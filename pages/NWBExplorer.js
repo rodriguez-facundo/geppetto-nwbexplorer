@@ -82,9 +82,11 @@ export default class NWBExplorer extends React.Component {
                 GEPPETTO.CommandController.log("The NWB file was loaded");
                 GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
-                Instances.getInstance("nwb");
-                Instances.getInstance("time");
 
+                Instances.getInstance("time");
+                Instances.getInstance("nwb.DfOverF_1");
+                Instances.getInstance("nwb.DfOverF_2");
+                Instances.getInstance("nwb.Stimulus");
 
                 GEPPETTO.ControlPanel.setColumnMeta([
                     { "columnName": "path", "order": 1, "locked": false, "displayName": "Path", "source": "$entity$.getPath()" },
@@ -92,15 +94,7 @@ export default class NWBExplorer extends React.Component {
                     { "columnName": "controls", "order": 3, "locked": false, "customComponent": GEPPETTO.ControlsComponent, "displayName": "Controls", "source": "", "action": "GEPPETTO.FE.refresh();" }]);
                 GEPPETTO.ControlPanel.setColumns(['sweep', 'controls']);
                 GEPPETTO.ControlPanel.setDataFilter(function (entities) {
-                    var compositeInstances = GEPPETTO.ModelFactory.getAllTypesOfMetaType(GEPPETTO.Resources.COMPOSITE_TYPE_NODE, entities);
-                    var sweepInstances = [];
-                    for (var index in compositeInstances) {
-                        var allVariables = compositeInstances[index].getVariables();
-                        for (var v in allVariables) {
-                            sweepInstances.push(allVariables[v]);
-                        }
-                    }
-                    return sweepInstances;
+                    return GEPPETTO.ModelFactory.getAllInstancesOfType(window.Model.common.StateVariable);
                 });
                 GEPPETTO.ControlPanel.setControlsConfig(
                     {
@@ -111,7 +105,7 @@ export default class NWBExplorer extends React.Component {
                                     {
                                         "id": "plot",
                                         "actions": [
-                                            "for (var i = 0; i < GEPPETTO.ModelFactory.allPaths.length; i++) { if (GEPPETTO.ModelFactory.allPaths[i].type == $instance$.getPath()) { var instancePath = GEPPETTO.ModelFactory.allPaths[i].path; break; }G.addWidget(0).then(w=>{w.setSize(273.8,556.8).plotXYData(Instances.getInstance(instancePath), time).setPosition(130,35).setName(instancePath);}); }; "],
+                                            "G.addWidget(0).then(w=>{w.plotXYData(Instances.getInstance($instance$.getPath()), time).setPosition(130,35).setName($instance$.getPath());});"],
                                         "icon": "fa-area-chart",
                                         "label": "Plot",
                                         "tooltip": "Plot Sweep"
