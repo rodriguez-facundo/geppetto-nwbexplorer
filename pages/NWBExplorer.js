@@ -74,6 +74,10 @@ export default class NWBExplorer extends React.Component {
     }
 
     componentDidMount() {
+        $.get( "/org.geppetto.frontend/api/load", function( data ) {
+            console.log(data);
+            // do stuff here 
+        });
     }
 
     handleClick(event) {
