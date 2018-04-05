@@ -74,13 +74,53 @@ export default class NWBExplorer extends React.Component {
     }
 
     componentDidMount() {
+        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
         fetch("/api/load")
             .then((response) => response.json())
             .then((responseJson) => {
-                GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
                 GEPPETTO.Manager.loadModel(JSON.parse(responseJson));
                 GEPPETTO.CommandController.log("The NWB file was loaded");
                 GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
+                Instances.getInstance("nwb");
+                Instances.getInstance("time");
+
+
+                GEPPETTO.ControlPanel.setColumnMeta([
+                    { "columnName": "path", "order": 1, "locked": false, "displayName": "Path", "source": "$entity$.getPath()" },
+                    { "columnName": "sweep", "order": 2, "locked": false, "displayName": "Sweep No.", "source": "$entity$.getPath()" },
+                    { "columnName": "controls", "order": 3, "locked": false, "customComponent": GEPPETTO.ControlsComponent, "displayName": "Controls", "source": "", "action": "GEPPETTO.FE.refresh();" }]);
+                GEPPETTO.ControlPanel.setColumns(['sweep', 'controls']);
+                GEPPETTO.ControlPanel.setDataFilter(function (entities) {
+                    var compositeInstances = GEPPETTO.ModelFactory.getAllTypesOfMetaType(GEPPETTO.Resources.COMPOSITE_TYPE_NODE, entities);
+                    var sweepInstances = [];
+                    for (var index in compositeInstances) {
+                        var allVariables = compositeInstances[index].getVariables();
+                        for (var v in allVariables) {
+                            sweepInstances.push(allVariables[v]);
+                        }
+                    }
+                    return sweepInstances;
+                });
+                GEPPETTO.ControlPanel.setControlsConfig(
+                    {
+                        "VisualCapability": {},
+                        "Common":
+                            {
+                                "plot":
+                                    {
+                                        "id": "plot",
+                                        "actions": [
+                                            "for (var i = 0; i < GEPPETTO.ModelFactory.allPaths.length; i++) { if (GEPPETTO.ModelFactory.allPaths[i].type == $instance$.getPath()) { var instancePath = GEPPETTO.ModelFactory.allPaths[i].path; break; }G.addWidget(0).then(w=>{w.setSize(273.8,556.8).plotXYData(Instances.getInstance(instancePath), time).setPosition(130,35).setName(instancePath);}); }; "],
+                                        "icon": "fa-area-chart",
+                                        "label": "Plot",
+                                        "tooltip": "Plot Sweep"
+                                    }
+                            }
+                    });
+                GEPPETTO.ControlPanel.setControls({ "VisualCapability": [], "Common": ['plot'] });
+                GEPPETTO.ControlPanel.addData(Instances);
+
             });
 
 
