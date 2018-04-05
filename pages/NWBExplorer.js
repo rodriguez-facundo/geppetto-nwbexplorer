@@ -74,9 +74,12 @@ export default class NWBExplorer extends React.Component {
     }
 
     componentDidMount() {
-        $.get( "/org.geppetto.frontend/api/load", function( data ) {
-            console.log(data);
-            // do stuff here 
+        fetch("/api/load")
+        .then(response => {
+            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
+            GEPPETTO.Manager.loadModel(JSON.parse(response));
+            GEPPETTO.CommandController.log("The NWB file was loaded");
+            GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
         });
     }
 
