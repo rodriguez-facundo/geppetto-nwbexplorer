@@ -52,8 +52,8 @@ export default class NWBExplorer extends React.Component {
         var that = this;
         G.addWidget(1).then(w => {
             w.setName(name);
-            var file='http://localhost:8000/static/org.geppetto.frontend/src/main/webapp/extensions/geppetto-nwbexplorer/styles/images/'+image;
-            w.$el.append("<img src='"+ file+"'/>");
+            var file = 'http://localhost:8000/static/org.geppetto.frontend/src/main/webapp/extensions/geppetto-nwbexplorer/styles/images/' + image;
+            w.$el.append("<img src='" + file + "'/>");
             // var svg = $(w.$el).find("svg")[0];
             // svg.removeAttribute('width');
             // svg.removeAttribute('height');
@@ -75,12 +75,15 @@ export default class NWBExplorer extends React.Component {
 
     componentDidMount() {
         fetch("/api/load")
-        .then(response => {
-            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
-            GEPPETTO.Manager.loadModel(JSON.parse(response));
-            GEPPETTO.CommandController.log("The NWB file was loaded");
-            GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-        });
+            .then((response) => response.json())
+            .then((responseJson) => {
+                GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
+                GEPPETTO.Manager.loadModel(JSON.parse(responseJson));
+                GEPPETTO.CommandController.log("The NWB file was loaded");
+                GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+            });
+
+
     }
 
     handleClick(event) {
@@ -102,15 +105,15 @@ export default class NWBExplorer extends React.Component {
 
     render() {
 
-        var controls= (
-                <Menu>
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show mean response" onClick={() => { that.plotFigure('meanresponse.png', 'Mean response') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show image series stimuli" onClick={() => { that.plotFigure('stimuli.png', 'Image series stimuli') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show confusion matrix" onClick={() => { that.plotFigure('cm.png', 'Confusion matrix') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show plots" onClick={() => { that.plotFigure('plots.png', 'Plots') }} />
-                    <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show raster" onClick={() => { that.plotFigure('raster.png', 'Raster plot') }} />
-                </Menu>
-            );
+        var controls = (
+            <Menu>
+                <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show mean response" onClick={() => { that.plotFigure('meanresponse.png', 'Mean response') }} />
+                <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show image series stimuli" onClick={() => { that.plotFigure('stimuli.png', 'Image series stimuli') }} />
+                <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show confusion matrix" onClick={() => { that.plotFigure('cm.png', 'Confusion matrix') }} />
+                <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show plots" onClick={() => { that.plotFigure('plots.png', 'Plots') }} />
+                <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show raster" onClick={() => { that.plotFigure('raster.png', 'Raster plot') }} />
+            </Menu>
+        );
 
         var that = this;
         return (
