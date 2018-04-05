@@ -76,7 +76,7 @@ export default class NWBExplorer extends React.Component {
     componentDidMount() {
         fetch("/api/load")
         .then(response => {
-            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, GEPPETTO.Resources.PARSING_MODEL);
+            GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
             GEPPETTO.Manager.loadModel(JSON.parse(response));
             GEPPETTO.CommandController.log("The NWB file was loaded");
             GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
