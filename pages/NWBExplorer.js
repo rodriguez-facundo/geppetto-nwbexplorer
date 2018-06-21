@@ -82,11 +82,8 @@ export default class NWBExplorer extends React.Component {
                 GEPPETTO.CommandController.log("The NWB file was loaded");
                 GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
-
                 Instances.getInstance("time");
-                Instances.getInstance("nwb.DfOverF_1");
-                Instances.getInstance("nwb.DfOverF_2");
-                Instances.getInstance("nwb.Stimulus");
+                Instances.getInstance("nwb.variable.types[0].variables").map(x => Instances.getInstance("nwb."+ x.wrappedObj.id))
 
                 GEPPETTO.ControlPanel.setColumnMeta([
                     { "columnName": "path", "order": 1, "locked": false, "displayName": "Path", "source": "$entity$.getPath()" },
