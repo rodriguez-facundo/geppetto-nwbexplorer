@@ -82,8 +82,14 @@ export default class NWBExplorer extends React.Component {
                 GEPPETTO.CommandController.log("The NWB file was loaded");
                 GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
-                Instances.getInstance("time");
-                Instances.getInstance("nwb.variable.types[0].variables").map(x => Instances.getInstance("nwb."+ x.wrappedObj.id))
+                let groupsIDs = [];
+                let groups = Instances.getInstance("nwb.getVariable().getType().getVariables()").map(function(g){
+                    let groupID = g.wrappedObj.id;
+                    groupsIDs.push(groupID);
+                    return Instances.getInstance(groupID + ".getVariable().getType().getVariables()")
+                });
+
+                groups.forEach((g, index) => g.map(x=> Instances.getInstance(groupsIDs[index] + "." + x.wrappedObj.id)));
 
                 GEPPETTO.ControlPanel.setColumnMeta([
                     { "columnName": "path", "order": 1, "locked": false, "displayName": "Path", "source": "$entity$.getPath()" },
@@ -102,7 +108,7 @@ export default class NWBExplorer extends React.Component {
                                     {
                                         "id": "plot",
                                         "actions": [
-                                            "G.addWidget(0).then(w=>{w.plotXYData(Instances.getInstance($instance$.getPath()), time).setPosition(130,35).setName($instance$.getPath());});"],
+                                            "G.addWidget(0).then(w=>{w.plotXYData(Instances.getInstance($instance$.getPath()), Instances.getInstance($instance$.getPath().split('.')[0]+\".time\")).setPosition(130,35).setName($instance$.getPath());});"],
                                         "icon": "fa-area-chart",
                                         "label": "Plot",
                                         "tooltip": "Plot Sweep"
