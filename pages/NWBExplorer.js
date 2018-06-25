@@ -97,7 +97,7 @@ export default class NWBExplorer extends React.Component {
                     { "columnName": "controls", "order": 3, "locked": false, "customComponent": GEPPETTO.ControlsComponent, "displayName": "Controls", "source": "", "action": "GEPPETTO.FE.refresh();" }]);
                 GEPPETTO.ControlPanel.setColumns(['sweep', 'controls']);
                 GEPPETTO.ControlPanel.setDataFilter(function (entities) {
-                    return GEPPETTO.ModelFactory.getAllInstancesOfType(window.Model.common.StateVariable);
+                    return GEPPETTO.ModelFactory.getAllInstancesOfType(window.Model.common.StateVariable).slice(1);
                 });
                 GEPPETTO.ControlPanel.setControlsConfig(
                     {
