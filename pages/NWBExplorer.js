@@ -34,7 +34,8 @@ export default class NWBExplorer extends React.Component {
             model: props.model,
             controlPanelHidden: true,
             plotButtonOpen: false,
-            openDialog: false
+            openDialog: false,
+            plotsAvailable: []
         };
         this.widgets = [];
         this.plotFigure = this.plotFigure.bind(this);
@@ -65,8 +66,29 @@ export default class NWBExplorer extends React.Component {
         });
     }
 
+    newPlotWidgetIframe(url) {
+        var that = this;
+        G.addWidget(1).then(w => {
+            w.setName("holoviews prototype");
+
+            w.$el.append("<iframe src='" + url + "' width='100%' height='100%s'/>");
+            that.widgets.push(w);
+            w.showHistoryIcon(false);
+            w.showHelpIcon(false);
+        });
+    }
+
     plotFigure(image, plotName) {
         this.newPlotWidget(plotName, image)
+    }
+
+    plotHoloviews(url) {
+        fetch(url)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                let data = JSON.parse(responseJson);
+                this.newPlotWidgetIframe(data.url);
+            });
     }
 
     getOpenedWidgets() {
@@ -149,6 +171,8 @@ export default class NWBExplorer extends React.Component {
                 <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show confusion matrix" onClick={() => { that.plotFigure('cm.png', 'Confusion matrix') }} />
                 <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show plots" onClick={() => { that.plotFigure('plots.png', 'Plots') }} />
                 <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show raster" onClick={() => { that.plotFigure('raster.png', 'Raster plot') }} />
+
+                <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show holoviews" onClick={() => { that.plotHoloviews('/api/holoviews') }} />
             </Menu>
         );
 
