@@ -26,6 +26,9 @@ const styles = {
     }
 };
 
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+
 export default class NWBExplorer extends React.Component {
 
     constructor(props) {
