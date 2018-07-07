@@ -70,10 +70,10 @@ export default class NWBExplorer extends React.Component {
         });
     }
 
-    newPlotWidgetIframe(url) {
+    newPlotWidgetIframe(name, url) {
         var that = this;
         G.addWidget(1).then(w => {
-            w.setName("holoviews prototype");
+            w.setName(name);
 
             w.$el.append("<iframe src='" + url + "' width='100%' height='100%s'/>");
             that.widgets.push(w);
@@ -86,12 +86,12 @@ export default class NWBExplorer extends React.Component {
         this.newPlotWidget(plotName, image)
     }
 
-    plotExternalHTML(url) {
+    plotExternalHTML(url, plot_id) {
         fetch(url)
             .then((response) => response.json())
             .then((responseJson) => {
                 let data = JSON.parse(responseJson);
-                this.newPlotWidgetIframe(data.url);
+                this.newPlotWidgetIframe(plot_id, data.url);
             });
     }
 
@@ -174,8 +174,9 @@ export default class NWBExplorer extends React.Component {
         event.preventDefault();
 
         var that = this;
-        //TODO: This doesn't work on first click, and we probably just need to fetch once
-        // TODO: Solve Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `NWBExplorer`
+        // Todo - Review: I didn't try really hard on it since we might change this approach but nevertheless I might need some help here.
+        // Todo: This doesn't work on first click, and we probably just need to fetch once
+        // Todo: Solve Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `NWBExplorer`
         fetch("/api/plots_available/")
             .then((response) => response.json())
             .then((responseJson) => {
@@ -185,7 +186,7 @@ export default class NWBExplorer extends React.Component {
                     return <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv}
                                      primaryText={plot.name}
                                      onClick={() => {
-                                         that.plotExternalHTML('/api/plot/?plot='+plot.id)
+                                         that.plotExternalHTML('/api/plot/?plot='+plot.id, plot.id)
                                      }}/>
                 });
             });
@@ -243,6 +244,6 @@ export default class NWBExplorer extends React.Component {
                 </div>
             </div>
 
-        );
+        ); // Todo - Review: I had to add the Menu tags because I wasn't able to find a way to create them 'dynamically'
     }
 }
