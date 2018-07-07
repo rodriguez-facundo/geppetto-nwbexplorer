@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ControlPanel from '../../../js/components/interface/controlPanel/controlpanel';
 import IconButton from '../../../js/components/controls/iconButton/IconButton';
 import Popover from 'material-ui/Popover';
@@ -27,6 +27,7 @@ const styles = {
 };
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
+
 injectTapEventPlugin();
 
 export default class NWBExplorer extends React.Component {
@@ -38,8 +39,8 @@ export default class NWBExplorer extends React.Component {
             controlPanelHidden: true,
             plotButtonOpen: false,
             openDialog: false,
-            plotsAvailable: []
         };
+        this.plotsAvailable = (null);
         this.widgets = [];
         this.plotFigure = this.plotFigure.bind(this);
         this.newPlotWidget = this.newPlotWidget.bind(this);
@@ -49,7 +50,7 @@ export default class NWBExplorer extends React.Component {
     }
 
     handleCloseDialog = () => {
-        this.setState({ openDialog: false });
+        this.setState({openDialog: false});
     };
 
     newPlotWidget(name, image) {
@@ -85,7 +86,7 @@ export default class NWBExplorer extends React.Component {
         this.newPlotWidget(plotName, image)
     }
 
-    plotHoloviews(url) {
+    plotExternalHTML(url) {
         fetch(url)
             .then((response) => response.json())
             .then((responseJson) => {
@@ -108,18 +109,38 @@ export default class NWBExplorer extends React.Component {
                 GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
                 let groupsIDs = [];
-                let groups = Instances.getInstance("nwb.getVariable().getType().getVariables()").map(function(g){
+                let groups = Instances.getInstance("nwb.getVariable().getType().getVariables()").map(function (g) {
                     let groupID = g.wrappedObj.id;
                     groupsIDs.push(groupID);
                     return Instances.getInstance(groupID + ".getVariable().getType().getVariables()")
                 });
 
-                groups.forEach((g, index) => g.map(x=> Instances.getInstance(groupsIDs[index] + "." + x.wrappedObj.id)));
+                groups.forEach((g, index) => g.map(x => Instances.getInstance(groupsIDs[index] + "." + x.wrappedObj.id)));
 
                 GEPPETTO.ControlPanel.setColumnMeta([
-                    { "columnName": "path", "order": 1, "locked": false, "displayName": "Path", "source": "$entity$.getPath()" },
-                    { "columnName": "sweep", "order": 2, "locked": false, "displayName": "Sweep No.", "source": "$entity$.getPath()" },
-                    { "columnName": "controls", "order": 3, "locked": false, "customComponent": GEPPETTO.ControlsComponent, "displayName": "Controls", "source": "", "action": "GEPPETTO.FE.refresh();" }]);
+                    {
+                        "columnName": "path",
+                        "order": 1,
+                        "locked": false,
+                        "displayName": "Path",
+                        "source": "$entity$.getPath()"
+                    },
+                    {
+                        "columnName": "sweep",
+                        "order": 2,
+                        "locked": false,
+                        "displayName": "Sweep No.",
+                        "source": "$entity$.getPath()"
+                    },
+                    {
+                        "columnName": "controls",
+                        "order": 3,
+                        "locked": false,
+                        "customComponent": GEPPETTO.ControlsComponent,
+                        "displayName": "Controls",
+                        "source": "",
+                        "action": "GEPPETTO.FE.refresh();"
+                    }]);
                 GEPPETTO.ControlPanel.setColumns(['sweep', 'controls']);
                 GEPPETTO.ControlPanel.setDataFilter(function (entities) {
                     return GEPPETTO.ModelFactory.getAllInstancesOfType(window.Model.common.StateVariable).slice(1);
@@ -140,7 +161,7 @@ export default class NWBExplorer extends React.Component {
                                     }
                             }
                     });
-                GEPPETTO.ControlPanel.setControls({ "VisualCapability": [], "Common": ['plot'] });
+                GEPPETTO.ControlPanel.setControls({"VisualCapability": [], "Common": ['plot']});
                 GEPPETTO.ControlPanel.addData(Instances);
 
             });
@@ -152,11 +173,29 @@ export default class NWBExplorer extends React.Component {
         // This prevents ghost click.
         event.preventDefault();
 
+        var that = this;
+        //TODO: This doesn't work on first click, and we probably just need to fetch once
+        // TODO: Solve Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `NWBExplorer`
+        fetch("/api/plots_available/")
+            .then((response) => response.json())
+            .then((responseJson) => {
+
+                let response = JSON.parse(responseJson);
+                this.plotsAvailable = response.map(function (plot) {
+                    return <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv}
+                                     primaryText={plot.name}
+                                     onClick={() => {
+                                         that.plotExternalHTML('/api/plot/?plot='+plot.id)
+                                     }}/>
+                });
+            });
+
         this.setState({
             plotButtonOpen: true,
             anchorEl: event.currentTarget,
         });
     }
+
 
     handleRequestClose() {
         this.setState({
@@ -167,34 +206,25 @@ export default class NWBExplorer extends React.Component {
 
     render() {
 
-        var controls = (
-            <Menu>
-                <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show mean response" onClick={() => { that.plotFigure('meanresponse.png', 'Mean response') }} />
-                <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show image series stimuli" onClick={() => { that.plotFigure('stimuli.png', 'Image series stimuli') }} />
-                <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show confusion matrix" onClick={() => { that.plotFigure('cm.png', 'Confusion matrix') }} />
-                <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show plots" onClick={() => { that.plotFigure('plots.png', 'Plots') }} />
-                <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show raster" onClick={() => { that.plotFigure('raster.png', 'Raster plot') }} />
-
-                <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv} primaryText="Show holoviews" onClick={() => { that.plotHoloviews('/api/holoviews') }} />
-            </Menu>
-        );
 
         var that = this;
         return (
-            <div id="instantiatedContainer" style={{ height: '100%', width: '100%' }}>
+            <div id="instantiatedContainer" style={{height: '100%', width: '100%'}}>
                 <div id="logo"></div>
-                <div id="controlpanel" style={{ top: 0 }}>
+                <div id="controlpanel" style={{top: 0}}>
                     <ControlPanel
                         icon={"styles.Modal"}
                         useBuiltInFilters={false}
                     >
                     </ControlPanel>
                 </div>
-                <IconButton style={{ position: 'absolute', left: 15, top: 100 }} onClick={() => { $('#controlpanel').show(); }} icon={"fa-list"} />
+                <IconButton style={{position: 'absolute', left: 15, top: 100}} onClick={() => {
+                    $('#controlpanel').show();
+                }} icon={"fa-list"}/>
                 <div>
                     <IconButton
                         onClick={this.handleClick}
-                        style={{ position: 'absolute', left: 15, top: 140 }}
+                        style={{position: 'absolute', left: 15, top: 140}}
                         label="Plot"
                         icon={"fa-bar-chart"}
 
@@ -202,11 +232,13 @@ export default class NWBExplorer extends React.Component {
                     <Popover
                         open={this.state.plotButtonOpen}
                         anchorEl={this.state.anchorEl}
-                        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-                        targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+                        anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                        targetOrigin={{horizontal: 'left', vertical: 'top'}}
                         onRequestClose={this.handleRequestClose}
                     >
-                        {controls}
+                        <Menu>
+                            {that.plotsAvailable}
+                        </Menu>
                     </Popover>
                 </div>
             </div>
