@@ -91,7 +91,8 @@ export default class NWBExplorer extends React.Component {
             .then((response) => response.json())
             .then((responseJson) => {
                 let data = JSON.parse(responseJson);
-                this.newPlotWidgetIframe(plot_id, data.url);
+                if(data.url !=='')
+                    this.newPlotWidgetIframe(plot_id, data.url);
             });
     }
 
@@ -157,8 +158,7 @@ export default class NWBExplorer extends React.Component {
                     }]);
                 GEPPETTO.ControlPanel.setColumns(['sweep', 'controls']);
                 GEPPETTO.ControlPanel.setDataFilter(function (entities) {
-                    // Assuming time variable is the first entry of each group
-                    return GEPPETTO.ModelFactory.getAllInstancesOfType(window.Model.common.StateVariable).slice(1);
+                    return GEPPETTO.ModelFactory.getAllInstancesOfType(window.Model.common.StateVariable).filter(x => x.id !== "time")
                 });
                 GEPPETTO.ControlPanel.setControlsConfig(
                     {
@@ -197,7 +197,7 @@ export default class NWBExplorer extends React.Component {
                     });
 
             });
-        
+
     }
 
     handleClick(event) {
