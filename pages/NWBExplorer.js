@@ -100,6 +100,7 @@ export default class NWBExplorer extends React.Component {
     }
 
     componentDidMount() {
+        var that = this;
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
         fetch("/api/load/")
             .then((response) => response.json())
@@ -178,31 +179,30 @@ export default class NWBExplorer extends React.Component {
                 GEPPETTO.ControlPanel.setControls({"VisualCapability": [], "Common": ['plot']});
                 GEPPETTO.ControlPanel.addData(Instances);
 
+                // Todo - Review: plots_available assumes that load happens first. Otherwise would be empty
+
+                fetch("/api/plots_available/")
+                    .then((response) => response.json())
+                    .then((responseJson) => {
+
+                        let response = JSON.parse(responseJson);
+                        this.plotsAvailable = response.map(function (plot) {
+                            return <MenuItem key={plot.id}
+                                             style={styles.menuItem} innerDivStyle={styles.menuItemDiv}
+                                             primaryText={plot.name}
+                                             onClick={() => {
+                                                 that.plotExternalHTML('/api/plot/?plot=' + plot.id, plot.id)
+                                             }}/>
+                        });
+                    });
+
             });
-
-
+        
     }
 
     handleClick(event) {
         // This prevents ghost click.
         event.preventDefault();
-
-        var that = this;
-        // Todo: This doesn't work on first click, and we probably just need to fetch once
-        // Todo: Solve Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `NWBExplorer`
-        fetch("/api/plots_available/")
-            .then((response) => response.json())
-            .then((responseJson) => {
-
-                let response = JSON.parse(responseJson);
-                this.plotsAvailable = response.map(function (plot) {
-                    return <MenuItem style={styles.menuItem} innerDivStyle={styles.menuItemDiv}
-                                     primaryText={plot.name}
-                                     onClick={() => {
-                                         that.plotExternalHTML('/api/plot/?plot='+plot.id, plot.id)
-                                     }}/>
-                });
-            });
 
         this.setState({
             plotButtonOpen: true,
@@ -219,8 +219,6 @@ export default class NWBExplorer extends React.Component {
 
 
     render() {
-
-
         var that = this;
         return (
             <div id="instantiatedContainer" style={{height: '100%', width: '100%'}}>
