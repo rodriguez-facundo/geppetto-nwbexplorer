@@ -108,6 +108,19 @@ export default class NWBExplorer extends React.Component {
                 GEPPETTO.CommandController.log("The NWB file was loaded");
                 GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
+
+                // Assuming a group structure such as
+                // nwb.group1
+                // nwb.group2
+                //
+                // group1.time
+                // group1.stimulus
+                //
+                // group2.time
+                // group2.stimulus
+                //
+                // where each group entry contains the corresponding data from the nwb file.
+
                 let groupsIDs = [];
                 let groups = Instances.getInstance("nwb.getVariable().getType().getVariables()").map(function (g) {
                     let groupID = g.wrappedObj.id;
@@ -143,6 +156,7 @@ export default class NWBExplorer extends React.Component {
                     }]);
                 GEPPETTO.ControlPanel.setColumns(['sweep', 'controls']);
                 GEPPETTO.ControlPanel.setDataFilter(function (entities) {
+                    // Assuming time variable is the first entry of each group
                     return GEPPETTO.ModelFactory.getAllInstancesOfType(window.Model.common.StateVariable).slice(1);
                 });
                 GEPPETTO.ControlPanel.setControlsConfig(
@@ -174,7 +188,6 @@ export default class NWBExplorer extends React.Component {
         event.preventDefault();
 
         var that = this;
-        // Todo - Review: I didn't try really hard on it since we might change this approach but nevertheless I might need some help here.
         // Todo: This doesn't work on first click, and we probably just need to fetch once
         // Todo: Solve Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `NWBExplorer`
         fetch("/api/plots_available/")
