@@ -91,13 +91,17 @@ export default class NWBExplorer extends React.Component {
             .then((response) => response.json())
             .then((responseJson) => {
                 let data = JSON.parse(responseJson);
-                if(data.url !=='')
+                if (data.url !== '')
                     this.newPlotWidgetIframe(plot_id, data.url);
             });
     }
 
     getOpenedWidgets() {
         return this.widgets;
+    }
+
+    static isImage(instance) {
+        return false
     }
 
     componentDidMount() {
@@ -160,6 +164,7 @@ export default class NWBExplorer extends React.Component {
                 GEPPETTO.ControlPanel.setDataFilter(function (entities) {
                     return GEPPETTO.ModelFactory.getAllInstancesOfType(window.Model.common.StateVariable).filter(x => x.id !== "time")
                 });
+
                 GEPPETTO.ControlPanel.setControlsConfig(
                     {
                         "VisualCapability": {},
@@ -169,7 +174,23 @@ export default class NWBExplorer extends React.Component {
                                     {
                                         "id": "plot",
                                         "actions": [
-                                            "G.addWidget(0).then(w=>{w.plotXYData(Instances.getInstance($instance$.getPath()), Instances.getInstance($instance$.getPath().split('.')[0]+\".time\")).setPosition(130,35).setName($instance$.getPath());});"],
+                                            "let instanceX = Instances.getInstance($instance$.getPath()); " +
+                                            "let instanceX_values = instanceX.getVariable().getWrappedObj().initialValues;" +
+                                            "if (typeof instanceX_values[0] !== 'undefined') {" +
+                                            "if (instanceX_values[0].value.eClass === 'MDTimeSeries') {" +
+                                            "if (typeof instanceX_values[0].value.value[0] !== 'undefined') {" +
+                                            "if (instanceX_values[0].value.value[0].eClass === 'Image') {" +
+                                            "console.log('ImageTimeSeries')" +
+                                            "}" +
+                                            "}" +
+                                            "}" +
+                                            "else {" +
+                                            "G.addWidget(0).then(w => {" +
+                                            "w.plotXYData(Instances.getInstance($instance$.getPath()), Instances.getInstance($instance$.getPath().split('.')[0] + '.time')).setPosition(130, 35).setName($instance$.getPath());" +
+                                            "});" +
+                                            "}" +
+                                            "}"
+                                        ],
                                         "icon": "fa-area-chart",
                                         "label": "Plot",
                                         "tooltip": "Plot Sweep"
