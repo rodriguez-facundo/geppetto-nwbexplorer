@@ -180,7 +180,7 @@ export default class NWBExplorer extends React.Component {
                                             "if (instanceX_values[0].value.eClass === 'MDTimeSeries') {" +
                                             "if (typeof instanceX_values[0].value.value[0] !== 'undefined') {" +
                                             "if (instanceX_values[0].value.value[0].eClass === 'Image') {" +
-                                            "console.log('ImageTimeSeries')" +
+                                            "G.addWidget('CAROUSEL', { files:['data:image/png;base64,' + instanceX_values[0].value.value[0].data]})" +
                                             "}" +
                                             "}" +
                                             "}" +
