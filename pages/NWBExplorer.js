@@ -70,6 +70,11 @@ export default class NWBExplorer extends React.Component {
         });
     }
 
+    /**
+     * Injects .html plot in a iframe tag
+     * @param name A string that is presented in the widget
+     * @param url url to locate plot
+     */
     newPlotWidgetIframe(name, url) {
         var that = this;
         G.addWidget(1).then(w => {
@@ -86,6 +91,11 @@ export default class NWBExplorer extends React.Component {
         this.newPlotWidget(plotName, image)
     }
 
+    /**
+     * Fetches url to retrieve plot external html
+     * @param url url such as api/plot?plot=plot_id
+     * @param plot_id
+     */
     plotExternalHTML(url, plot_id) {
         fetch(url)
             .then((response) => response.json())
@@ -114,18 +124,21 @@ export default class NWBExplorer extends React.Component {
                 GEPPETTO.CommandController.log("The NWB file was loaded");
                 GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
+                /**
+                 * Retrieves instances of state variables
+                 * Assuming a group structure such as
+                 * nwb.group1
+                 * nwb.group2
 
-                // Assuming a group structure such as
-                // nwb.group1
-                // nwb.group2
-                //
-                // group1.time
-                // group1.stimulus
-                //
-                // group2.time
-                // group2.stimulus
-                //
-                // where each group entry contains the corresponding data from the nwb file.
+                 * group1.time
+                 * group1.stimulus
+
+                 * group2.time
+                 * group2.df_over_f_01
+                 * group2.df_over_f_02
+
+                 * where each group entry contains the corresponding data from the nwb file.
+                 */
 
                 let groupsIDs = [];
                 let groups = Instances.getInstance("nwb.getVariable().getType().getVariables()").map(function (g) {
@@ -162,6 +175,7 @@ export default class NWBExplorer extends React.Component {
                     }]);
                 GEPPETTO.ControlPanel.setColumns(['sweep', 'controls']);
                 GEPPETTO.ControlPanel.setDataFilter(function (entities) {
+                    /** adds all non-time instances to control panel */
                     return GEPPETTO.ModelFactory.getAllInstancesOfType(window.Model.common.StateVariable).filter(x => x.id !== "time")
                 });
 
@@ -174,6 +188,9 @@ export default class NWBExplorer extends React.Component {
                                     {
                                         "id": "plot",
                                         "actions": [
+                                            /**
+                                             * Operates on an instance of a state variable and plots in accordance
+                                             */
                                             "let instanceX = Instances.getInstance($instance$.getPath()); " +
                                             "let instanceX_values = instanceX.getVariable().getWrappedObj().initialValues;" +
                                             "if (typeof instanceX_values[0] !== 'undefined') {" +
@@ -182,7 +199,7 @@ export default class NWBExplorer extends React.Component {
                                             "if (instanceX_values[0].value.value[0].eClass === 'Image') {" +
                                             "G.addWidget('CAROUSEL', { " +
                                             "files:['data:image/png;base64,' + instanceX_values[0].value.value[0].data], " +
-                                            "onClick:function() {return 0}, " +
+                                            "onClick:function() {return 0}, " + //Todo: this is a placeholder
                                             "onMouseEnter:function() {return 0}, " +
                                             "onMouseLeave:function() {return 0}, " +
                                             "})" +
@@ -213,6 +230,7 @@ export default class NWBExplorer extends React.Component {
 
                         let response = JSON.parse(responseJson);
                         this.plotsAvailable = response.map(function (plot) {
+                            /** fill plotsAvailable (controls) with the response and with onClick = fetch("api/plot?plot=plot_id") */
                             return <MenuItem key={plot.id}
                                              style={styles.menuItem} innerDivStyle={styles.menuItemDiv}
                                              primaryText={plot.name}
