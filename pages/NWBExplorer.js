@@ -26,6 +26,8 @@ const styles = {
     }
 };
 
+const nwbfile ="./test_data/brain_observatory.nwb"; //TODO: HardCoded for now
+
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 injectTapEventPlugin();
@@ -117,7 +119,7 @@ export default class NWBExplorer extends React.Component {
     componentDidMount() {
         var that = this;
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
-        fetch("/api/load/")
+        fetch("/api/load/?nwbfile=" + nwbfile)
             .then((response) => response.json())
             .then((responseJson) => {
                 GEPPETTO.Manager.loadModel(JSON.parse(responseJson));
@@ -222,8 +224,6 @@ export default class NWBExplorer extends React.Component {
                 GEPPETTO.ControlPanel.setControls({"VisualCapability": [], "Common": ['plot']});
                 GEPPETTO.ControlPanel.addData(Instances);
 
-                // Todo - Review: plots_available assumes that load happens first. Otherwise would be empty
-
                 fetch("/api/plots_available/")
                     .then((response) => response.json())
                     .then((responseJson) => {
@@ -299,6 +299,6 @@ export default class NWBExplorer extends React.Component {
                 </div>
             </div>
 
-        ); // Todo - Review: I had to add the Menu tags because I wasn't able to find a way to create them 'dynamically'
+        );
     }
 }
