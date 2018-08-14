@@ -100,12 +100,18 @@ export default class NWBExplorer extends React.Component {
      */
     plotExternalHTML(url, plot_id) {
         fetch(url)
-            .then((response) => response.json())
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    throw new Error('Something went wrong');
+                }
+            })
             .then((responseJson) => {
                 let data = JSON.parse(responseJson);
-                if (data.url !== '')
-                    this.newPlotWidgetIframe(plot_id, data.url);
-            });
+                this.newPlotWidgetIframe(plot_id, data.url);
+            })
+            .catch(error => console.log(error));
     }
 
     getOpenedWidgets() {
@@ -120,7 +126,13 @@ export default class NWBExplorer extends React.Component {
         var that = this;
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
         fetch("/api/load/?nwbfile=" + nwbfile)
-            .then((response) => response.json())
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    throw new Error('Something went wrong');
+                }
+            })
             .then((responseJson) => {
                 GEPPETTO.Manager.loadModel(JSON.parse(responseJson));
                 GEPPETTO.CommandController.log("The NWB file was loaded");
@@ -225,7 +237,13 @@ export default class NWBExplorer extends React.Component {
                 GEPPETTO.ControlPanel.addData(Instances);
 
                 fetch("/api/plots_available/")
-                    .then((response) => response.json())
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json()
+                        } else {
+                            throw new Error('Something went wrong');
+                        }
+                    })
                     .then((responseJson) => {
 
                         let response = JSON.parse(responseJson);
@@ -238,9 +256,11 @@ export default class NWBExplorer extends React.Component {
                                                  that.plotExternalHTML('/api/plot/?plot=' + plot.id, plot.id)
                                              }}/>
                         });
-                    });
+                    })
+                    .catch(error => console.log(error));
 
-            });
+            })
+            .catch(error => console.log(error));
 
     }
 
