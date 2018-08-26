@@ -124,7 +124,10 @@ export default class NWBExplorer extends React.Component {
 
     componentDidMount() {
         var that = this;
-        GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
+
+        setTimeout(function(){GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");}, 500);
+        
+
         fetch("/api/load/?nwbfile=" + nwbfile)
             .then((response) => {
                 if (response.ok) {
