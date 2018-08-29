@@ -1,3 +1,5 @@
+@import "colors.less";
+
 #mainContainer{
     color: white;
 }
@@ -7,3 +9,36 @@
     width: 200px;
     height:76px;
 }
+
+#controlpanel .griddle td {
+    color: @primary_color;
+}
+
+.contextMenuView {
+    color: @primary_color;
+    li {
+        border-color: @primary_color!important;
+    }
+
+    li:hover {
+        color: @background_color_widget;
+    }
+}
+
+iframe{
+    border:0;
+    body{
+        background-color: transparent!important;
+    }
+}
+
+.legendtext, .g-xtitle, .g-ytitle{
+    fill: @primary_color!important;
+}
+.xtick, .ytick, .xlines-above, .ylines-above{
+    stroke:@primary_color!important;
+    text{
+        fill:@primary_color!important;
+    }
+}
+

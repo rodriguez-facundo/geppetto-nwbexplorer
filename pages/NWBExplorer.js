@@ -98,7 +98,7 @@ export default class NWBExplorer extends React.Component {
      * @param url url such as api/plot?plot=plot_id
      * @param plot_id
      */
-    plotExternalHTML(url, plot_id) {
+    plotExternalHTML(url, plot_name) {
         fetch(url)
             .then((response) => {
                 if (response.ok) {
@@ -109,7 +109,7 @@ export default class NWBExplorer extends React.Component {
             })
             .then((responseJson) => {
                 let data = JSON.parse(responseJson);
-                this.newPlotWidgetIframe(plot_id, data.url);
+                this.newPlotWidgetIframe(plot_name, data.url);
             })
             .catch(error => console.log(error));
     }
@@ -256,7 +256,7 @@ export default class NWBExplorer extends React.Component {
                                              style={styles.menuItem} innerDivStyle={styles.menuItemDiv}
                                              primaryText={plot.name}
                                              onClick={() => {
-                                                 that.plotExternalHTML('/api/plot/?plot=' + plot.id, plot.id)
+                                                 that.plotExternalHTML('/api/plot/?plot=' + plot.id, plot.name)
                                              }}/>
                         });
                     })
