@@ -3,7 +3,11 @@ import MainTemplate from './pages/MainTemplate';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { grey500, blueGrey900, grey400  } from 'material-ui/styles/colors';
+import { grey500, blueGrey900, grey400 } from 'material-ui/styles/colors';
+
+import Console from '../../js/components/interface/console/Console';
+import TabbedDrawer from '../../js/components/interface/drawer/TabbedDrawer';
+import PythonConsole from '../../js/components/interface/pythonConsole/PythonConsole';
 
 // list of props here --> https://github.com/mui-org/material-ui/blob/master/src/styles/baseThemes/lightBaseTheme.js
 const customTheme = {
@@ -19,12 +23,21 @@ const theme = getMuiTheme(customTheme);
 
 export default class App extends React.Component {
 
-    render(){
-
+    render() {
         return (
-            <MuiThemeProvider muiTheme={theme}>
-                <MainTemplate />
-            </MuiThemeProvider>
+            <div>
+                <MuiThemeProvider muiTheme={theme}>
+                    <MainTemplate />
+                </MuiThemeProvider>
+                <div id="footer">
+                    <div id="footerHeader">
+                        <TabbedDrawer labels={["Console", "Python"]} iconClass={["fa fa-terminal", "fa fa-flask"]}>
+                            <Console />
+                            <PythonConsole pythonNotebookPath={"http://" + window.location.hostname + ":" + window.location.port + "/notebooks/notebook.ipynb"} />
+                        </TabbedDrawer>
+                    </div>
+                </div>
+            </div>
         )
 
     }

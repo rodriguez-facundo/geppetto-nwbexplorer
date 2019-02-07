@@ -26,7 +26,7 @@ const styles = {
     }
 };
 
-const nwbfile ="./test_data/brain_observatory.nwb"; //TODO: HardCoded for now
+const nwbfile ="./test_data/sample.nwb"; //TODO: HardCoded for now
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -55,11 +55,12 @@ export default class NWBExplorer extends React.Component {
         this.setState({openDialog: false});
     };
 
+
     newPlotWidget(name, image) {
-        var that = this;
+        var that = this; 
         G.addWidget(1).then(w => {
             w.setName(name);
-            var file = 'http://localhost:8000/static/org.geppetto.frontend/src/main/webapp/extensions/geppetto-nwbexplorer/styles/images/' + image;
+            var file = '/geppetto/extensions/geppetto-nwbexplorer/styles/images/' + image;
             w.$el.append("<img src='" + file + "'/>");
             // var svg = $(w.$el).find("svg")[0];
             // svg.removeAttribute('width');
@@ -108,11 +109,12 @@ export default class NWBExplorer extends React.Component {
                 }
             })
             .then((responseJson) => {
-                let data = JSON.parse(responseJson);
+                let data = responseJson;
                 this.newPlotWidgetIframe(plot_name, data.url);
             })
             .catch(error => console.log(error));
     }
+
 
     getOpenedWidgets() {
         return this.widgets;
@@ -126,7 +128,6 @@ export default class NWBExplorer extends React.Component {
         var that = this;
 
         setTimeout(function(){GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");}, 500);
-        
 
         fetch("/api/load/?nwbfile=" + nwbfile)
             .then((response) => {
@@ -137,7 +138,7 @@ export default class NWBExplorer extends React.Component {
                 }
             })
             .then((responseJson) => {
-                GEPPETTO.Manager.loadModel(JSON.parse(responseJson));
+                GEPPETTO.Manager.loadModel(responseJson);
                 GEPPETTO.CommandController.log("The NWB file was loaded");
                 GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
@@ -239,7 +240,7 @@ export default class NWBExplorer extends React.Component {
                 GEPPETTO.ControlPanel.setControls({"VisualCapability": [], "Common": ['plot']});
                 GEPPETTO.ControlPanel.addData(Instances);
 
-                fetch("/api/plots_available/")
+                fetch("/api/plots_available")
                     .then((response) => {
                         if (response.ok) {
                             return response.json()
@@ -248,15 +249,14 @@ export default class NWBExplorer extends React.Component {
                         }
                     })
                     .then((responseJson) => {
-
-                        let response = JSON.parse(responseJson);
+                        let response = responseJson;
                         this.plotsAvailable = response.map(function (plot) {
                             /** fill plotsAvailable (controls) with the response and with onClick = fetch("api/plot?plot=plot_id") */
                             return <MenuItem key={plot.id}
                                              style={styles.menuItem} innerDivStyle={styles.menuItemDiv}
                                              primaryText={plot.name}
                                              onClick={() => {
-                                                 that.plotExternalHTML('/api/plot/?plot=' + plot.id, plot.name)
+                                                 that.plotExternalHTML('/api/plot?plot=' + plot.id, plot.name)
                                              }}/>
                         });
                     })
