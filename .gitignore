@@ -3,3 +3,4 @@ holoviews_plots/
 node_modules
 package-lock.json
 build
+dependencies

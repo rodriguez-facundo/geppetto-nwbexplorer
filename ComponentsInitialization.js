@@ -6,19 +6,14 @@ jQuery(function () {
   const ReactDOM = require('react-dom');
   const React = require('react');
   const Utils = require('./Utils').default;
-  const Router = require('react-router-dom').BrowserRouter;
-  const Route = require('react-router-dom').Route;
-  const Switch = require('react-router-dom').Switch;
 
   const App = require('./App').default;
-
   
 
   require('./styles/main.less');
 
   G.enableLocalStorage(false);
   G.setIdleTimeOut(-1);
-
 
   // Create router structure
   ReactDOM.render(
@@ -38,13 +33,12 @@ jQuery(function () {
     Utils.execPythonMessage('from nwb_explorer.nwb_main import main');
     Utils.execPythonMessage('main()');
 
-    // ReactDOM.render(
-    // 	ReactDOM.render(<App  />, document.getElementById('mainContainer')));
-    // Utils.evalPythonMessage('hnn_geppetto.getData', []).then(response => {
-    // 	let data = Utils.convertToJSON(response);
-
-      
-
+    /*
+     * ReactDOM.render(
+     * 	ReactDOM.render(<App  />, document.getElementById('mainContainer')));
+     * Utils.evalPythonMessage('hnn_geppetto.getData', []).then(response => {
+     * 	let data = Utils.convertToJSON(response);
+     */
 
 
     // })
