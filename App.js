@@ -5,9 +5,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { grey500, blueGrey900, grey400 } from 'material-ui/styles/colors';
 
-import Console from '../../js/components/interface/console/Console';
-import TabbedDrawer from '../../js/components/interface/drawer/TabbedDrawer';
-import PythonConsole from '../../js/components/interface/pythonConsole/PythonConsole';
+import Console from 'geppetto-client/js/components/interface/console/Console';
+import TabbedDrawer from 'geppetto-client/js/components/interface/drawer/TabbedDrawer';
+import PythonConsole from 'geppetto-client/js/components/interface/pythonConsole/PythonConsole';
 
 // list of props here --> https://github.com/mui-org/material-ui/blob/master/src/styles/baseThemes/lightBaseTheme.js
 const customTheme = {

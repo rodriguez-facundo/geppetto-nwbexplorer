@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import ControlPanel from '../../../js/components/interface/controlPanel/controlpanel';
-import IconButton from '../../../js/components/controls/iconButton/IconButton';
+import ControlPanel from '../geppetto-client/js/components/interface/controlPanel/controlpanel';
+import IconButton from '../geppetto-client/js/components/controls/iconButton/IconButton';
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
