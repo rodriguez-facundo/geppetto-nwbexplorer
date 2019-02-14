@@ -35,9 +35,9 @@ jQuery(function () {
 
     /*
      * ReactDOM.render(
-     * 	ReactDOM.render(<App  />, document.getElementById('mainContainer')));
+     * ReactDOM.render(<App  />, document.getElementById('mainContainer')));
      * Utils.evalPythonMessage('hnn_geppetto.getData', []).then(response => {
-     * 	let data = Utils.convertToJSON(response);
+     * let data = Utils.convertToJSON(response);
      */
 
 
