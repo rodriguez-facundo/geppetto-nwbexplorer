@@ -8,7 +8,6 @@ jQuery(function () {
   const Utils = require('./Utils').default;
 
   const App = require('./App').default;
-  
 
   require('./styles/main.less');
 

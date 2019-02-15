@@ -5,6 +5,7 @@ import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import GeppettoPathService from '../services/GeppettoPathService';
 
 const styles = {
   modal: {
@@ -133,7 +134,7 @@ export default class NWBExplorer extends React.Component {
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
       }, 500);
 
-      fetch("/api/load/?nwbfile=" + nwbfile)
+      fetch(GeppettoPathService.serverPath("/api/load/?nwbfile=" + nwbfile))
         .then(response => {
           if (response.ok) {
             return response.json()
@@ -244,7 +245,7 @@ export default class NWBExplorer extends React.Component {
           GEPPETTO.ControlPanel.setControls({ "VisualCapability": [], "Common": ['plot'] });
           GEPPETTO.ControlPanel.addData(Instances);
 
-          fetch("/api/plots_available")
+          fetch(GeppettoPathService.serverPath("/api/plots_available"))
             .then(response => {
               if (response.ok) {
                 return response.json()
@@ -260,7 +261,7 @@ export default class NWBExplorer extends React.Component {
                   style={styles.menuItem} innerDivStyle={styles.menuItemDiv}
                   primaryText={plot.name}
                   onClick={() => {
-                    that.plotExternalHTML('/api/plot?plot=' + plot.id, plot.name)
+                    that.plotExternalHTML(GeppettoPathService.serverPath('/api/plot?plot=' + plot.id, plot.name))
                   }}/>
               });
             })
