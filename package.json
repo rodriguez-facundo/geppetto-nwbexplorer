@@ -16,12 +16,11 @@
     "start": "node --max_old_space_size=2048 node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress  --config webpack.config.dev.js"
   },
   "dependencies": {
-    "react-tap-event-plugin": "^2.0.1",
+    "@geppettoengine/geppetto-client": "openworm/geppetto-client#infra-merge",
+    "material-ui": "^0.20.2",
     "url-join": "4.0.0"
   },
-  "devDependencies": {
-    "@geppettoengine/geppetto-client": "openworm/geppetto-client#feature-eslint"
-  },
+  "devDependencies": {},
   "buildOptions": {
     "emitEntryPoint": true,
     "compile": {

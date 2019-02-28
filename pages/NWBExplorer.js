@@ -4,7 +4,6 @@ import IconButton from 'geppetto-client/js/components/controls/iconButton/IconBu
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import GeppettoPathService from '../services/GeppettoPathService';
 
 const styles = {
@@ -31,7 +30,6 @@ const styles = {
 
 const IMAGES_PATH = '/styles/images/';
 
-injectTapEventPlugin();
 
 const NWB_FILE_URL_PARAM = 'nwbfile';
 export default class NWBExplorer extends React.Component {
