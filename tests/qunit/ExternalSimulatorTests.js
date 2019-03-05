@@ -1,9 +1,8 @@
 
 define(function (require) {
   var QUnit = require("qunitjs");
-  var path = require('path');
   require('../../../components/ComponentFactory')(GEPPETTO);
-  global.GEPPETTO_CONFIGURATION = require('root/GeppettoConfiguration.json');
+  global.GEPPETTO_CONFIGURATION = require('../../../../GeppettoConfiguration.json');
   /**
    * Calls "start()" from QUnit to start qunit tests, closes socket and clears
    * handlers. Method is called from each test.

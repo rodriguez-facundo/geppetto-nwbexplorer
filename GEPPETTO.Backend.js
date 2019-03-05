@@ -15,7 +15,6 @@ app.get('/org.geppetto.frontend/geppetto', function (req, res) {
     }
     res.send(data.toString());
   });
-
 });
 
 // Creating web socket
@@ -28,13 +27,11 @@ app.ws('/org.geppetto.frontend/GeppettoServlet', function (ws, req) {
       ws.send(JSON.stringify({ "requestID":msgParsed['requestID'],"type":"geppetto_version","data":"{\"geppetto_version\":\"0.3.4\"}" }));
     }
   });
-
   console.log("Opening ws...")
   ws.send(JSON.stringify({ "type":"client_id","data":"{\"clientID\":\"Connection161\"}" }));
 });
 
+// Creating server
 app.listen(8080, function () {
   console.log('Geppetto listening on port 8080!');
 });
-
-
