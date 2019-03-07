@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 import IconButton from 'geppetto-client/js/components/controls/iconButton/IconButton';
 import Popover from '@material-ui/core/Popover';
-import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import GeppettoPathService from '../services/GeppettoPathService';
 
@@ -32,7 +31,7 @@ const IMAGES_PATH = '/styles/images/';
 
 
 const NWB_FILE_URL_PARAM = 'nwbfile';
-export default class NWBExplorer extends React.Component {
+export default class NWBExplorer extends Component {
 
   constructor (props) {
     super(props);
@@ -329,14 +328,11 @@ export default class NWBExplorer extends React.Component {
           <Popover
             open={this.state.plotButtonOpen}
             anchorEl={this.state.anchorEl}
-            onClose={this.handleClose}
             anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
             transformOrigin={{ horizontal: 'left', vertical: 'top' }}
-            onRequestClose={this.handleRequestClose}
+            onClose={this.handleRequestClose}
           >
-            <Menu>
-              {that.plotsAvailable}
-            </Menu>
+            {that.plotsAvailable}
           </Popover>
         </div>
       </div>
