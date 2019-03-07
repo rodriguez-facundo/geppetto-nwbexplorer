@@ -5,6 +5,7 @@ jQuery(function () {
   require('geppetto-client-initialization');
   const ReactDOM = require('react-dom');
   const React = require('react');
+  
   const Utils = require('./Utils').default;
 
   const App = require('./App').default;

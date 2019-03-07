@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 import IconButton from 'geppetto-client/js/components/controls/iconButton/IconButton';
-import Popover from 'material-ui/Popover';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
+import Popover from '@material-ui/core/Popover';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import GeppettoPathService from '../services/GeppettoPathService';
 
 const styles = {
@@ -175,12 +175,13 @@ export default class NWBExplorer extends React.Component {
             let response = responseJson;
             this.plotsAvailable = response.map(function (plot) {
               /** fill plotsAvailable (controls) with the response and with onClick = fetch("api/plot?plot=plot_id") */
-              return <MenuItem key={plot.id}
-                style={styles.menuItem} innerDivStyle={styles.menuItemDiv}
-                primaryText={plot.name}
-                onClick={() => {
-                  that.plotExternalHTML(GeppettoPathService.serverPath('/api/plot?plot=' + plot.id, plot.name))
-                }} />
+              return (
+                <MenuItem 
+                  key={plot.id}
+                  onClick={() => {
+                    that.plotExternalHTML(GeppettoPathService.serverPath('/api/plot?plot=' + plot.id, plot.name))
+                  }}>{plot.name}</MenuItem>
+              )
             });
           })
           .catch(error => console.log(error));
@@ -328,8 +329,9 @@ export default class NWBExplorer extends React.Component {
           <Popover
             open={this.state.plotButtonOpen}
             anchorEl={this.state.anchorEl}
+            onClose={this.handleClose}
             anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+            transformOrigin={{ horizontal: 'left', vertical: 'top' }}
             onRequestClose={this.handleRequestClose}
           >
             <Menu>
