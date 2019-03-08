@@ -32,6 +32,8 @@ jQuery(function () {
     console.log("Initializing Python extension");
     Utils.execPythonMessage('from nwb_explorer.nwb_main import main');
     Utils.execPythonMessage('main()');
+    GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
 
     /*
      * ReactDOM.render(
