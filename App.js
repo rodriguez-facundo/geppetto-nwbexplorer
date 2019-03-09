@@ -29,7 +29,7 @@ export default function App () {
       <div id="footerHeader">
         <TabbedDrawer labels={["Console", "Python"]} iconClass={["fa fa-terminal", "fa fa-flask"]}>
           <Console />
-          <PythonConsole pythonNotebookPath={"../notebooks/notebook.ipynb"} />
+          <PythonConsole pythonNotebookPath={"../notebook.ipynb"} />
         </TabbedDrawer>
       </div>
     </div>
