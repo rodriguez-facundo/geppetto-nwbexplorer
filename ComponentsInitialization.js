@@ -5,6 +5,7 @@ jQuery(function () {
   require('geppetto-client-initialization');
   const ReactDOM = require('react-dom');
   const React = require('react');
+  
   const Utils = require('./Utils').default;
 
   const App = require('./App').default;
@@ -31,6 +32,8 @@ jQuery(function () {
     console.log("Initializing Python extension");
     Utils.execPythonMessage('from nwb_explorer.nwb_main import main');
     Utils.execPythonMessage('main()');
+    GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
 
     /*
      * ReactDOM.render(
