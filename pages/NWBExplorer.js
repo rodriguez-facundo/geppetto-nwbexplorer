@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 import IconButton from 'geppetto-client/js/components/controls/iconButton/IconButton';
-import Popover from '@material-ui/core/Popover';
-import MenuItem from '@material-ui/core/MenuItem';
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
 import GeppettoPathService from '../services/GeppettoPathService';
 
 const styles = {
@@ -31,7 +32,7 @@ const IMAGES_PATH = '/styles/images/';
 
 
 const NWB_FILE_URL_PARAM = 'nwbfile';
-export default class NWBExplorer extends Component {
+export default class NWBExplorer extends React.Component {
 
   constructor (props) {
     super(props);
@@ -113,7 +114,8 @@ export default class NWBExplorer extends Component {
         let data = responseJson;
         this.newPlotWidgetIframe(plot_name, data.url);
       })
-      .catch(error => console.log(error));
+      .catch(error => console.error(error))
+    ;
   }
 
 
@@ -162,31 +164,33 @@ export default class NWBExplorer extends Component {
 
         this.fillControlPanel();
 
-        fetch(GeppettoPathService.serverPath("/api/plots_available"))
-          .then(response => {
-            if (response.ok) {
-              return response.json()
-            } else {
-              throw new Error('Something went wrong');
-            }
-          })
-          .then(responseJson => {
-            let response = responseJson;
-            this.plotsAvailable = response.map(function (plot) {
-              /** fill plotsAvailable (controls) with the response and with onClick = fetch("api/plot?plot=plot_id") */
-              return (
-                <MenuItem 
-                  key={plot.id}
-                  onClick={() => {
-                    that.plotExternalHTML(GeppettoPathService.serverPath('/api/plot?plot=' + plot.id, plot.name))
-                  }}>{plot.name}</MenuItem>
-              )
-            });
-          })
-          .catch(error => console.log(error));
+
+        // TODO we'll readd the support for external plots later
+        //   fetch(GeppettoPathService.serverPath("/api/plots_available"))
+        //     .then(response => {
+        //       if (response.ok) {
+        //         return response.json()
+        //       } else {
+        //         throw new Error('Something went wrong');
+        //       }
+        //     })
+        //     .then(responseJson => {
+        //       let response = responseJson;
+        //       this.plotsAvailable = response.map(function (plot) {
+        //         /** fill plotsAvailable (controls) with the response and with onClick = fetch("api/plot?plot=plot_id") */
+        //         return <MenuItem key={plot.id}
+        //           style={styles.menuItem} innerDivStyle={styles.menuItemDiv}
+        //           primaryText={plot.name}
+        //           onClick={() => {
+        //             that.plotExternalHTML(GeppettoPathService.serverPath('/api/plot?plot=' + plot.id, plot.name))
+        //           }} />
+        //       });
+        //     })
+        //     .catch(error => console.error(error)); //
+
 
       })
-      .catch(error => console.log(error));
+      .catch(error => console.error(error));
 
   }
 
@@ -278,7 +282,7 @@ export default class NWBExplorer extends Component {
   }
 
   getNWBFile () {
-    let nwbfile = "./test_data/sample.nwb";
+    let nwbfile = "https://github.com/OpenSourceBrain/NWBShowcase/raw/master/NWB/time_series_data.nwb";
     let urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get(NWB_FILE_URL_PARAM)) {
       nwbfile = urlParams.get(NWB_FILE_URL_PARAM);
@@ -317,7 +321,7 @@ export default class NWBExplorer extends Component {
         <IconButton style={{ position: 'absolute', left: 15, top: 100 }} onClick={() => {
           $('#controlpanel').show();
         }} icon={"fa-list"} />
-        <div>
+        {/* <div>
           <IconButton
             onClick={this.handleClick}
             style={{ position: 'absolute', left: 15, top: 140 }}
@@ -329,12 +333,14 @@ export default class NWBExplorer extends Component {
             open={this.state.plotButtonOpen}
             anchorEl={this.state.anchorEl}
             anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-            transformOrigin={{ horizontal: 'left', vertical: 'top' }}
-            onClose={this.handleRequestClose}
+            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+            onRequestClose={this.handleRequestClose}
           >
-            {that.plotsAvailable}
+            <Menu>
+              {that.plotsAvailable}
+            </Menu>
           </Popover>
-        </div>
+        </div> */}
       </div>
 
     );
