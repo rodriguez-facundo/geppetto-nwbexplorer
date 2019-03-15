@@ -1,6 +1,7 @@
 global.jQuery = require("jquery");
 global.GEPPETTO_CONFIGURATION = require('./GeppettoConfiguration.json');
 
+
 jQuery(function () {
   require('geppetto-client-initialization');
   const ReactDOM = require('react-dom');
@@ -10,6 +11,10 @@ jQuery(function () {
 
   const App = require('./App').default;
 
+  // The service is also called from the parent frame to change file
+  const nwbFileService = require('./services/NWBFileService').default;
+  
+  window.nwbFileService = nwbFileService;
   require('./styles/main.less');
 
   G.enableLocalStorage(false);
@@ -30,8 +35,10 @@ jQuery(function () {
 
   GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
     console.log("Initializing Python extension");
+
     Utils.execPythonMessage('from nwb_explorer.nwb_main import main');
-    Utils.execPythonMessage('main()');
+
+    Utils.evalPythonMessage('main', [nwbFileService.getNWBFileUrl()]);
     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
 

@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 import IconButton from 'geppetto-client/js/components/controls/iconButton/IconButton';
-import Popover from '@material-ui/core/Popover';
-import MenuItem from '@material-ui/core/MenuItem';
+import nwbFileService from '../services/NWBFileService';
+/*
+ * Temporarely disabled the popover with holoviews plots
+ * import Popover from '@material-ui/core/Popover';
+ * import MenuItem from '@material-ui/core/MenuItem';
+ */
 import GeppettoPathService from '../services/GeppettoPathService';
 
 const styles = {
@@ -30,7 +34,6 @@ const styles = {
 const IMAGES_PATH = '/styles/images/';
 
 
-const NWB_FILE_URL_PARAM = 'nwbfile';
 export default class NWBExplorer extends React.Component {
 
   constructor (props) {
@@ -132,7 +135,7 @@ export default class NWBExplorer extends React.Component {
     setTimeout(function () {
       GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
     }, 500);
-    fetch(GeppettoPathService.serverPath("/api/load/?nwbfile=" + this.getNWBFile()))
+    fetch(GeppettoPathService.serverPath("/api/load/?nwbfile=" + nwbFileService.getNWBFileUrl()))
       .then(response => {
         if (response.ok) {
           return response.json()
@@ -280,14 +283,6 @@ export default class NWBExplorer extends React.Component {
     GEPPETTO.ControlPanel.addData(Instances);
   }
 
-  getNWBFile () {
-    let nwbfile = "https://github.com/OpenSourceBrain/NWBShowcase/raw/master/NWB/time_series_data.nwb";
-    let urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get(NWB_FILE_URL_PARAM)) {
-      nwbfile = urlParams.get(NWB_FILE_URL_PARAM);
-    }
-    return nwbfile;
-  }
 
   handleClick (event) {
     // This prevents ghost click.
