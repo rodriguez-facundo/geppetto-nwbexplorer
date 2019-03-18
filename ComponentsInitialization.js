@@ -14,7 +14,7 @@ jQuery(function () {
   // The service is also called from the parent frame to change file
   const nwbFileService = require('./services/NWBFileService').default;
   
-  window.nwbFileService = nwbFileService;
+  window.updateFile = nwbFileService.setNWBFileUrl;
   require('./styles/main.less');
 
   G.enableLocalStorage(false);
@@ -33,25 +33,38 @@ jQuery(function () {
   GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NWB explorer");
   console.log("Initializing NWB explorer")
 
+  // Support url parameter nwbfile
+  if (nwbFileService.getNWBFileUrl() != undefined) {
+    nwbFileService.loadNWBFile();
+  }
+
   GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
     console.log("Initializing Python extension");
 
     Utils.execPythonMessage('from nwb_explorer.nwb_main import main');
-
-    Utils.evalPythonMessage('main', [nwbFileService.getNWBFileUrl()]);
+   
     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
-
-    /*
-     * ReactDOM.render(
-     * ReactDOM.render(<App  />, document.getElementById('mainContainer')));
-     * Utils.evalPythonMessage('hnn_geppetto.getData', []).then(response => {
-     * let data = Utils.convertToJSON(response);
-     */
-
-
-    // })
+    if (!nwbFileService.isLoadedInNotebook()) {
+      nwbFileService.loadNWBFileInNotebook(); // We may have missed the loading if notebook was not initialized at the time of the url change
+    }
   });
+
+
+  // This allows to change the file from the outside frame
+  window.addEventListener('message', function (event) { 
+
+    // Here we would expect some cross-origin check, but we don't do anything more than load a nwb file here
+    if (typeof(event.data) == 'string') {
+      // The data sent with postMessage is stored in event.data 
+      console.debug(event.data); 
+      nwbFileService.setNWBFileUrl(event.data);
+      nwbFileService.loadNWBFile();
+      
+    }
+
+    
+  }); 
 
   
 });

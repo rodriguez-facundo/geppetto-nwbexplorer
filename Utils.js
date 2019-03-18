@@ -45,6 +45,9 @@ const Utils = {
   parsePythonException (exception){
     return <pre dangerouslySetInnerHTML={{ __html: IPython.utils.fixConsole(exception) }} />
   },
+  isNotebookLoaded () {
+    return window.IPython != undefined;
+  },
 
   execPythonMessage,
   evalPythonMessage
