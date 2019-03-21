@@ -1,5 +1,5 @@
 import React from 'react';
-import NWBExplorer from './NWBExplorer';
+import NWBExplorer from '../components/NWBExplorer';
 
 export default class MainTemplate extends React.Component {
 

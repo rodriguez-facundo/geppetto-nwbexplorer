@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 import IconButton from 'geppetto-client/js/components/controls/iconButton/IconButton';
-
+import { controlPanelConfig, controlPanelColMeta, controlPanelControlConfigs, controlPanelColumns } from './configuration/controlPanelConfiguration';
 /*
  * Temporarely disabled the popover with holoviews plots
  * import Popover from '@material-ui/core/Popover';
@@ -129,7 +129,13 @@ export default class NWBExplorer extends React.Component {
 
   componentDidMount () {
     let that = this;
-    
+    if (this.refs.controlpanelref !== undefined) {
+      this.refs.controlpanelref.setColumnMeta(controlPanelColMeta);
+      this.refs.controlpanelref.setColumns(controlPanelColumns);
+      this.refs.controlpanelref.setControlsConfig(controlPanelConfig);
+      this.refs.controlpanelref.setControls(controlPanelControlConfigs);
+    }
+
 
   }
 
@@ -159,6 +165,11 @@ export default class NWBExplorer extends React.Component {
           <ControlPanel
             icon={"styles.Modal"}
             useBuiltInFilters={false}
+            controlPanelColMeta={controlPanelColMeta}
+            controlPanelConfig={controlPanelConfig}
+            columns={controlPanelColumns}
+            controlPanelControlConfigs={controlPanelControlConfigs}
+            ref="controlpanelref"
           >
           </ControlPanel>
         </div>
