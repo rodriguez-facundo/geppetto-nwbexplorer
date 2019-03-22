@@ -117,7 +117,7 @@ export default class NWBExplorer extends React.Component {
       .catch(error => console.error(error))
     ;
   }
-
+ 
 
   getOpenedWidgets () {
     return this.widgets;
@@ -129,16 +129,36 @@ export default class NWBExplorer extends React.Component {
 
   componentDidMount () {
     let that = this;
+    this.initControlPanel();
+  }
+
+
+  async initControlPanel () {
     if (this.refs.controlpanelref !== undefined) {
       this.refs.controlpanelref.setColumnMeta(controlPanelColMeta);
       this.refs.controlpanelref.setColumns(controlPanelColumns);
       this.refs.controlpanelref.setControlsConfig(controlPanelConfig);
       this.refs.controlpanelref.setControls(controlPanelControlConfigs);
     }
+    let groupsIDs = [];
+    let groups = Instances.getInstance("nwb.getVariable().getType().getVariables()")
+      .map(group => {
+        let groupID = group.wrappedObj.id;
+        groupsIDs.push(groupID);
+        return Instances.getInstance(groupID + ".getVariable().getType().getVariables()");
+      });
+    groups.forEach((g, index) => g.map(x => Instances.getInstance(groupsIDs[index] + "." + x.wrappedObj.id)));
 
 
+    await this.refs.controlpanelref.setDataFilter(function (entities) {
+      /** adds all non-time instances to control panel */
+      return GEPPETTO.ModelFactory.getAllInstancesOfType(window.Model.common.StateVariable).
+        filter(
+          x => x.id !== "time"
+        );
+    });
+    this.refs.controlpanelref.addData(Instances);
   }
-
 
   handleClick (event) {
     // This prevents ghost click.
@@ -159,8 +179,7 @@ export default class NWBExplorer extends React.Component {
   render () {
     var that = this;
     return (
-      <div id="instantiatedContainer" style={{ height: '100%', width: '100%' }}>
-        <div id="logo"></div>
+      <div id="controls">
         <div id="controlpanel" style={{ top: 0 }}>
           <ControlPanel
             icon={"styles.Modal"}

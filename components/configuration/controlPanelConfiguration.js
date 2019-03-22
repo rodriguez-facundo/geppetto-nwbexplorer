@@ -48,7 +48,7 @@ function clickAction ($instance$) {
     }
   }
 }
-window.controlPanelClickAction = clickAction; // we don't like global variables but this saves us from putting the code in a string 
+window.controlPanelClickAction = clickAction; // we don't like global variables but we like less putting the code in a string 
 
 let controlPanelConfig = {
   "VisualCapability": {},
@@ -76,3 +76,4 @@ module.exports = {
   controlPanelControlConfigs,
   controlPanelColumns
 };
+

@@ -29,7 +29,7 @@ class NWBFileService {
     return this.notebookloaded;
   }
 
-  loadNWBFile () {
+  loadNWBFile (callback) {
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
     fetch(GeppettoPathService.serverPath("/api/load/?nwbfile=" + this.nwbfile))
       .then(response => {
@@ -40,14 +40,10 @@ class NWBFileService {
         }
       })
       .then(responseJson => {
-        GEPPETTO.Manager.loadModel(responseJson);
-        GEPPETTO.CommandController.log("The NWB file was loaded");
+       
+        callback(responseJson);
         GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-        this.fillControlPanel();
-
-        if (Utils.isNotebookLoaded()){
-          this.loadNWBFileInNotebook();
-        }
+       
         
         // TODO we'll readd the support for external plots later
         //   fetch(GeppettoPathService.serverPath("/api/plots_available"))
@@ -75,7 +71,6 @@ class NWBFileService {
       .catch(error => console.error(error));
     
     
-    GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
   }
 
   loadNWBFileInNotebook () {
@@ -100,21 +95,7 @@ class NWBFileService {
    * where each group entry contains the corresponding data from the nwb file.
    */
   fillControlPanel () {
-    let groupsIDs = [];
-    let groups = Instances.getInstance("nwb.getVariable().getType().getVariables()")
-      .map(group => {
-        let groupID = group.wrappedObj.id;
-        groupsIDs.push(groupID);
-        return Instances.getInstance(groupID + ".getVariable().getType().getVariables()");
-      });
-    groups.forEach((g, index) => g.map(x => Instances.getInstance(groupsIDs[index] + "." + x.wrappedObj.id)));
-   
-    GEPPETTO.ControlPanel.setDataFilter(function (entities) {
-      /** adds all non-time instances to control panel */
-      return GEPPETTO.ModelFactory.getAllInstancesOfType(window.Model.common.StateVariable).filter(x => x.id !== "time");
-    });
-
-    GEPPETTO.ControlPanel.addData(Instances);
+    
   }
 }
 
