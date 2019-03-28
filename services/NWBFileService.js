@@ -5,7 +5,7 @@ const NWB_FILE_URL_PARAM = 'nwbfile';
 
 class NWBFileService {
 
-  constructor (){
+  constructor () {
     this.nwbfile = undefined;
     this.notebookloaded = false;
   }
@@ -22,16 +22,16 @@ class NWBFileService {
     this.nwbfile = nwbfile;
     console.log("new file", nwbfile);
     this.notebookloaded = false;
-    
+
   }
 
   isLoadedInNotebook () {
     return this.notebookloaded;
   }
 
-  loadNWBFile (callback) {
+  async loadNWBFile () {
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
-    fetch(GeppettoPathService.serverPath("/api/load/?nwbfile=" + this.nwbfile))
+    let responseJson = await fetch(GeppettoPathService.serverPath("/api/load/?nwbfile=" + this.nwbfile))
       .then(response => {
         if (response.ok) {
           return response.json();
@@ -39,38 +39,25 @@ class NWBFileService {
           throw new Error('Something went wrong');
         }
       })
-      .then(responseJson => {
-       
-        callback(responseJson);
-        GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-       
-        
-        // TODO we'll readd the support for external plots later
-        //   fetch(GeppettoPathService.serverPath("/api/plots_available"))
-        //     .then(response => {
-        //       if (response.ok) {
-        //         return response.json()
-        //       } else {
-        //         throw new Error('Something went wrong');
-        //       }
-        //     })
-        //     .then(responseJson => {
-        //       let response = responseJson;
-        //       this.plotsAvailable = response.map(function (plot) {
-        //         /** fill plotsAvailable (controls) with the response and with onClick = fetch("api/plot?plot=plot_id") */
-        //         return <MenuItem key={plot.id}
-        //           style={styles.menuItem} innerDivStyle={styles.menuItemDiv}
-        //           primaryText={plot.name}
-        //           onClick={() => {
-        //             that.plotExternalHTML(GeppettoPathService.serverPath('/api/plot?plot=' + plot.id, plot.name))
-        //           }} />
-        //       });
-        //     })
-        //     .catch(error => console.error(error)); //
+      .catch(error => console.error(error));
+
+    GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+    return responseJson;
+  }
+
+  async importValue (instance) {
+    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading data");
+    let responseJson = await fetch(GeppettoPathService.serverPath("/api/importvalue/?path=" + instance.getPath()))
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Something went wrong');
+        }
       })
       .catch(error => console.error(error));
-    
-    
+    GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+    return responseJson;
   }
 
   loadNWBFileInNotebook () {
@@ -78,6 +65,7 @@ class NWBFileService {
     Utils.evalPythonMessage('main', [this.getNWBFileUrl()]);
     this.notebookloaded = true;
   }
+
 
   /**
    * Retrieves instances of state variables
@@ -95,7 +83,7 @@ class NWBFileService {
    * where each group entry contains the corresponding data from the nwb file.
    */
   fillControlPanel () {
-    
+
   }
 }
 

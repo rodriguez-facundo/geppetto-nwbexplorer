@@ -12,6 +12,7 @@ const App = require('./components/App').default;
 
 // The service is also called from the parent frame to change file
 const nwbFileService = require('./services/NWBFileService').default;
+const nwbManager = require('./services/NWBGeppettoManager').default;
 
 window.updateFile = nwbFileService.setNWBFileUrl;
 require('./styles/main.less');
@@ -27,6 +28,7 @@ let app = null;
   GEPPETTO.G.setIdleTimeOut(-1);
   GEPPETTO.G.debug(true); // Change this to true to see messages on the Geppetto console while loading
   GEPPETTO.Resources.COLORS.DEFAULT = "#008ea0";
+  GEPPETTO.Manager = nwbManager; // Override standard Geppetto manager
   console.log(Utils);
   GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NWB explorer");
   console.log("Initializing NWB explorer")
@@ -37,23 +39,24 @@ let app = null;
   );
 })();
 
-(function loadNWBFile () {
-// The first way to specify the file to load is the url parameter "nwbfile"
+(async function loadNWBFile () {
+  // The first way to specify the file to load is the url parameter "nwbfile"
   if (nwbFileService.getNWBFileUrl() != undefined) {
-    
-    nwbFileService.loadNWBFile(initModel);
+
+    let nwbFileGeppettoModel = await nwbFileService.loadNWBFile();
+    initModel(nwbFileGeppettoModel);
   }
 
   // The second way is sending a message, for instance from the parent frame
-  window.addEventListener('message', function (event) {
+  window.addEventListener('message', async function (event) {
 
     // Here we would expect some cross-origin check, but we don't do anything more than load a nwb file here
     if (typeof (event.data) == 'string') {
-    // The data sent with postMessage is stored in event.data 
+      // The data sent with postMessage is stored in event.data 
       console.debug(event.data);
       nwbFileService.setNWBFileUrl(event.data);
-      nwbFileService.loadNWBFile(initModel);
-
+      let nwbFileGeppettoModel = await nwbFileService.loadNWBFile();
+      initModel(nwbFileGeppettoModel);
     }
   });
 })();
@@ -75,11 +78,14 @@ GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
 function initModel (nwbFileGeppettoModel) {
   GEPPETTO.Manager.loadModel(nwbFileGeppettoModel);
   GEPPETTO.CommandController.log("The NWB file was loaded");
-  
+  // GEPPETTO.Manager.loadProject(GEPPETTO.ProjectFactory.createProjectNode({ id:0 }));
+
   app.setState({ nwbFile: nwbFileGeppettoModel }); // triggers the component reload
   if (Utils.isNotebookLoaded()) {
     this.loadNWBFileInNotebook();
   }
+
+
 }
 
 
