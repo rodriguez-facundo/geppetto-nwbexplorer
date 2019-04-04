@@ -42,22 +42,24 @@ class NWBFileService {
       .catch(error => console.error(error));
 
     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
     return responseJson;
   }
 
   async importValue (instance) {
-    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading data");
-    let responseJson = await fetch(GeppettoPathService.serverPath("/api/importvalue/?path=" + instance.getPath()))
+    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading data for " + instance.getPath());
+    let instanceValue = await fetch(GeppettoPathService.serverPath("/api/importvalue/?path=" + instance.getPath()))
       .then(response => {
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error('Something went wrong');
+          throw new Error('Something went wrong while retrieving ' + instance.getPath());
         }
       })
       .catch(error => console.error(error));
     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-    return responseJson;
+    GEPPETTO.Manager.swapResolvedValue(instanceValue);
+    return instanceValue;
   }
 
   loadNWBFileInNotebook () {

@@ -118,17 +118,32 @@ export default class NWBExplorer extends React.Component {
   }
 
 
-  retrieveAndPlotTimeSeries ($instance$) {
+  async retrieveAndPlotTimeSeries ($instance$) {
     let data = Instances.getInstance($instance$.getPath() + '.data');
     let time = Instances.getInstance($instance$.getPath() + '.time');
 
-    data.getValue().resolve(dataValue => {
-      time.getValue().resolve(timeValue => {
-        G.addWidget(0).then(w => {
-          w.plotXYData(dataValue, timeValue).setPosition(130, 35).setName($instance$.getPath());
-        });
-      });
+    // TODO store the value and add the check to make the load only one time
+    let dataValue = await nwbFileService.importValue(data);
+    let timeValue = await nwbFileService.importValue(time);
+    /*
+     * data.setValue(dataValue);
+     * time.setValue(timeValue);
+     */
+    G.addWidget(0).then(w => {
+      w.plotXYData(data, time).setPosition(130, 35).setName($instance$.getPath());
     });
+    /*
+     * Using the resolve capability should be the proper way to resolve the values, but the paths coming from values are not correct
+     * data.getValue().resolve(dataValue => {
+     *   time.getValue().resolve(timeValue => {
+     *     G.addWidget(0).then(w => {
+     *       w.plotXYData(data, time).setPosition(130, 35).setName($instance$.getPath());
+     *     });
+     *   });
+     * });
+     */
+
+    // TODO add the value coming from importValue to current data and time instances
     
   }
 
