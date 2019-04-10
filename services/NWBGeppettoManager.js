@@ -11,14 +11,14 @@ class NWBGeppettoManager extends Manager{
   }
   
 
-  /**
-   * Resolve import type
-   *
-   * @param typePath
-   */
-  resolveImportType (typePaths, callback) {
-    throw "operation not supported on NWB Manager";
-  }
+  // /**
+  //  * Resolve import type
+  //  *
+  //  * @param typePath
+  //  */
+  // resolveImportType (typePaths, callback) {
+  //   throw "operation not supported on NWB Manager";
+  // }
 
 
   /**

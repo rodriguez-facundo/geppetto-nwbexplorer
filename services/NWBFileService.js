@@ -59,6 +59,24 @@ class NWBFileService {
       .catch(error => console.error(error));
     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
     GEPPETTO.Manager.swapResolvedValue(instanceValue);
+  }
+
+  /**
+   * Like importValue but it's not meant to update the model. Just returns the value
+   * @param {} instance 
+   */
+  async retrieveValue (instance) {
+    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading data for " + instance.getPath());
+    let instanceValue = await fetch(GeppettoPathService.serverPath("/api/retrievevalue/?path=" + instance.getPath()))
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Something went wrong while retrieving ' + instance.getPath());
+        }
+      })
+      .catch(error => console.error(error));
+    GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
     return instanceValue;
   }
 

@@ -31,7 +31,8 @@ let app = null;
   GEPPETTO.Manager = nwbManager; // Override standard Geppetto manager
   console.log(Utils);
   GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NWB explorer");
-  console.log("Initializing NWB explorer")
+  console.log("Initializing NWB explorer");
+  GEPPETTO.Manager.loadProject({ id:0 }, false);
   // Create router structure
   app = ReactDOM.render(
     <App />
@@ -41,11 +42,7 @@ let app = null;
 
 (async function loadNWBFile () {
   // The first way to specify the file to load is the url parameter "nwbfile"
-  if (nwbFileService.getNWBFileUrl() != undefined) {
-
-    let nwbFileGeppettoModel = await nwbFileService.loadNWBFile();
-    initModel(nwbFileGeppettoModel);
-  }
+ 
 
   // The second way is sending a message, for instance from the parent frame
   window.addEventListener('message', async function (event) {
@@ -55,8 +52,13 @@ let app = null;
       // The data sent with postMessage is stored in event.data 
       console.debug(event.data);
       nwbFileService.setNWBFileUrl(event.data);
-      let nwbFileGeppettoModel = await nwbFileService.loadNWBFile();
-      initModel(nwbFileGeppettoModel);
+      /*
+       * let nwbFileGeppettoModel = await nwbFileService.loadNWBFile();
+       * initModel(nwbFileGeppettoModel);
+       */
+
+      GEPPETTO.CommandController.execute('Project.loadFromURL("' + nwbFileService.getNWBFileUrl() + '")');
+      // GEPPETTO.Manager.resolveImportType(, initModel);
     }
   });
 })();
@@ -69,23 +71,29 @@ GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
   Utils.execPythonMessage('from nwb_explorer.nwb_main import main');
 
   GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner); // Hide  "Initialising NWB explorer"
+  if (nwbFileService.getNWBFileUrl() != undefined) {
 
+    /*
+     * let nwbFileGeppettoModel = await nwbFileService.loadNWBFile();
+     * initModel(nwbFileGeppettoModel);
+     */
+    GEPPETTO.CommandController.execute('Project.loadFromURL("' + nwbFileService.getNWBFileUrl() + '")');
+    // GEPPETTO.Manager.resolveImportType(nwbFileService.getNWBFileUrl(), initModel);
+    
+  }
   if (!nwbFileService.isLoadedInNotebook()) {
     nwbFileService.loadNWBFileInNotebook(); // We may have missed the loading if notebook was not initialized at the time of the url change
   }
 });
 
-function initModel (nwbFileGeppettoModel) {
-  GEPPETTO.Manager.loadModel(nwbFileGeppettoModel);
-  GEPPETTO.CommandController.log("The NWB file was loaded");
-  // GEPPETTO.Manager.loadProject(GEPPETTO.ProjectFactory.createProjectNode({ id:0 }));
 
-  app.setState({ nwbFile: nwbFileGeppettoModel }); // triggers the component reload
+GEPPETTO.on(GEPPETTO.Events.Model_loaded, () => {
+  // 
+
+  app.setState({ nwbFile: Model }); // triggers the component to reload
   if (Utils.isNotebookLoaded()) {
     this.loadNWBFileInNotebook();
   }
 
 
-}
-
-
+});
