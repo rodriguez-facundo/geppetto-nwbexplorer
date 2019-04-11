@@ -32,7 +32,7 @@ let app = null;
   console.log(Utils);
   GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Initialising NWB explorer");
   console.log("Initializing NWB explorer");
-  GEPPETTO.Manager.loadProject({ id:0 }, false);
+ 
   // Create router structure
   app = ReactDOM.render(
     <App />
@@ -91,8 +91,8 @@ GEPPETTO.on(GEPPETTO.Events.Model_loaded, () => {
   // 
 
   app.setState({ nwbFile: Model }); // triggers the component to reload
-  if (Utils.isNotebookLoaded()) {
-    this.loadNWBFileInNotebook();
+  if (nwbFileService.isLoadedInNotebook()) {
+    nwbFileService.loadNWBFileInNotebook();
   }
 
 
