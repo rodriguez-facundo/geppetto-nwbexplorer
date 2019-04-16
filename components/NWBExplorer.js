@@ -75,7 +75,7 @@ export default class NWBExplorer extends React.Component {
      * Instances.addInstances seems not to be working, we add with getInstance
      */
     let timeseriesInstances = GEPPETTO.ModelFactory.allPaths.
-      filter(pathobj => ~pathobj.type.indexOf('timeseries')).
+      // filter(pathobj => ~pathobj.type.indexOf('timeseries')).
       map(pathobj => Instances.getInstance(pathobj.path));
     
 
@@ -126,19 +126,6 @@ export default class NWBExplorer extends React.Component {
     data.getValue().getPath = () => data.getPath()
     time.getValue().getPath = () => time.getPath()
 
-
-    /*
-     * // TODO store the value and add the check to make the load only one time
-     * await nwbFileService.importValue(data);
-     * await nwbFileService.importValue(time);
-     */
-    /*
-     * data.setValue(dataValue);
-     * time.setValue(timeValue);
-     */
-    G.addWidget(0).then(w => {
-      w.plotXYData(data, time).setPosition(130, 35).setName($instance$.getPath());
-    });
     
     // Using the resolve capability should be the proper way to resolve the values, but the paths coming from values are not correct
     data.getValue().resolve(dataValue => {

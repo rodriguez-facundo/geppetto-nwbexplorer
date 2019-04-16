@@ -29,6 +29,7 @@ class NWBFileService {
     return this.notebookloaded;
   }
 
+  
   async loadNWBFile () {
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
     let responseJson = await fetch(GeppettoPathService.serverPath("/api/load/?nwbfile=" + this.nwbfile))
@@ -48,7 +49,7 @@ class NWBFileService {
 
   async importValue (instance) {
     GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading data for " + instance.getPath());
-    let instanceValue = await fetch(GeppettoPathService.serverPath("/api/importvalue/?path=" + instance.getPath()))
+    let newModel = await fetch(GeppettoPathService.serverPath("/api/importvalue/?path=" + instance.getPath()))
       .then(response => {
         if (response.ok) {
           return response.json();
@@ -58,7 +59,7 @@ class NWBFileService {
       })
       .catch(error => console.error(error));
     GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-    GEPPETTO.Manager.swapResolvedValue(instanceValue);
+    GEPPETTO.Manager.swapResolvedValue(newModel);
   }
 
   /**
