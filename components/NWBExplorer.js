@@ -136,13 +136,23 @@ export default class NWBExplorer extends React.Component {
           G.addWidget(0).then(w => {
             GEPPETTO.ModelFactory.deleteInstance(data);
             GEPPETTO.ModelFactory.deleteInstance(time);
+            w.plotOptions.xaxis.title.font.color = '#2d5a88'
+            w.plotOptions.yaxis.title.font.color = '#2d5a88'
             w.plotXYData(Instances.getInstance(data_path), Instances.getInstance(time_path)).setPosition(130, 100).setName($instance$.getPath());
+            if (!w.plotOptions.yaxis.title.text) {
+              w.setOptions({ yaxis: { title: { text: 'Arbitrary unit (Au)' } }, margin: { l: 40 } })
+            }
           });
         });
       });
     } else {
       G.addWidget(0).then(w => {
+        w.plotOptions.xaxis.title.font.color = '#2d5a88'
+        w.plotOptions.yaxis.title.font.color = '#2d5a88'
         w.plotXYData(data, time).setPosition(130, 100).setName($instance$.getPath());
+        if (!w.plotOptions.yaxis.title.text) {
+          w.setOptions({ yaxis: { title: { text: 'Arbitrary unit (Au)' } }, margin: { l: 40 } })
+        }
       });
     }
      
