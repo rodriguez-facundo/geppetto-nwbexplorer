@@ -91,7 +91,7 @@ GEPPETTO.on(GEPPETTO.Events.Model_loaded, () => {
   // 
 
   app.setState({ nwbFile: Model }); // triggers the component to reload
-  if (nwbFileService.isLoadedInNotebook()) {
+  if (!nwbFileService.isLoadedInNotebook()) {
     nwbFileService.loadNWBFileInNotebook();
   }
 
