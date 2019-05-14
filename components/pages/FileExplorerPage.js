@@ -12,7 +12,7 @@ const theme = createMuiTheme({
   },
   palette: {
     primary: { main: grey[500] },
-    secondary: { main: blueGrey[900] },
+    secondary: { main: '#3E3264' },
     ternary: { main: '#b0ac9a' }
   }
 });
@@ -25,7 +25,9 @@ export default class FileExplorerPage extends React.Component{
         <div className="mainContainer">
           <div className="midContainer">
             <div id="instantiatedContainer" style={{ height: '100%', width: '100%' }}>
-              <div id="logo"></div>
+              <header id="main-header">
+                <h1>Welcome to NWB Explorer</h1>
+              </header>
               <NWBExplorer />
             </div>
           </div>
