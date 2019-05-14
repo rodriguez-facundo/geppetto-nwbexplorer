@@ -13,25 +13,14 @@ class NWBFileService {
   getNWBFileUrl () {
     let urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get(NWB_FILE_URL_PARAM)) {
-      this.nwbfile = urlParams.get(NWB_FILE_URL_PARAM);
+      return urlParams.get(NWB_FILE_URL_PARAM);
     }
-    return this.nwbfile;
+    return null;
   }
 
-  setNWBFileUrl (nwbfile) {
-    this.nwbfile = nwbfile;
-    console.log("new file", nwbfile);
-    this.notebookloaded = false;
 
-  }
-
-  isLoadedInNotebook () {
-    return this.notebookloaded;
-  }
-
-  
   async loadNWBFile () {
-    GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
+    // GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, "Loading NWB file");
     let responseJson = await fetch(GeppettoPathService.serverPath("/api/load/?nwbfile=" + this.nwbfile))
       .then(response => {
         if (response.ok) {
@@ -42,7 +31,7 @@ class NWBFileService {
       })
       .catch(error => console.error(error));
 
-    GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+    // GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
 
     return responseJson;
   }
@@ -81,31 +70,10 @@ class NWBFileService {
     return instanceValue;
   }
 
-  loadNWBFileInNotebook () {
-    console.info("Loading file into notebook:", this.getNWBFileUrl())
-    Utils.evalPythonMessage('main', [this.getNWBFileUrl()]);
-    this.notebookloaded = true;
+  async loadNWBFileInNotebook (nwbFileUrl) {
+    return await Utils.evalPythonMessage('main', [nwbFileUrl]);
   }
 
-
-  /**
-   * Retrieves instances of state variables
-   * Assuming a group structure such as
-   * nwb.group1
-   * nwb.group2
-   *
-   * group1.time
-   * group1.stimulus
-   *
-   * group2.time
-   * group2.df_over_f_01
-   * group2.df_over_f_02
-   *
-   * where each group entry contains the corresponding data from the nwb file.
-   */
-  fillControlPanel () {
-
-  }
 }
 
 export const nwbFileService = new NWBFileService();

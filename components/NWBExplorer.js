@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { connect } from "react-redux";
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 import IconButton from 'geppetto-client/js/components/controls/iconButton/IconButton';
 import { controlPanelConfig, controlPanelColMeta, controlPanelControlConfigs, controlPanelColumns } from './configuration/controlPanelConfiguration';
-import nwbFileService from '../services/NWBFileService';
+
 import GeppettoPathService from "../services/GeppettoPathService";
 /*
  * Temporarely disabled the popover with holoviews plots
@@ -34,7 +35,7 @@ const styles = {
 const IMAGES_PATH = '/styles/images/';
 
 
-export default class NWBExplorer extends React.Component {
+class NWBExplorer extends React.Component {
 
   constructor (props) {
     super(props);
@@ -58,9 +59,17 @@ export default class NWBExplorer extends React.Component {
   }
 
   componentDidMount () {
-    let that = this;
-    this.initControlPanel();
+    
   }
+
+
+  componentDidUpdate (prevProps, prevState) {
+    if (!prevProps.model && this.props.model) {
+      this.initControlPanel();
+    }
+    
+  }
+
 
   async initControlPanel () {
     if (this.refs.controlpanelref !== undefined) {
@@ -81,7 +90,7 @@ export default class NWBExplorer extends React.Component {
 
     /*
      * Change the data filter on the control panel
-     * Note: await is needed because of setState in the control panel
+     * Note: await is needed because of setState in the control panel which is asyncronous
      */
     await this.refs.controlpanelref.setDataFilter(function (entities) { 
       /** adds all non-time instances to control panel */
@@ -91,6 +100,7 @@ export default class NWBExplorer extends React.Component {
         );
     });
     this.refs.controlpanelref.addData(timeseriesInstances);
+    this.refs.controlpanelref.open();
   }
 
   handleCloseDialog = () => {
@@ -102,7 +112,9 @@ export default class NWBExplorer extends React.Component {
    * Operates on an instance of a state variable and plots in accordance
    */
   clickAction ($instance$) {
+    // TODO handle time series loading with redux actions
     this.plotInstance($instance$);
+    this.refs.controlpanelref.close();
   }
   
 
@@ -128,7 +140,7 @@ export default class NWBExplorer extends React.Component {
     // Trick to resolve with the instance path instead than the type path. TODO remove when fixed 
       data.getValue().getPath = () => data.getPath()
       time.getValue().getPath = () => time.getPath()
-
+      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Loading timeseries data');
     
       // Using the resolve capability should be the proper way to resolve the values, but the paths coming from values are not correct
       data.getValue().resolve(dataValue => {
@@ -142,6 +154,7 @@ export default class NWBExplorer extends React.Component {
             if (!w.plotOptions.yaxis.title.text) {
               w.setOptions({ yaxis: { title: { text: 'Arbitrary unit (Au)' } }, margin: { l: 40 } })
             }
+            GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
           });
         });
       });
@@ -298,6 +311,9 @@ export default class NWBExplorer extends React.Component {
 
   render () {
     var that = this;
+    if (!this.props.model) {
+      return '';
+    }
     return (
       <div id="controls">
         <div id="controlpanel" style={{ top: 0 }}>
@@ -340,3 +356,8 @@ export default class NWBExplorer extends React.Component {
     );
   }
 }
+
+
+const mapStateToProps = state => ({ ...state });
+const mapDispatchToProps = dispatch => ({});
+export default connect(mapStateToProps, mapDispatchToProps)(NWBExplorer);

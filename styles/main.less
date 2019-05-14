@@ -1,9 +1,12 @@
 @import "colors.less";
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
 #mainContainer{
     color: white;
 }
-
+html, body {
+    font-family: 'Source Sans Pro', sans-serif;
+}
 #logo{
     background-image: url("images/nwbExplorer.png");
     width: 200px;
@@ -41,4 +44,105 @@ iframe{
         fill:@primary_color!important;
     }
 }
+
+
+.greybox {
+    background-color: @box_color;
+    color: white;
+    padding: 1em;
+
+    input, button {
+        border: 2px solid white;
+        border-radius: 30px;
+        color: white;
+        text-transform: none;
+        font-size: 1.5rem;
+        margin: 1rem 0;
+            }
+            fieldset {
+                border: none;
+            }
+    h1, h2{
+        margin-top: 0.3rem;
+        margin-bottom: 1.2rem;
+    }
+    
+        margin-bottom: 1.5rem;
+
+    
+   
+}
+
+.flex-filler {
+    flex: 2;
+}
+#main-header {
+    text-align: right;
+    width: 100%;
+}
+#mainContainer > div{
+    height: 100%;
+}
+
+.font-small {
+    font-size: 0.8em;
+}
+.font-medium {
+    font-size: 1em;
+}
+.font-large {
+    font-size: 2em;
+}
+
+#splash {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 2;
+    height: 100%;
+   
+    font-size: 1.9rem;
+
+    h1 {
+        font-size: 4rem;
+    }
+    h2 {
+        font-size: 3rem;
+    }
+
+    p{
+        font-size: 1em;
+    }
+
+    img{
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
+}
+
+.sidebar{
+    display: flex;
+    flex-direction: column;
+}
+.hidden {
+    display: none;
+}
+.aligned-form-elements-wrapper{
+    display: flex;
+    align-items: stretch;
+}
+.aligned-form-element {
+    input, button {
+        padding: 1em;
+    }
+    &.input {
+        flex: 3;
+        padding-right: 1em;
+    }
+    &.button {
+        flex: 1;
+    }
+}
+
 
