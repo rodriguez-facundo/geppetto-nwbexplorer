@@ -6,7 +6,7 @@ import { setNWBFileAction, loadNWBFileAction, nwbFileLoadedAction } from '../act
 import { loadNWBFileInNotebookAction, notebookReadyAction, loadNotebookAction } from '../actions/notebookActions';
 import FileExplorerPage from './pages/FileExplorerPage';
 import SplashPage from './pages/SplashPage';
-import { Route, Switch, Redirect, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Switch, Redirect, BrowserRouter as Router, DefaultRoute } from 'react-router-dom';
 import ConsoleTabs from './ConsoleTabs';
 
 class App extends React.Component{
@@ -83,7 +83,8 @@ class App extends React.Component{
           
       <Router basename={GEPPETTO_CONFIGURATION.contextPath}>
         <Switch>
-          <Route path="/geppetto" component={ page } />
+          <DefaultRoute component={ page } />
+
           {/* <Redirect from="/" to="/geppetto" /> */}
         </Switch>
       </Router>
