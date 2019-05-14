@@ -84,7 +84,7 @@ class App extends React.Component{
       <Router basename={GEPPETTO_CONFIGURATION.contextPath}>
         <Switch>
           <Route path="/geppetto" component={ page } />
-          <Redirect from="/" to="/geppetto" />
+          {/* <Redirect from="/" to="/geppetto" /> */}
         </Switch>
       </Router>
       <div id="footer">
