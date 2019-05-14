@@ -6,7 +6,7 @@ import { setNWBFileAction, loadNWBFileAction, nwbFileLoadedAction } from '../act
 import { loadNWBFileInNotebookAction, notebookReadyAction, loadNotebookAction } from '../actions/notebookActions';
 import FileExplorerPage from './pages/FileExplorerPage';
 import SplashPage from './pages/SplashPage';
-import { Route, Switch, Redirect, BrowserRouter as Router, DefaultRoute } from 'react-router-dom';
+import { Route, Switch, Redirect, BrowserRouter as Router } from 'react-router-dom';
 import ConsoleTabs from './ConsoleTabs';
 
 class App extends React.Component{
@@ -76,18 +76,12 @@ class App extends React.Component{
   }
  
   render () {
-    let page = this.props.nwbFileUrl || this.isEmbeddedInIframe() ? FileExplorerPage : SplashPage;
+    let page = this.props.nwbFileUrl || this.isEmbeddedInIframe() ? <FileExplorerPage /> : <SplashPage />;
 
     
     return <div id="main-container-inner">
-          
-      <Router basename={GEPPETTO_CONFIGURATION.contextPath}>
-        <Switch>
-          <DefaultRoute component={ page } />
-
-          {/* <Redirect from="/" to="/geppetto" /> */}
-        </Switch>
-      </Router>
+      { page }
+      
       <div id="footer">
         <div id="footerHeader">
           <ConsoleTabs enabled={ this.props.showNotebook } hidden={ !this.props.isLoadedInNotebook } />
