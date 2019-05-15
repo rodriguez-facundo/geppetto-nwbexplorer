@@ -3,14 +3,12 @@ import React from 'react';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { grey, blueGrey } from '@material-ui/core/colors';
 
-
 import Grid from '@material-ui/core/Grid';
-
 
 import FileUrlSelector from '../FileUrlSelector';
 import FileSampleSelector from '../FileSampleSelector';
 
-import img from '../../resources/splash.png';
+import img from '../../resources/splash.jpg';
 
 const theme = createMuiTheme({
   typography: { 
