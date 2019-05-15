@@ -16,9 +16,9 @@ class App extends React.Component{
   }
 
   componentDidMount () {
-
+    self = this;
     // A message from the parent frame can specify the file to load
-    window.addEventListener('message', function (event) {
+    window.addEventListener('message', event => {
 
       // Here we would expect some cross-origin check, but we don't do anything more than load a nwb file here
       if (typeof (event.data) == 'string') {
@@ -70,13 +70,10 @@ class App extends React.Component{
       GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
     }
   }
-
-  isEmbeddedInIframe () {
-    return window.location !== window.parent.location;
-  }
+ 
  
   render () {
-    let page = this.props.nwbFileUrl || this.isEmbeddedInIframe() ? <FileExplorerPage /> : <SplashPage />;
+    let page = this.props.nwbFileUrl || this.props.embedded ? <FileExplorerPage /> : <SplashPage />;
 
     
     return <div id="main-container-inner">

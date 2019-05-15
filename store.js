@@ -1,6 +1,10 @@
 import { createStore } from "redux";
 import loadFileReducer from "./reducers/loadFileReducer";
 
+function isEmbeddedInIframe () {
+  return window.location !== window.parent.location;
+}
+
 const INIT_STATE = { 
   nwbFileUrl: null,
   model: null, 
@@ -8,7 +12,8 @@ const INIT_STATE = {
   isLoadedInNotebook: false,
   isLoadingInNotebook: false,
   showNotebook: false,
-  notebookReady: false
+  notebookReady: false,
+  embedded: isEmbeddedInIframe()
 };
 
 function configureStore (state = INIT_STATE) {
