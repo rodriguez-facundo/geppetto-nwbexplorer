@@ -49,7 +49,7 @@ export class FileUrlSelector extends React.Component {
             variant="outlined"
             onClick={this.handleClickLoadFile}
             className = 'aligned-form-element button'
-            disabled={false}
+            disabled={this.state.inputValue.length <= 5}
           >Load NWB file</Button>
         </div>
       </div>
