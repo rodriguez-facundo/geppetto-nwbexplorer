@@ -17,7 +17,7 @@ export function notebookReadyAction (dispatch){
 }
 
 export function unloadFileInNotebook (){
-  Utils.execPythonMessage('del nwbFile');
+  Utils.execPythonMessage('del nwbfile');
   return {
     type: "nwbfileunloadinnotebook",
     payload: { isLoadedInNotebook: false }
