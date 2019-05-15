@@ -16,6 +16,14 @@ export function notebookReadyAction (dispatch){
   };
 }
 
+export function unloadFileInNotebook (){
+  Utils.execPythonMessage('del nwbFile');
+  return {
+    type: "nwbfileunloadinnotebook",
+    payload: { isLoadedInNotebook: false }
+  };
+}
+
 /*
  * function dependenciesLoadedAction (){
  *   return {

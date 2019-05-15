@@ -1,7 +1,17 @@
+import { unloadFileInNotebook } from './notebookActions';
+
 export function setNWBFileAction (nwbFileUrl){
   return {
     type: "setnwbfile",
     payload: { nwbFileUrl: nwbFileUrl, loading: false }
+  };
+}
+
+export function unloadNWBFileAction (dispatch){
+  dispatch(unloadFileInNotebook());
+  return {
+    type: "unloadnwbfile",
+    payload: { nwbFileUrl: null, model: null }
   };
 }
 

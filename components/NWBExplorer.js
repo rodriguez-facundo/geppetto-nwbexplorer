@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 import IconButton from 'geppetto-client/js/components/controls/iconButton/IconButton';
 import { controlPanelConfig, controlPanelColMeta, controlPanelControlConfigs, controlPanelColumns } from './configuration/controlPanelConfiguration';
-
+import { unloadNWBFileAction } from '../actions/loadFileActions';
 import GeppettoPathService from "../services/GeppettoPathService";
 /*
  * Temporarely disabled the popover with holoviews plots
@@ -329,8 +329,10 @@ class NWBExplorer extends React.Component {
           </ControlPanel>
         </div>
         <IconButton style={{ position: 'absolute', left: 15, top: 100 }} onClick={() => {
-          $('#controlpanel').show();
+          this.refs.controlpanelref.open();
         }} icon={"fa-list"} />
+        <IconButton style={{ position: 'absolute', left: 15, top: 140 }} onClick={ () => this.props.unloadNWBFileAction() }
+          icon={"fa-arrow-left"} />
         {/* <div>
           <IconButton
             onClick={this.handleClick}
@@ -359,5 +361,5 @@ class NWBExplorer extends React.Component {
 
 
 const mapStateToProps = state => ({ ...state });
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({ unloadNWBFileAction: () => dispatch(unloadNWBFileAction(dispatch)) });
 export default connect(mapStateToProps, mapDispatchToProps)(NWBExplorer);
