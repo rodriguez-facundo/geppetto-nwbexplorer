@@ -331,10 +331,11 @@ class NWBExplorer extends React.Component {
         <IconButton style={{ position: 'absolute', left: 15, top: 100 }} onClick={() => {
           this.refs.controlpanelref.open();
         }} icon={"fa-list"} />
-        {!this.props.embedded 
-          ? <IconButton style={{ position: 'absolute', left: 15, top: 140 }} onClick={ () => this.props.unloadNWBFileAction() }
-            icon={"fa-arrow-left"} /> 
-          : ''
+        { 
+          !this.props.embedded
+            ? <IconButton style={{ position: 'absolute', left: 15, top: 140 }} onClick={ () => this.props.unloadNWBFileAction() }
+              icon={"fa-arrow-left"} /> 
+            : ''
         }
         {/* <div>
           <IconButton
