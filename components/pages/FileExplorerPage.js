@@ -22,14 +22,17 @@ export default class FileExplorerPage extends React.Component{
   render () {
     return <div>
       <MuiThemeProvider theme={theme}>
-        <Grid container className="{classes.root} container" spacing={16}>
-          <Grid item sm={12} >
-            <header id="main-header">
-              <h1>NWB Explorer</h1>
-            </header>
+        { !this.props.embedded
+          ? <Grid container className="{classes.root} container" spacing={16}>
+            <Grid item sm={12} >
+              <header id="main-header">
+                <h1>NWB Explorer</h1>
+              </header>
            
+            </Grid>
           </Grid>
-        </Grid>
+          : ''
+        }
         <div className="mainContainer">
           <div className="midContainer">
             <div id="instantiatedContainer" style={{ height: '100%', width: '100%' }}>

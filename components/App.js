@@ -23,11 +23,14 @@ class App extends React.Component{
       // Here we would expect some cross-origin check, but we don't do anything more than load a nwb file here
       if (typeof (event.data) == 'string') {
         this.props.setNWBFileAction(event.data);
+        // The message may be triggered after the notebook was ready
+
       }
     });
 
     if (nwbFileService.getNWBFileUrl()){
       this.props.setNWBFileAction(nwbFileService.getNWBFileUrl());
+
     }
 
     this.props.loadNotebookAction();
@@ -35,12 +38,7 @@ class App extends React.Component{
     // When the extension is ready we can communicate with the notebook kernel
     GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
       console.log("Initializing Python extension");
-      this.props.notebookReadyAction();
-      // If the file url is set as parameter
-      if (this.props.nwbFileUrl && !this.props.model && !this.props.nwbFileLoading){
-        this.props.loadNWBFileAction(this.props.nwbFileUrl);
-      }
-      
+      this.props.notebookReadyAction();   
 
       /*
        * 
@@ -55,8 +53,11 @@ class App extends React.Component{
 
   componentDidUpdate () {
    
-    if (!this.props.isLoadedInNotebook && this.props.nwbFileUrl && this.props.notebookReady && !this.props.isLoadingInNotebook) {
+    if (this.props.notebookReady && this.props.nwbFileUrl && !this.props.model && !this.props.nwbFileLoading){
+      this.props.loadNWBFileAction(this.props.nwbFileUrl);
+    }
 
+    if (!this.props.isLoadedInNotebook && this.props.nwbFileUrl && this.props.notebookReady && !this.props.isLoadingInNotebook) {
       this.props.loadNWBFileInNotebookAction(this.props.nwbFileUrl); // We may have missed the loading if notebook was not initialized at the time of the url change
     }
 
