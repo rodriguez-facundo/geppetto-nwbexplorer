@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { grey, blueGrey } from '@material-ui/core/colors';
 
-import NWBExplorer from '../NWBExplorer';
+import NWBExplorerContainer from '../NWBExplorerContainer';
 
 const theme = createMuiTheme({
   typography: { 
@@ -37,7 +37,7 @@ export default class FileExplorerPage extends React.Component{
           <div className="midContainer">
             <div id="instantiatedContainer" style={{ height: '100%', width: '100%' }}>
 
-              <NWBExplorer />
+              <NWBExplorerContainer />
             </div>
           </div>
         </div>

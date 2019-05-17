@@ -1,9 +1,9 @@
 import React from 'react';
-import { connect } from "react-redux";
+
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 import IconButton from 'geppetto-client/js/components/controls/iconButton/IconButton';
 import { controlPanelConfig, controlPanelColMeta, controlPanelControlConfigs, controlPanelColumns } from './configuration/controlPanelConfiguration';
-import { unloadNWBFileAction } from '../actions/loadFileActions';
+
 import GeppettoPathService from "../services/GeppettoPathService";
 /*
  * Temporarely disabled the popover with holoviews plots
@@ -35,7 +35,7 @@ const styles = {
 const IMAGES_PATH = '/styles/images/';
 
 
-class NWBExplorer extends React.Component {
+export default class NWBExplorer extends React.Component {
 
   constructor (props) {
     super(props);
@@ -310,8 +310,9 @@ class NWBExplorer extends React.Component {
 
 
   render () {
+    const { model, embedded, toggleInfoPanel, unloadNWBFile } = this.props;
     var that = this;
-    if (!this.props.model) {
+    if (!model) {
       return '';
     }
     return (
@@ -328,13 +329,25 @@ class NWBExplorer extends React.Component {
           >
           </ControlPanel>
         </div>
-        <IconButton style={{ position: 'absolute', left: 15, top: 100 }} onClick={() => {
-          this.refs.controlpanelref.open();
-        }} icon={"fa-list"} />
+        <IconButton 
+          style={{ position: 'absolute', left: 15, top: 100 }} 
+          onClick={ () => this.refs.controlpanelref.open() } 
+          icon="fa-list"
+        />
+        <IconButton 
+          style={{ position: 'absolute', left: 15, top: 140 }} 
+          onClick={ () => toggleInfoPanel() } 
+          icon="fa-info"
+        />
         { 
-          !this.props.embedded
-            ? <IconButton style={{ position: 'absolute', left: 15, top: 140 }} onClick={ () => this.props.unloadNWBFileAction() }
-              icon={"fa-arrow-left"} /> 
+          !embedded
+            ? (
+              <IconButton 
+                style={{ position: 'absolute', left: 15, top: 180 }} 
+                onClick={ () => unloadNWBFile() }
+                icon="fa-arrow-left"
+              />
+            ) 
             : ''
         }
         {/* <div>
@@ -362,8 +375,3 @@ class NWBExplorer extends React.Component {
     );
   }
 }
-
-
-const mapStateToProps = state => ({ ...state });
-const mapDispatchToProps = dispatch => ({ unloadNWBFileAction: () => dispatch(unloadNWBFileAction(dispatch)) });
-export default connect(mapStateToProps, mapDispatchToProps)(NWBExplorer);

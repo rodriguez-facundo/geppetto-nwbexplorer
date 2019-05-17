@@ -5,8 +5,8 @@ import { grey, blueGrey } from '@material-ui/core/colors';
 
 import Grid from '@material-ui/core/Grid';
 
-import FileUrlSelector from '../FileUrlSelector';
-import FileSampleSelector from '../FileSampleSelector';
+import FileUrlSelectorContainer from '../FileUrlSelectorContainer';
+import FileSampleSelectorContainer from '../FileSampleSelectorContainer';
 
 import img from '../../resources/splash.jpg';
 
@@ -37,10 +37,10 @@ export default class SplashPage extends React.Component{
 
           <Grid className="sidebar" item xs={12} sm={12} md={6} lg={5} xl={4} >
             <div className="greybox">
-              <FileUrlSelector></FileUrlSelector>
+              <FileUrlSelectorContainer/>
             </div>
             <div className="greybox flex-filler">
-              <FileSampleSelector></FileSampleSelector>
+              <FileSampleSelectorContainer/>
             </div>
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={7} xl={8} >
@@ -53,3 +53,4 @@ export default class SplashPage extends React.Component{
     </div>;
   }
 }
+{/*  */}

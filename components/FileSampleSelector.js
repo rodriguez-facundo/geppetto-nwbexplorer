@@ -1,10 +1,11 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import { connect } from "react-redux";
-import { loadNWBFileAction } from '../actions/loadFileActions';
+
 const SAMPLE_LINK_FERGUSON = 'https://github.com/OpenSourceBrain/NWBShowcase/raw/master/FergusonEtAl2015/FergusonEtAl2015.nwb';
 const SAMPLE_LINK_TIMESERIES = 'https://github.com/OpenSourceBrain/NWBShowcase/raw/master/NWB/time_series_data.nwb';
-export class FileSampleSelector extends React.Component {
+
+
+export default class FileSampleSelector extends React.Component {
 
   constructor (props) {
     super(props);
@@ -20,7 +21,8 @@ export class FileSampleSelector extends React.Component {
     console.log("Props in FileSampleSelector", this.props);
   }
   handleClickLoadFile (url) {
-    this.props.loadNWBFileAction(url);
+    const { loadNWBFile } = this.props;
+    loadNWBFile(url);
   }
   render () {
     
@@ -51,11 +53,3 @@ export class FileSampleSelector extends React.Component {
     );
   }
 }
-
-FileSampleSelector.defaultProps = {};
-
-const mapStateToProps = state => ({});
-const mapDispatchToProps = dispatch => ({ loadNWBFileAction: payload => dispatch(loadNWBFileAction(payload)) });
-
-export default connect(mapStateToProps, mapDispatchToProps)(FileSampleSelector);
-

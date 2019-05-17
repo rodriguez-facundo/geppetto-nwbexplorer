@@ -1,15 +1,11 @@
 import React from 'react';
-import { connect } from "react-redux";
-import { withStyles } from '@material-ui/core/styles';
+
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import { loadNWBFileAction } from '../actions/loadFileActions';
 
-const styles = theme => ({ inputs: { margin: 2 } });
-
-export class FileUrlSelector extends React.Component {
+export default class FileUrlSelector extends React.Component {
 
   constructor (props) {
     super(props);
@@ -23,7 +19,8 @@ export class FileUrlSelector extends React.Component {
    
   }
   handleClickLoadFile () {
-    this.props.loadNWBFileAction(this.state.inputValue);
+    const { loadNWBFile } = this.props
+    loadNWBFile(this.state.inputValue);
   }
 
   updateInputValue (evt) {
@@ -57,12 +54,3 @@ export class FileUrlSelector extends React.Component {
   }
 
 }
-
-FileUrlSelector.defaultProps = {};
-
-const mapStateToProps = state => ({});
-const mapDispatchToProps = dispatch => ({ loadNWBFileAction: payload => dispatch(loadNWBFileAction(payload)) });
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(FileUrlSelector));
-
-

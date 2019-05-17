@@ -1,7 +1,10 @@
 global.jQuery = require("jquery");
 global.GEPPETTO_CONFIGURATION = require('./GeppettoConfiguration.json');
-import { Provider } from "react-redux";
-import configureStore from "./store";
+
+require("babel-polyfill");
+const Provider = require("react-redux").Provider;
+const configureStore = require('./store').default;
+
 
 require('geppetto-client-initialization');
 const ReactDOM = require('react-dom');
@@ -9,7 +12,7 @@ const React = require('react');
 
 const Utils = require('./Utils').default;
 
-const App = require('./components/App').default;
+const AppContainer = require('./components/AppContainer').default;
 
 // The service is also called from the parent frame to change file
 const nwbFileService = require('./services/NWBFileService').default;
@@ -33,7 +36,7 @@ G.setIdleTimeOut(-1);
 
   ReactDOM.render(
     <Provider store={configureStore()}>
-      <App />
+      <AppContainer />
     </Provider>
     , document.getElementById('mainContainer'));
 
