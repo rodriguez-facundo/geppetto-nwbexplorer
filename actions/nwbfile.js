@@ -66,15 +66,20 @@ export const setNWBFile = (nwbFilesSate, action) => ({
   loading: false
 })
 
-/*
- * reducers cannot be async. Moving this line to func level
- * action.dispatch(unloadNWBFileInNotebookCreator());
- */
-export const unloadNWBFile = (nwbFilesSate, action) => ({
-  ...nwbFilesSate,
-  nwbFileUrl: null, 
-  model: null
-})
+export const unloadNWBFile = async (nwbFilesSate, action) => {
+  let controller
+
+  Object.values(action.widgetTypes).forEach(async wtype => {
+    controller = await GEPPETTO.WidgetFactory.getController(wtype)
+    controller.getWidgets().forEach(w => w.destroy())
+  })
+  
+  return {
+    ...nwbFilesSate,
+    nwbFileUrl: null, 
+    model: null
+  }
+}
 
 
 export const loadNWBFile = (nwbFilesSate, action) => {

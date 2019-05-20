@@ -8,7 +8,10 @@ export const setNWBFile = nwbFileUrl => ({
   nwbFileUrl
 });
 
-export const unloadNWBFile = () => ({ type: UNLOAD_NWB_FILE });
+export const unloadNWBFile = widgetTypes => ({ 
+  type: UNLOAD_NWB_FILE,
+  widgetTypes
+});
 
 export const nwbFileLoaded = model => ({ 
   type: NWB_FILE_LOADED,

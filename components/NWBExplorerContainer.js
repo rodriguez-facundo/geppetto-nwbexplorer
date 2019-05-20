@@ -9,10 +9,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({ 
-  toggleInfoPanel: () => dispatch(toggleInfoPanel(dispatch)),
-  unloadNWBFile: () => {
+  toggleInfoPanel: () => dispatch(toggleInfoPanel()),
+  unloadNWBFile: widgetTypes => {
     dispatch(unloadNWBFileInNotebook());
-    dispatch(unloadNWBFile())
+    dispatch(unloadNWBFile(widgetTypes))
   }
 });
 

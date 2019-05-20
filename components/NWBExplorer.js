@@ -2,6 +2,7 @@ import React from 'react';
 
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 import IconButton from 'geppetto-client/js/components/controls/iconButton/IconButton';
+
 import { controlPanelConfig, controlPanelColMeta, controlPanelControlConfigs, controlPanelColumns } from './configuration/controlPanelConfiguration';
 
 import GeppettoPathService from "../services/GeppettoPathService";
@@ -45,6 +46,7 @@ export default class NWBExplorer extends React.Component {
       plotButtonOpen: false,
       openDialog: false,
     };
+    
     this.plotsAvailable = (null);
     this.widgets = [];
     this.plotFigure = this.plotFigure.bind(this);
@@ -58,16 +60,10 @@ export default class NWBExplorer extends React.Component {
 
   }
 
-  componentDidMount () {
-    
-  }
-
-
   componentDidUpdate (prevProps, prevState) {
     if (!prevProps.model && this.props.model) {
       this.initControlPanel();
     }
-    
   }
 
 
@@ -311,7 +307,7 @@ export default class NWBExplorer extends React.Component {
 
   render () {
     const { model, embedded, toggleInfoPanel, unloadNWBFile } = this.props;
-    var that = this;
+    
     if (!model) {
       return '';
     }
@@ -344,7 +340,7 @@ export default class NWBExplorer extends React.Component {
             ? (
               <IconButton 
                 style={{ position: 'absolute', left: 15, top: 180 }} 
-                onClick={ () => unloadNWBFile() }
+                onClick={ () => unloadNWBFile(window.Widgets) }
                 icon="fa-arrow-left"
               />
             ) 
