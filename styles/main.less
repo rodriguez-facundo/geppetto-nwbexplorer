@@ -13,8 +13,11 @@ html, body {
     height:76px;
 }
 
-#controlpanel .griddle td {
+#controlpanel {
+    background-color: rgba(66,66,66,0.8)!important;
+    .griddle td {
     color: @primary_color;
+    }
 }
 
 .contextMenuView {
@@ -75,12 +78,65 @@ iframe{
    
 }
 
+
+.flexlayout__tab {
+    // border: 1px solid rebeccapurple;
+    // border-radius: 6px;
+    background-color: rgba(66,66,66,0.8);
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+.flexlayout__tab_button--selected {
+//     border: 1px solid rebeccapurple;
+//     border-radius: 4px;
+        background-color: rgba(66,66,66,0.8);
+        border-top-right-radius: 7px;
+        border-top-left-radius: 7px;
+}
+// .flexlayout__tab_button {
+//     margin-left: 8px;
+// }
+// .iconButton{
+//     span.fa{
+//         color: white!important;
+//     }
+// }
+.flexlayout__tab_button_trailing {
+    color: white;
+}
+.flexlayout__tab_button_content{
+    color: white;
+}
+.flexlayout__tab_toolbar_button-min{
+    color:white;
+}
+.customIconFlexLayout{
+    color: white;
+}
+// .flexlayout__border_bottom{
+//     background-color: black;
+// }
+// .flexlayout__layout {
+//     background-color: black;
+//     border-top: 1px solid black;
+// }
+// .flexlayout__tab_header_inner {
+//     background-color: black;
+// }
+// #main-container-inner{
+//     background-color: black;
+// }
 .flex-filler {
     flex: 2;
 }
 #main-header {
     text-align: right;
     width: 100%;
+    >h1 {
+        margin-right: 30px;
+    }
+    
 }
 #mainContainer > div{
     height: 100%;
@@ -156,5 +212,3 @@ iframe{
 .popup-text {
 	color: black !important;
 }
-
-

@@ -29,6 +29,14 @@ const styles = {
   menuItem: {
     lineHeight: '28px',
     minHeight: '28px'
+  },
+  icon: {
+    position: 'absolute',
+    left: 15,
+    /*
+     * color: 'white',
+     * backgroundColor: 'black'
+     */
   }
 };
 
@@ -322,16 +330,16 @@ export default class NWBExplorer extends React.Component {
             columns={controlPanelColumns}
             controlPanelControlConfigs={controlPanelControlConfigs}
             ref="controlpanelref"
-          >
-          </ControlPanel>
+          />
         </div>
+        
         <IconButton 
-          style={{ position: 'absolute', left: 15, top: 100 }} 
+          style={{ ...styles.icon, top: 100 }} 
           onClick={ () => this.refs.controlpanelref.open() } 
           icon="fa-list"
         />
         <IconButton 
-          style={{ position: 'absolute', left: 15, top: 140 }} 
+          style={{ ...styles.icon, top: 140 }} 
           onClick={ () => toggleInfoPanel() } 
           icon="fa-info"
         />
@@ -339,7 +347,7 @@ export default class NWBExplorer extends React.Component {
           !embedded
             ? (
               <IconButton 
-                style={{ position: 'absolute', left: 15, top: 180 }} 
+                style={{ ...styles.icon, top: 180 }} 
                 onClick={ () => unloadNWBFile(window.Widgets) }
                 icon="fa-arrow-left"
               />

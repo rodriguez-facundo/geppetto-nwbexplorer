@@ -1,4 +1,5 @@
 import React from 'react';
+import Flexy from './Flexy';
 import ConsoleTabs from './ConsoleTabs';
 import SplashPage from './pages/SplashPage';
 import nwbFileService from '../services/NWBFileService';
@@ -78,7 +79,7 @@ export default class App extends React.Component{
   render () {
     const { nwbFileUrl, embedded, showNotebook, isLoadedInNotebook } = this.props;
     
-    const page = nwbFileUrl || embedded ? <FileExplorerPage /> : <SplashPage />;
+    const page = nwbFileUrl || embedded ? <Flexy /> : <SplashPage />;
 
     
     return (

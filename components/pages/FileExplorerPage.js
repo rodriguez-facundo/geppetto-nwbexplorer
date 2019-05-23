@@ -1,7 +1,6 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { grey, blueGrey } from '@material-ui/core/colors';
+import { grey } from '@material-ui/core/colors';
 
 import NWBExplorerContainer from '../NWBExplorerContainer';
 
@@ -23,14 +22,9 @@ export default class FileExplorerPage extends React.Component{
     return <div>
       <MuiThemeProvider theme={theme}>
         { !this.props.embedded
-          ? <Grid container className="{classes.root} container" spacing={16}>
-            <Grid item sm={12} >
-              <header id="main-header">
-                <h1>NWB Explorer</h1>
-              </header>
-           
-            </Grid>
-          </Grid>
+          ? <header id="main-header">
+            <h1>NWB Explorer</h1>
+          </header>
           : ''
         }
         <div className="mainContainer">
