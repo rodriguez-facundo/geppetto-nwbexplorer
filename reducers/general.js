@@ -1,4 +1,4 @@
-import { toggleInfoPanel } from '../actions/general';
+import { toggleInfoPanel } from './reduce/general';
 import { TOGGLE_INFO_PANEL } from '../actions/creators/general';
 
 

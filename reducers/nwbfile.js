@@ -1,4 +1,4 @@
-import * as accions from '../actions/nwbfile';
+import * as reducer from './reduce/nwbfile';
 import * as TYPES from '../actions/creators/nwbfile';
 
 export default ( state = {}, action ) => {
@@ -6,31 +6,31 @@ export default ( state = {}, action ) => {
   switch (action.type) {
     
   case TYPES.SET_NWB_FILE:
-    return { ...accions.setNWBFile(state, action) }
+    return { ...reducer.setNWBFile(state, action) }
   
   case TYPES.LOAD_NWB_FILE:
-    return { ...accions.loadNWBFile(state, action) }
+    return { ...reducer.loadNWBFile(state, action) }
   
   case TYPES.NWB_FILE_LOADED:
-    return { ...accions.nwbFileLoaded(state, action) }
+    return { ...reducer.nwbFileLoaded(state, action) }
   
   case TYPES.UNLOAD_NWB_FILE:
-    return { ...accions.unloadNWBFile(state, action) }
+    return { ...reducer.unloadNWBFile(state, action) }
 
   case TYPES.LOAD_NOTEBOOK:
-    return { ...accions.loadNotebook(state, action) }
+    return { ...reducer.loadNotebook(state, action) }
   
   case TYPES.NOTEBOOK_READY:
-    return { ...accions.notebookReady(state, action) }
+    return { ...reducer.notebookReady(state, action) }
 
   case TYPES.LOAD_NWB_FILE_IN_NOTEBOOK:
-    return { ...accions.loadNWBFileInNotebook(state, action) }
+    return { ...reducer.loadNWBFileInNotebook(state, action) }
 
   case TYPES.LOADED_NWB_FILE_IN_NOTEBOOK:
-    return { ...accions.loadedNWBFileInNotebook(state, action) }
+    return { ...reducer.loadedNWBFileInNotebook(state, action) }
 
   case TYPES.UNLOAD_NWB_FILE_IN_NOTEBOOK:
-    return { ...accions.unloadNWBFileInNotebook(state, action) }
+    return { ...reducer.unloadNWBFileInNotebook(state, action) }
 
   default:
     return { ...state };

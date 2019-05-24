@@ -1,8 +1,8 @@
 
-import Utils from '../Utils';
-import { loadedNWBFileInNotebook as loadedNWBFileInNotebookCreator } from './creators/nwbfile';
+import Utils from '../../Utils';
+import { loadedNWBFileInNotebook as loadedNWBFileInNotebookCreator } from '../../actions/creators/nwbfile';
 
-import nwbFileService from '../services/NWBFileService';
+import nwbFileService from '../../services/NWBFileService';
 
 export const loadNotebook = (nwbFilesSate, action) => ({
   ...nwbFilesSate,
