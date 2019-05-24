@@ -13,18 +13,75 @@ const json = {
     "children": [
       {
         "type": "row",
-        "weight": 100,
+        "weight": 30,
         "children": [
           {
             "type": "tabset",
             "weight": 100,
-            "id": "top",
+            "id": "top1",
             "children": [
               {
                 "type": "tab",
-                "name": "explorer",
-                "component": "explorer",
-                "id":"explorer",
+                "name": "Explorer",
+                "component": "Explorer",
+                "id":"Explorer",
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "weight": 30,
+        "children": [
+          {
+            "type": "tabset",
+            "weight": 100,
+            "id": "top2",
+            "children": [
+              {
+                "type": "tab",
+                "name": "Description",
+                "component": "Description",
+                "id":"Description",
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "weight": 30,
+        "children": [
+          {
+            "type": "tabset",
+            "weight": 50,
+            "id": "top3",
+            "children": [
+              {
+                "type": "tab",
+                "name": "Plot1",
+                "component": "Plot",
+                "id":"Plot1",
+              },
+              {
+                "type": "tab",
+                "name": "Plot2",
+                "component": "Plot",
+                "id":"Plot2",
+              }
+            ]
+          },
+          {
+            "type": "tabset",
+            "weight": 50,
+            "id": "top4",
+            "children": [
+              {
+                "type": "tab",
+                "name": "Others",
+                "component": "Others",
+                "id":"Others",
               }
             ]
           }
@@ -57,9 +114,14 @@ export default class Flexy extends Component {
     node.setEventListener("close", () => {
       console.log("Click on close")
     });
-    if (component === "explorer" ) { 
+    if (component === "Explorer" ) { 
       return <FileExplorerPage />;
+    } else if (component === "Description" ) { 
+      return <h3>Comming soon</h3>;
+    } else if (component === "Plot" ) { 
+      return <h3>Stay tuned</h3>;
     }
+
 
   }
 
