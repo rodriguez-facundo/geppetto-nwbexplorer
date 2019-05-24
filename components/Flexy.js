@@ -117,9 +117,11 @@ export default class Flexy extends Component {
     if (component === "Explorer" ) { 
       return <FileExplorerPage />;
     } else if (component === "Description" ) { 
-      return <h3>Comming soon</h3>;
+      return <h3 style={{ marginLeft: '15px' }}>Comming soon</h3>;
     } else if (component === "Plot" ) { 
-      return <h3>Stay tuned</h3>;
+      return <h3 style={{ marginLeft: '15px' }}>Stay tuned</h3>;
+    } else if (component === "Others" ) { 
+      return <h3 style={{ marginLeft: '15px' }}>More to come!</h3>;
     }
 
 

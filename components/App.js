@@ -6,6 +6,7 @@ import nwbFileService from '../services/NWBFileService';
 import FileExplorerPage from './pages/FileExplorerPage';
 // import { Route, Switch, Redirect, BrowserRouter as Router } from 'react-router-dom';
 
+import logo from '../images/nwb.png';
 
 export default class App extends React.Component{
 
@@ -83,18 +84,21 @@ export default class App extends React.Component{
 
     
     return (
-      <div id="main-container-inner">
-        { page }
+      <React.Fragment>
+        {nwbFileUrl || embedded ? <img src={logo} alt="Logo" style={{ width: '120px', height: '50px' }}/> : null}
+        <div id="main-container-inner">
+          { page }
         
-        <div id="footer">
-          <div id="footerHeader">
-            <ConsoleTabs 
-              enabled={ showNotebook } 
-              hidden={ !isLoadedInNotebook } 
-            />
+          <div id="footer">
+            <div id="footerHeader">
+              <ConsoleTabs 
+                enabled={ showNotebook } 
+                hidden={ !isLoadedInNotebook } 
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     )
   }
   

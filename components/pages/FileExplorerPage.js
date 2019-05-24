@@ -21,16 +21,9 @@ export default class FileExplorerPage extends React.Component{
   render () {
     return <div>
       <MuiThemeProvider theme={theme}>
-        { !this.props.embedded
-          ? <header id="main-header">
-            <h1>NWB Explorer</h1>
-          </header>
-          : ''
-        }
         <div className="mainContainer">
           <div className="midContainer">
             <div id="instantiatedContainer" style={{ height: '100%', width: '100%' }}>
-
               <NWBExplorerContainer />
             </div>
           </div>
