@@ -1,0 +1,78 @@
+@import "../../styles/colors.less";
+
+@pcolor: #7f56c8;
+@plcolor: #9563ed;
+
+.Collapsible {
+    background-color: transparent;
+}
+
+.Collapsible__contentInner {
+    padding: 0px 30px 8px 15px;
+    border-top: 0;
+    font-size: 13px;
+    color: white;
+    text-align: justify;
+}
+
+.Collapsible__contentInner p {
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.Collapsible__contentInner p:last-child {
+    margin-bottom: 0;
+}
+
+.Collapsible__trigger {
+    margin-left: 5px;
+    display: block;
+    text-transform: capitalize;
+    font-weight: 600;
+    font-size: 13px;
+    color: @pcolor;
+    position: relative;
+    padding: 2px;
+    background: transparent;
+    cursor: pointer;
+}
+.Collapsible__trigger:hover {
+    color: @plcolor!important;
+}
+
+.Collapsible__trigger:after {
+    font-family: 'FontAwesome';
+    content: '\f139';
+    position: absolute;
+    right: 10px;
+    top: 2px;
+    display: block;
+    transition: transform 300ms;
+}
+
+.Collapsible__trigger.is-open:after {
+    transform: rotateZ(180deg);
+    color: #8A7F7F;
+}
+
+.Collapsible__trigger.is-disabled {
+    opacity: 0.5;
+    background-color: grey;
+}
+
+.CustomTriggerCSS {
+    background-color: lightcoral;
+    transition: background-color 200ms ease;
+}
+
+.CustomTriggerCSS--open {
+    background-color: darkslateblue;
+}
+
+.Collapsible__custom-sibling {
+    padding: 5px;
+    font-size: 12px;
+    background-color: #CBB700;
+    color: black;
+}

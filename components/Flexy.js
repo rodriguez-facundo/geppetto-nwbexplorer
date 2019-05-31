@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import * as FlexLayout from 'geppetto-client/js/components/interface/flexLayout2/src/index';
 import Actions from 'geppetto-client/js/components/interface/flexLayout2/src/model/Actions';
 import FileExplorerPage from './pages/FileExplorerPage';
+import MetadataContainer from './metadata/MetadataContainer'
 
 const json = {
   "global": { sideBorders: 8 },
@@ -11,25 +12,6 @@ const json = {
     "weight": 100,
     "id": "root",
     "children": [
-      {
-        "type": "row",
-        "weight": 30,
-        "children": [
-          {
-            "type": "tabset",
-            "weight": 100,
-            "id": "top1",
-            "children": [
-              {
-                "type": "tab",
-                "name": "Explorer",
-                "component": "Explorer",
-                "id":"Explorer",
-              }
-            ]
-          }
-        ]
-      },
       {
         "type": "row",
         "weight": 30,
@@ -51,7 +33,7 @@ const json = {
       },
       {
         "type": "row",
-        "weight": 30,
+        "weight": 70,
         "children": [
           {
             "type": "tabset",
@@ -110,14 +92,18 @@ export default class Flexy extends Component {
   }
 
   factory (node) {
-    let component = node.getComponent();
+    const component = node.getComponent();
     node.setEventListener("close", () => {
       console.log("Click on close")
     });
     if (component === "Explorer" ) { 
       return <FileExplorerPage />;
     } else if (component === "Description" ) { 
-      return <h3 style={{ marginLeft: '15px' }}>Coming soon</h3>;
+      return (
+        <div className="flexChildContainer">
+          <MetadataContainer instancePath='nwbfile.metadata' />
+        </div>
+      )
     } else if (component === "Plot" ) { 
       return <h3 style={{ marginLeft: '15px' }}>Stay tuned</h3>;
     } else if (component === "Others" ) { 

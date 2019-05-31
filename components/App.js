@@ -6,7 +6,25 @@ import nwbFileService from '../services/NWBFileService';
 import FileExplorerPage from './pages/FileExplorerPage';
 // import { Route, Switch, Redirect, BrowserRouter as Router } from 'react-router-dom';
 
-import logo from '../images/nwb.png';
+
+import { grey } from '@material-ui/core/colors';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
+import AppbarContainer from './AppBarContainer'
+
+const theme = createMuiTheme({
+  typography: { 
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
+  palette: {
+    primary: { main: grey[500] },
+    secondary: { main: '#202020' },
+    error: { main: '#b0ac9a' },
+    text: { secondary: "white" }
+  }
+});
+
 
 export default class App extends React.Component{
 
@@ -80,12 +98,21 @@ export default class App extends React.Component{
   render () {
     const { nwbFileUrl, embedded, showNotebook, isLoadedInNotebook } = this.props;
     
-    const page = nwbFileUrl || embedded ? <Flexy /> : <SplashPage />;
+    var page;
+    if (nwbFileUrl || embedded) {
+      page = (
+        <MuiThemeProvider theme={theme}>
+          <AppbarContainer/>
+          <Flexy />
+        </MuiThemeProvider>
+      )
+    } else {
+      page = <SplashPage />
+    }
 
-    
     return (
       <React.Fragment>
-        {nwbFileUrl || embedded ? <img src={logo} alt="Logo" style={{ width: '120px', height: '50px' }}/> : null}
+        
         <div id="main-container-inner">
           { page }
         

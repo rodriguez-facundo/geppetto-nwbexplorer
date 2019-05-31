@@ -1,6 +1,7 @@
 @import "colors.less";
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
+@darkcolor: rgba(66,66,66,0.8);
 #mainContainer{
     color: white;
 }
@@ -14,7 +15,7 @@ html, body {
 }
 
 #controlpanel {
-    background-color: rgba(66,66,66,0.8)!important;
+    background-color: @darkcolor!important;
     .griddle td {
     color: @primary_color;
     }
@@ -88,7 +89,9 @@ iframe{
     
    
 }
-
+.flexlayout__tabset {
+    background-color: inherit;
+}
 .flexlayout__layout{
     height:89%;
     margin-top:20px;
@@ -96,7 +99,7 @@ iframe{
 .flexlayout__tab {
     // border: 1px solid rebeccapurple;
     // border-radius: 6px;
-    background-color: rgba(66,66,66,0.8);
+    background-color: @darkcolor;
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
     border-bottom-left-radius: 15px;
@@ -104,7 +107,7 @@ iframe{
 .flexlayout__tab_button--selected {
 //     border: 1px solid rebeccapurple;
 //     border-radius: 4px;
-        background-color: rgba(66,66,66,0.8);
+        background-color: @darkcolor;
         border-top-right-radius: 7px;
         border-top-left-radius: 7px;
 }
