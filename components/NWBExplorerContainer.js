@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import NWBExplorer from './NWBExplorer';
-import { unloadNWBFile, unloadNWBFileInNotebook } from '../actions/creators/nwbfile';
-import { toggleInfoPanel } from '../actions/creators/general';
+import { unloadNWBFile, unloadNWBFileInNotebook } from '../actions/nwbfile';
+import { enableInfoPanel, disableInfoPanel } from '../actions/general';
 
 const mapStateToProps = state => ({
   toggleInfoPanel: state.general.toggleInfoPanel,
@@ -9,10 +9,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({ 
-  toggleInfoPanel: () => dispatch(toggleInfoPanel()),
-  unloadNWBFile: widgetTypes => {
+  enableInfoPanel: () => dispatch(enableInfoPanel),
+  disableInfoPanel: () => dispatch(disableInfoPanel),
+  unloadNWBFile: () => {
     dispatch(unloadNWBFileInNotebook());
-    dispatch(unloadNWBFile(widgetTypes))
+    dispatch(unloadNWBFile);
   }
 });
 

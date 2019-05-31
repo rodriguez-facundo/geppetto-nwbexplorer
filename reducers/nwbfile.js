@@ -1,38 +1,43 @@
-import * as reducer from './reduce/nwbfile';
-import * as TYPES from '../actions/creators/nwbfile';
+import * as nwbfileActions from '../actions/nwbfile';
+import * as notebookActions from '../actions/notebook';
 
-export default ( state = {}, action ) => {
-  
+export const NWBFILE_DEFAULT_STATUS = {
+  nwbFileUrl: null,
+  model: null,
+  isLoadedInNotebook: false,
+  isLoadingInNotebook: false,
+};
+
+
+export default ( state = {}, action ) => ({ ...state, ...reduceNWBFile(state, action) });
+
+function reduceNWBFile (state = {}, action) {
   switch (action.type) {
     
-  case TYPES.SET_NWB_FILE:
-    return { ...reducer.setNWBFile(state, action) }
+  case nwbfileActions.SET_NWB_FILE:
+    return { ...action.data }
   
-  case TYPES.LOAD_NWB_FILE:
-    return { ...reducer.loadNWBFile(state, action) }
-  
-  case TYPES.NWB_FILE_LOADED:
-    return { ...reducer.nwbFileLoaded(state, action) }
-  
-  case TYPES.UNLOAD_NWB_FILE:
-    return { ...reducer.unloadNWBFile(state, action) }
-
-  case TYPES.LOAD_NOTEBOOK:
-    return { ...reducer.loadNotebook(state, action) }
-  
-  case TYPES.NOTEBOOK_READY:
-    return { ...reducer.notebookReady(state, action) }
-
-  case TYPES.LOAD_NWB_FILE_IN_NOTEBOOK:
-    return { ...reducer.loadNWBFileInNotebook(state, action) }
-
-  case TYPES.LOADED_NWB_FILE_IN_NOTEBOOK:
-    return { ...reducer.loadedNWBFileInNotebook(state, action) }
-
-  case TYPES.UNLOAD_NWB_FILE_IN_NOTEBOOK:
-    return { ...reducer.unloadNWBFileInNotebook(state, action) }
-
+  case nwbfileActions.LOAD_NWB_FILE:
+    return { ...action.data, nwbFileLoading: true }
+  case nwbfileActions.LOAD_NWB_FILE_IN_NOTEBOOK:
+    return { 
+      isLoadedInNotebook: false, 
+      isLoadingInNotebook: true, 
+    }
+  case nwbfileActions.UNLOAD_NWB_FILE_IN_NOTEBOOK:
+    return { isLoadedInNotebook: false }
+  case nwbfileActions.LOADED_NWB_FILE_IN_NOTEBOOK:
+    return { isLoadedInNotebook: true, isLoadingInNotebook: false }
+  case nwbfileActions.UNLOAD_NWB_FILE:
+    return {
+      nwbFileUrl: null, 
+      model: null 
+    }
+  case nwbfileActions.NWB_FILE_LOADED:
+    return { ...action.data, nwbFileLoading: false }  
+  case notebookActions.NOTEBOOK_READY:
+    return { isLoadingInNotebook: false }
   default:
-    return { ...state };
+    return state;
   }
 }

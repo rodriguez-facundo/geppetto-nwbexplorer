@@ -1,24 +1,13 @@
 import { createStore } from "redux";
 import all from "./reducers/all";
-
-function isEmbeddedInIframe () {
-  return window.location !== window.parent.location;
-}
+import { GENERAL_DEFAULT_STATUS } from "./reducers/general";
+import { NOTEBOOK_DEFAULT_STATUS } from "./reducers/notebook";
+import { NWBFILE_DEFAULT_STATUS } from "./reducers/nwbfile";
 
 const INIT_STATE = { 
-  general: { 
-    embedded: isEmbeddedInIframe(),
-    toggleInfoPanel: false 
-  },
-  nwbfile: {
-    isLoadedInNotebook: false,
-    isLoadingInNotebook: false,
-    showNotebook: false,
-    notebookReady: false,
-    nwbFileUrl: null,
-    model: null, 
-    loading: false
-  }
+  general: GENERAL_DEFAULT_STATUS,
+  nwbfile: NWBFILE_DEFAULT_STATUS,
+  notebook: NOTEBOOK_DEFAULT_STATUS
 };
 
 function configureStore (state = INIT_STATE) {
@@ -28,4 +17,5 @@ function configureStore (state = INIT_STATE) {
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );
 }
+
 export default configureStore;

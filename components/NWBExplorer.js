@@ -62,7 +62,8 @@ export default class NWBExplorer extends React.Component {
     this.getOpenedWidgets = this.getOpenedWidgets.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
-
+    this.handleClickBack = this.handleClickBack.bind(this);
+    this.toggleInfoPanel = this.toggleInfoPanel.bind(this);
     window.controlPanelClickAction = this.clickAction.bind(this); // we don't like global variables but we like less putting the code in a string
 
 
@@ -312,9 +313,49 @@ export default class NWBExplorer extends React.Component {
       .catch(error => console.error(error));
   }
 
+  handleClickBack () {
+    let controller;
+
+    Object.values(window.Widgets).forEach(async wtype => {
+      controller = await GEPPETTO.WidgetFactory.getController(wtype);
+      controller.getWidgets().forEach(w => w.destroy());
+    });
+
+    this.props.unloadNWBFile();
+  }
+
+
+  async createWidget () {
+    const w = await G.addWidget(1, { isStateless: true });
+    w.setName('Metadata');
+    w.setData(window.Instances.nwbfile.metadata);
+  }
+
+  async toggleInfoPanel () {
+    // TODO move info panel visualization to proper react component logic
+    let infoWidgetVisibility = undefined;
+    const popUpController = await GEPPETTO.WidgetFactory.getController(1)
+    const widgets = popUpController.getWidgets();
+    
+    widgets.forEach(w => {
+      if (w.getName() == 'Metadata') {
+        infoWidgetVisibility = w.visible;
+        infoWidgetVisibility ? w.hide() : w.show()
+      }
+    })
+      
+    if (infoWidgetVisibility === undefined) {
+      this.createWidget();
+      this.props.enableInfoPanel();
+      return;
+    }
+    
+    this.props.disableInfoPanel();
+    
+  }
 
   render () {
-    const { model, embedded, toggleInfoPanel, unloadNWBFile } = this.props;
+    const { model, embedded } = this.props;
     
     if (!model) {
       return '';
@@ -340,7 +381,7 @@ export default class NWBExplorer extends React.Component {
         />
         <IconButton 
           style={{ ...styles.icon, top: 140 }} 
-          onClick={ () => toggleInfoPanel() } 
+          onClick={ this.toggleInfoPanel } 
           icon="fa-info"
         />
         { 
@@ -348,7 +389,7 @@ export default class NWBExplorer extends React.Component {
             ? (
               <IconButton 
                 style={{ ...styles.icon, top: 180 }} 
-                onClick={ () => unloadNWBFile(window.Widgets) }
+                onClick={ this.handleClickBack }
                 icon="fa-arrow-left"
               />
             ) 

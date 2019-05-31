@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import FileUrlSelector from './FileUrlSelector';
 import { withStyles } from '@material-ui/core/styles';
 
-import { loadNWBFile } from '../actions/creators/nwbfile';
+import { loadNWBFile } from '../actions/nwbfile';
 
 const styles = () => ({ inputs: { margin: 2 } });
 
