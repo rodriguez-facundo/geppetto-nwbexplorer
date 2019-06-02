@@ -19,24 +19,34 @@ function reduceNWBFile (state = {}, action) {
   
   case nwbfileActions.LOAD_NWB_FILE:
     return { ...action.data, nwbFileLoading: true }
+
   case nwbfileActions.LOAD_NWB_FILE_IN_NOTEBOOK:
     return { 
       isLoadedInNotebook: false, 
       isLoadingInNotebook: true, 
     }
+
   case nwbfileActions.UNLOAD_NWB_FILE_IN_NOTEBOOK:
     return { isLoadedInNotebook: false }
+  
   case nwbfileActions.LOADED_NWB_FILE_IN_NOTEBOOK:
     return { isLoadedInNotebook: true, isLoadingInNotebook: false }
+  
   case nwbfileActions.UNLOAD_NWB_FILE:
     return {
       nwbFileUrl: null, 
       model: null 
     }
+
   case nwbfileActions.NWB_FILE_LOADED:
     return { ...action.data, nwbFileLoading: false }  
+
+  case nwbfileActions.CLEAR_MODEL:
+    return { model: null }
+  
   case notebookActions.NOTEBOOK_READY:
     return { isLoadingInNotebook: false }
+
   default:
     return state;
   }

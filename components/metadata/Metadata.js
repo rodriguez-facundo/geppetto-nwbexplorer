@@ -129,6 +129,10 @@ export default class Metadata extends React.Component {
   }
 
   componentDidMount () {
+    const { model } = this.props;
+    if (model && typeof Instances != "undefined") {
+      this.setData(Instances.getInstance('nwbfile.metadata'))
+    }
     window.addEventListener("resize", this.updateDimensions);
   }
 

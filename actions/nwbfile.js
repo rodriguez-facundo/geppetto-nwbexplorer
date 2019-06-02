@@ -11,6 +11,7 @@ export const UNLOAD_NWB_FILE = 'UNLOAD_NWB_FILE';
 export const LOAD_NWB_FILE_IN_NOTEBOOK = 'LOAD_NWB_FILE_IN_NOTEBOOK';
 export const LOADED_NWB_FILE_IN_NOTEBOOK = 'LOADED_NWB_FILE_IN_NOTEBOOK';
 export const UNLOAD_NWB_FILE_IN_NOTEBOOK = 'UNLOAD_NWB_FILE_IN_NOTEBOOK';
+export const CLEAR_MODEL = 'CLEAR_MODEL';
 
 export function setNWBFile (nwbFileUrl) {
   return {
@@ -51,3 +52,5 @@ export function nwbFileLoaded (model) {
     data: { model: model }
   }
 }
+
+export const clearModel = () => ({ type: CLEAR_MODEL })

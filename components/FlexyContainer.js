@@ -3,17 +3,22 @@ import Flexy from './Flexy';
 import { 
   activateNode,
   destroyNode,
+  hideNode,
+  createNode,
   maximizeNode,
-  minimizeNode,
 } from '../actions/flexlayout';
 
-const mapStateToProps = state => ({ nodes: state.flexlayout.nodes, });
+const mapStateToProps = state => ({ 
+  nodes: state.flexlayout.nodes, 
+  newNode: state.flexlayout.newNode
+});
 
 const mapDispatchToProps = dispatch => ({ 
-  activateNode: id => dispatch(activateNode(id)),
+  hideNode: id => dispatch(hideNode(id)),
   destroyNode: id => dispatch(destroyNode(id)),
   maximizeNode: id => dispatch(maximizeNode(id)),
-  minimizeNode: id => dispatch(minimizeNode(id))
+  activateNode: id => dispatch(activateNode(id)),
+  createNode: json => dispatch(createNode(json)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Flexy);

@@ -7,6 +7,6 @@ const mapStateToProps = (state, ownProps) => ({
   model: state.nwbfile.model
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({ });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Metadata);

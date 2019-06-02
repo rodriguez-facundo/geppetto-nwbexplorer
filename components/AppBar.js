@@ -8,12 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 
-
-import Paper from '@material-ui/core/Paper';
-import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-
 
 import { 
   controlPanelConfig,
@@ -24,16 +19,6 @@ import {
 
 import GeppettoPathService from "../services/GeppettoPathService";
 
-const anchor = {
-  anchorOrigin:{
-    vertical: 'bottom',
-    horizontal: 'center',
-  },
-  transformOrigin:{
-    vertical: 'top',
-    horizontal: 'center',
-  }
-}
 
 const styles = {
   modal: {
@@ -74,8 +59,6 @@ export default class Appbar extends React.Component {
       controlPanelHidden: true,
       plotButtonOpen: false,
       openDialog: false,
-      anchorEl: null,
-      tabsOpen: false
     };
     
     this.plotsAvailable = (null);
@@ -333,6 +316,8 @@ export default class Appbar extends React.Component {
   }
 
   handleClickBack () {
+    const { deleteAll } = this.props;
+    deleteAll()
     let controller;
 
     Object.values(window.Widgets).forEach(async wtype => {
@@ -341,6 +326,7 @@ export default class Appbar extends React.Component {
     });
 
     this.props.unloadNWBFile();
+    
   }
 
 
@@ -378,8 +364,7 @@ export default class Appbar extends React.Component {
   }
   
   render () {
-    const { model } = this.props;
-    const { anchorEl, tabsOpen } = this.state;
+    const { model, createNode } = this.props;
     
 
     if (!model) {
@@ -420,33 +405,21 @@ export default class Appbar extends React.Component {
                 >
                   <Icon color="error" className='fa fa-arrow-left' />
                 </IconButton>
-
-                <IconButton
-                  onClick={ event => this.setState({ anchorEl: event.currentTarget })}
-                >
-                  <Icon color="primary" className='fa fa-columns' />
-                </IconButton>
                   
                 <IconButton
-                  onClick={ event => this.setState({ anchorEl: event.currentTarget })}
+                  onClick={ event => {
+                    createNode({
+                      type: "tab",
+                      name: "Description",
+                      id: "Description",
+                      component: "Description",
+                      enableRename: false
+                    })
+                  }}
                 >
                   <Icon color="primary" className='fa fa-info' />
                 </IconButton>
-                {/* <Popover 
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={() => this.handleClose()}
-                  anchorOrigin={anchor.anchorOrigin}
-                  transformOrigin={anchor.transformOrigin}
-                >
-                  <Paper>
-                    <MenuList>
-                      <MenuItem >Profile</MenuItem>
-                      <MenuItem >My account</MenuItem>
-                      <MenuItem >Logout</MenuItem>
-                    </MenuList>
-                  </Paper>
-                </Popover> */}
+                
                 
                 <IconButton 
                   onClick={() => this.refs.controlpanelref.open()}
