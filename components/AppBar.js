@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+
 
 import { 
   controlPanelConfig,
@@ -427,7 +427,12 @@ export default class Appbar extends React.Component {
                   <Icon color="primary" className='fa fa-columns' />
                 </IconButton>
                   
-                <Popover 
+                <IconButton
+                  onClick={ event => this.setState({ anchorEl: event.currentTarget })}
+                >
+                  <Icon color="primary" className='fa fa-info' />
+                </IconButton>
+                {/* <Popover 
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
                   onClose={() => this.handleClose()}
@@ -441,7 +446,7 @@ export default class Appbar extends React.Component {
                       <MenuItem >Logout</MenuItem>
                     </MenuList>
                   </Paper>
-                </Popover>
+                </Popover> */}
                 
                 <IconButton 
                   onClick={() => this.refs.controlpanelref.open()}

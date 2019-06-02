@@ -3,11 +3,13 @@ import all from "./reducers/all";
 import { GENERAL_DEFAULT_STATUS } from "./reducers/general";
 import { NOTEBOOK_DEFAULT_STATUS } from "./reducers/notebook";
 import { NWBFILE_DEFAULT_STATUS } from "./reducers/nwbfile";
+import { FLEXLAYOUT_DEFAULT_STATUS } from "./reducers/flexlayout";
 
 const INIT_STATE = { 
   general: GENERAL_DEFAULT_STATUS,
   nwbfile: NWBFILE_DEFAULT_STATUS,
-  notebook: NOTEBOOK_DEFAULT_STATUS
+  notebook: NOTEBOOK_DEFAULT_STATUS,
+  flexlayout: FLEXLAYOUT_DEFAULT_STATUS
 };
 
 function configureStore (state = INIT_STATE) {

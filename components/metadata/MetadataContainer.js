@@ -1,7 +1,5 @@
 import { connect } from 'react-redux';
 import Metadata from './Metadata';
-import { enableInfoPanel, disableInfoPanel } from '../../actions/general';
-import { unloadNWBFile, unloadNWBFileInNotebook } from '../../actions/nwbfile';
 
 
 const mapStateToProps = (state, ownProps) => ({ 

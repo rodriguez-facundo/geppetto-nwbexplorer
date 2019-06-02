@@ -1,5 +1,5 @@
 import React from 'react';
-import Flexy from './Flexy';
+import FlexyContainer from './FlexyContainer';
 import ConsoleTabs from './ConsoleTabs';
 import SplashPage from './pages/SplashPage';
 import nwbFileService from '../services/NWBFileService';
@@ -103,7 +103,7 @@ export default class App extends React.Component{
       page = (
         <MuiThemeProvider theme={theme}>
           <AppbarContainer/>
-          <Flexy />
+          <FlexyContainer />
         </MuiThemeProvider>
       )
     } else {
@@ -111,11 +111,9 @@ export default class App extends React.Component{
     }
 
     return (
-      <React.Fragment>
-        
+      <div style={{ height: '100%', width: '100%' }}>
         <div id="main-container-inner">
           { page }
-        
           <div id="footer">
             <div id="footerHeader">
               <ConsoleTabs 
@@ -125,7 +123,7 @@ export default class App extends React.Component{
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
   
