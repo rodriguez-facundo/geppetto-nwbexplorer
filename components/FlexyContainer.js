@@ -10,7 +10,8 @@ import {
 
 const mapStateToProps = state => ({ 
   nodes: state.flexlayout.nodes, 
-  newNode: state.flexlayout.newNode
+  newNode: state.flexlayout.newNode,
+  descriptionTabInstancePath: state.flexlayout.descriptionTabInstancePath
 });
 
 const mapDispatchToProps = dispatch => ({ 

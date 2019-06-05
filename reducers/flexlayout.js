@@ -4,11 +4,13 @@ import {
   HIDE_NODE,
   CREATE_NODE,
   MAXIMIZE_NODE,
-  DELETE_ALL
+  DELETE_ALL,
+  CHANGE_INFO
 } from '../actions/flexlayout';
 
 export const FLEXLAYOUT_DEFAULT_STATUS = { 
   nodes: [],
+  descriptionTabInstancePath: 'empty',
   newNode: false
 };
 
@@ -32,7 +34,9 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
   // find node
   const node = nodes.find(node => node.id == action.id)
   
+  let descriptionTabInstancePath = state.descriptionTabInstancePath;
   let newNode = false;
+  
   switch (action.type) {
     
   case ACTIVATE_NODE:
@@ -58,11 +62,15 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
   case CREATE_NODE:
     newNode = action.json
     break;
+
+  case CHANGE_INFO:
+    descriptionTabInstancePath = action.instancePath;
+    break;
   
   case DELETE_ALL:
     return FLEXLAYOUT_DEFAULT_STATUS
   
   }
   
-  return { nodes, newNode }
+  return { nodes, newNode, descriptionTabInstancePath }
 }

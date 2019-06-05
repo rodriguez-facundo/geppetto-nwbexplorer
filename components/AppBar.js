@@ -121,8 +121,13 @@ export default class Appbar extends React.Component {
    * Operates on an instance of a state variable and plots in accordance
    */
   clickAction ($instance$) {
+    const { changeDescriptionTabContent } = this.props;
     // TODO handle time series loading with redux actions
+    
+    // get path for selected timeseries metadata
+    changeDescriptionTabContent(`${$instance$.parent.id}_${$instance$.id}`)    
     this.plotInstance($instance$);
+
     this.refs.controlpanelref.close();
   }
 
@@ -410,8 +415,8 @@ export default class Appbar extends React.Component {
                   onClick={ event => {
                     createNode({
                       type: "tab",
-                      name: "Description",
-                      id: "Description",
+                      name: "General",
+                      id: "general",
                       component: "Description",
                       enableRename: false
                     })

@@ -19,13 +19,33 @@ const json = {
             "type": "tabset",
             "weight": 100,
             "id": "top2",
+            "enableDeleteWhenEmpty": false,
+            "enableDrop": false,
+            "enableDrag": false,
+            "enableDivide": false,
+            "enableMaximize": false,
             "children": [
+              {
+                "type": "tab",
+                "name": "General",
+                "component": "General",
+                "id":"general",
+                "enableClose":false,
+                "enableDrag": false,
+                "enableRename": false,
+                "enableRenderOnDemand": false,
+                "enableMinimize": false,
+              },
               {
                 "type": "tab",
                 "name": "Description",
                 "component": "Description",
-                "id":"Description",
+                "id": "description",
+                "enableClose":false,
+                "enableDrag": false,
                 "enableRename": false,
+                "enableRenderOnDemand": false,
+                "enableMinimize": false,
               }
             ]
           }
@@ -108,12 +128,15 @@ export default class Flexy extends Component {
 
     if (component === "Explorer" ) { 
       return <FileExplorerPage />;
+
+    } else if (component === "General" ) { 
+      return <MetadataContainer mode="general"/>
+
     } else if (component === "Description" ) { 
-      return <MetadataContainer instancePath='nwbfile.metadata' />
+      return <MetadataContainer mode="description"/>
+
     } else if (component === "Plot" ) { 
       return <h3 style={{ marginLeft: '15px' }}>Stay tuned</h3>;
-    } else if (component === "Others" ) { 
-      return <h3 style={{ marginLeft: '15px' }}>More to come!</h3>;
     }
   }
 
@@ -136,13 +159,17 @@ export default class Flexy extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     const { model } = this;
-    const { newNode, createNode, activateNode } = this.props;
+    const { newNode, createNode, activateNode, descriptionTabInstancePath } = this.props;
     if (newNode) {
       if (!model.getNodeById(newNode.id)){
         this.createTab(newNode);
         activateNode(newNode.id);
       }
       createNode(false);
+    }
+    if (descriptionTabInstancePath != prevProps.descriptionTabInstancePath) {
+      model.getNodeById('top2')._setSelected(1)
+      model.doAction(FlexLayout.Actions.setActiveTabset('description'))
     }
   }
 
@@ -159,7 +186,7 @@ export default class Flexy extends Component {
         // find if there exists another tab in the maximized node that could take its place
         const children = model.getActiveTabset().getChildren();
         const index = children.findIndex(child => child.getId() == action.data.node)
-        
+        // Understand if the tab to the left or right of the destroyed tab will be the next one to be maximized
         if (index != -1 && children.length > 1) {
           if (index == 0) {
             maximizeNode(children[1].getId())  
@@ -207,14 +234,15 @@ export default class Flexy extends Component {
 
   onRenderTabSet (node, renderValues) {
     if (node.getType() === "tabset") {
-      renderValues.buttons.push(<div key={node.getId()} className="fa fa-window-minimize customIconFlexLayout" onClick={() => {
-        this.model.doAction(FlexLayout.Actions.moveNode(node.getSelectedNode().getId(), "border_bottom", FlexLayout.DockLocation.CENTER, 0));
-      }} />);
+      if (node.getId() != 'top2'){
+        renderValues.buttons.push(<div key={node.getId()} className="fa fa-window-minimize customIconFlexLayout" onClick={() => {
+          this.model.doAction(FlexLayout.Actions.moveNode(node.getSelectedNode().getId(), "border_bottom", FlexLayout.DockLocation.CENTER, 0));
+        }} />);
+      }
     }
   }
   render () {
     
-
     return (
       <div >
         <FlexLayout.Layout
