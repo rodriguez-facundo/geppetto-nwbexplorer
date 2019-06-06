@@ -121,11 +121,12 @@ export default class Appbar extends React.Component {
    * Operates on an instance of a state variable and plots in accordance
    */
   clickAction ($instance$) {
-    const { changeDescriptionTabContent } = this.props;
+    const { changeDetailsWidgetInstancePath } = this.props;
     // TODO handle time series loading with redux actions
     
     // get path for selected timeseries metadata
-    changeDescriptionTabContent(`${$instance$.parent.id}_${$instance$.id}`)    
+    changeDetailsWidgetInstancePath($instance$.getInstancePath())    
+    
     this.plotInstance($instance$);
 
     this.refs.controlpanelref.close();
@@ -369,7 +370,7 @@ export default class Appbar extends React.Component {
   }
   
   render () {
-    const { model, createNode } = this.props;
+    const { model, createWidget } = this.props;
     
 
     if (!model) {
@@ -413,7 +414,7 @@ export default class Appbar extends React.Component {
                   
                 <IconButton
                   onClick={ event => {
-                    createNode({
+                    createWidget({
                       type: "tab",
                       name: "General",
                       id: "general",

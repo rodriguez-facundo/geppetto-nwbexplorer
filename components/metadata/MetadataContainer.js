@@ -3,7 +3,7 @@ import Metadata from './Metadata';
 
 
 const mapStateToProps = (state, ownProps) => ({ 
-  instancePath: state.flexlayout.descriptionTabInstancePath,
+  instancePath: state.flexlayout.detailsWidgetInstancePath,
   model: state.nwbfile.model,
   mode: ownProps.mode
 });

@@ -49,7 +49,7 @@ export const unloadNWBFile = { type: UNLOAD_NWB_FILE }
 export function nwbFileLoaded (model) { 
   return {
     type: NWB_FILE_LOADED,
-    data: { model: model }
+    data: { model: model.wrappedObj }
   }
 }
 

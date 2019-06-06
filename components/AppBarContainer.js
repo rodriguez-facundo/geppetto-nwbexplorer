@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import Appbar from './AppBar';
 import { unloadNWBFile, unloadNWBFileInNotebook } from '../actions/nwbfile';
 import { enableInfoPanel, disableInfoPanel } from '../actions/general';
-import { createNode, deleteAll, changeDescriptionTabContent } from '../actions/flexlayout';
+import { createWidget, deleteAll, changeDetailsWidgetInstancePath } from '../actions/flexlayout';
 
 const mapStateToProps = state => ({
   toggleInfoPanel: state.general.toggleInfoPanel,
@@ -16,9 +16,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(unloadNWBFileInNotebook());
     dispatch(unloadNWBFile);
   },
-  createNode: json => dispatch(createNode(json)),
+  createWidget: json => dispatch(createWidget(json)),
   deleteAll: () => dispatch(deleteAll()),
-  changeDescriptionTabContent: instancePath => dispatch(changeDescriptionTabContent(instancePath))
+  changeDetailsWidgetInstancePath: instancePath => dispatch(changeDetailsWidgetInstancePath(instancePath))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Appbar);

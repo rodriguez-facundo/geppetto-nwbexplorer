@@ -130,11 +130,11 @@ export default class Metadata extends React.Component {
     if (model){ 
       if (mode == 'general') {
         if (!!model != !!prevProps.model) {
-          this.setData(Instances.getInstance('nwbfile.information.general'))  
+          this.setData(Instances.getInstance('nwbfile.general'))  
         }
       } else {
         if (instancePath != prevProps.instancePath) {
-          this.setData(Instances.getInstance('nwbfile.information.' + instancePath))
+          this.setData(Instances.getInstance(instancePath))
         }
       }
     }
@@ -147,7 +147,7 @@ export default class Metadata extends React.Component {
        * if metadata is related to the General tab, we get the general instance
        * if metadata is related to a particular acquisition / stimulus, we get the specific instance
        */
-      const path = mode == "description" ? instancePath : 'nwbfile.information.general'
+      const path = mode == "description" ? instancePath : 'nwbfile.general'
       this.setData(Instances.getInstance(path))
     }
     window.addEventListener("resize", this.updateDimensions);
