@@ -39,15 +39,6 @@ iframe{
     }
 }
 
-.legendtext, .g-xtitle, .g-ytitle{
-    fill: @primary_color!important;
-}
-.xtick, .ytick, .xlines-above, .ylines-above{
-    stroke:@primary_color!important;
-    text{
-        fill:@primary_color!important;
-    }
-}
 
 .tabButton {
     border-top-left-radius: 10px;
@@ -273,4 +264,19 @@ iframe{
 }
 .fa:hover{
     color: white;
+}
+
+
+// Plotly
+.xtitle {
+    fill: white!important
+}
+.ytitle {
+    fill: white!important
+}
+.xtick > text {
+    fill: white!important
+}
+.ytick > text {
+    fill: white!important
 }

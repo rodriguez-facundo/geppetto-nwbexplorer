@@ -55,7 +55,6 @@ export default class Appbar extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      model: props.model,
       controlPanelHidden: true,
       plotButtonOpen: false,
       openDialog: false,
@@ -69,7 +68,7 @@ export default class Appbar extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
     this.handleClickBack = this.handleClickBack.bind(this);
-    this.toggleInfoPanel = this.toggleInfoPanel.bind(this);
+    // this.toggleInfoPanel = this.toggleInfoPanel.bind(this);
     window.controlPanelClickAction = this.clickAction.bind(this); // we don't like global variables but we like less putting the code in a string
 
 
@@ -129,17 +128,26 @@ export default class Appbar extends React.Component {
     
     this.plotInstance($instance$);
 
+
     this.refs.controlpanelref.close();
   }
 
   plotInstance ($instance$) {
+    const { widgets } = this.props;
     let instanceX = $instance$;
     let instanceType = $instance$.getVariable().getType();
-    if (instanceType.getName() === 'timeseries') {
-      this.retrieveAndPlotTimeSeries($instance$);
-    } else if (instanceType === 'MDTimeSeries') {
-      this.plotMDTimeSeries(instanceX);
-    } 
+
+    const widget = widgets.find(({ id }) => id == $instance$.getName)
+    if (!widget) {
+      if (instanceType.getName() === 'timeseries') {
+        this.retrieveAndPlotTimeSeries($instance$);
+      } else if (instanceType === 'MDTimeSeries') {
+        this.plotMDTimeSeries(instanceX);
+      } 
+    } else if (widget.status == "DESTROYED") {
+
+    }
+
     
   }
 
@@ -336,34 +344,42 @@ export default class Appbar extends React.Component {
   }
 
 
-  async createWidget () {
-    const w = await G.addWidget(1, { isStateless: true });
-    w.setName('Metadata');
-    w.setData(window.Instances.nwbfile.metadata);
-  }
+  /*
+   * async createWidget () {
+   *   const w = await G.addWidget(1, { isStateless: true });
+   *   w.setName('Metadata');
+   *   w.setData(window.Instances.nwbfile.metadata);
+   * }
+   */
 
-  async toggleInfoPanel () {
-    // TODO move info panel visualization to proper react component logic
-    let infoWidgetVisibility = undefined;
-    const popUpController = await GEPPETTO.WidgetFactory.getController(1)
-    const widgets = popUpController.getWidgets();
+  /*
+   * async toggleInfoPanel () {
+   *   // TODO move info panel visualization to proper react component logic
+   *   let infoWidgetVisibility = undefined;
+   *   const popUpController = await GEPPETTO.WidgetFactory.getController(1)
+   *   const widgets = popUpController.getWidgets();
+   */
     
-    widgets.forEach(w => {
-      if (w.getName() == 'Metadata') {
-        infoWidgetVisibility = w.visible;
-        infoWidgetVisibility ? w.hide() : w.show()
-      }
-    })
+  /*
+   *   widgets.forEach(w => {
+   *     if (w.getName() == 'Metadata') {
+   *       infoWidgetVisibility = w.visible;
+   *       infoWidgetVisibility ? w.hide() : w.show()
+   *     }
+   *   })
+   */
       
-    if (infoWidgetVisibility === undefined) {
-      this.createWidget();
-      this.props.enableInfoPanel();
-      return;
-    }
+  /*
+   *   if (infoWidgetVisibility === undefined) {
+   *     this.createWidget();
+   *     this.props.enableInfoPanel();
+   *     return;
+   *   }
+   */
     
-    this.props.disableInfoPanel();
+  //   this.props.disableInfoPanel();
     
-  }
+  // }
 
   handleClose () {
     this.setState({ anchorEl: null })
@@ -412,7 +428,7 @@ export default class Appbar extends React.Component {
                   <Icon color="error" className='fa fa-arrow-left' />
                 </IconButton>
                   
-                <IconButton
+                {/* <IconButton
                   onClick={ event => {
                     createWidget({
                       type: "tab",
@@ -424,7 +440,7 @@ export default class Appbar extends React.Component {
                   }}
                 >
                   <Icon color="primary" className='fa fa-info' />
-                </IconButton>
+                </IconButton> */}
                 
                 
                 <IconButton 

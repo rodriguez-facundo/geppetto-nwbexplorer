@@ -1,8 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component, lazy, Suspense } from 'react'
 import * as FlexLayout from 'geppetto-client/js/components/interface/flexLayout2/src/index';
 import Actions from 'geppetto-client/js/components/interface/flexLayout2/src/model/Actions';
 import FileExplorerPage from './pages/FileExplorerPage';
 import MetadataContainer from './metadata/MetadataContainer'
+
+const PlotContainer = React.lazy(() => import('./PlotContainer'));
+
+
+// import PlotContainer from './PlotContainer';
 
 const json = {
   "global": { sideBorders: 8 },
@@ -136,7 +141,11 @@ export default class Flexy extends Component {
       return <MetadataContainer mode="details"/>
 
     } else if (component === "Plot" ) { 
-      return <h3 style={{ marginLeft: '15px' }}>Stay tuned</h3>;
+      return (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PlotContainer />
+        </Suspense>
+      )
     }
   }
 
@@ -176,8 +185,11 @@ export default class Flexy extends Component {
   onAction (action) {
     if (action.type == Actions.DELETE_TAB) {
       this.deleteWidget(action);
-    } else if (action.type == Actions.MAXIMIZE_TOGGLE){
+    } else if (action.type == Actions.MAXIMIZE_TOGGLE) {
       this.maximizeWidget(action);
+    } else if (action.type == Actions.ADJUST_SPLIT) {
+      // plotly.js listens for this to resize
+      window.dispatchEvent(new Event('resize'));
     }
     this.model.doAction(action)
   }

@@ -6,7 +6,8 @@ import { createWidget, deleteAll, changeDetailsWidgetInstancePath } from '../act
 
 const mapStateToProps = state => ({
   toggleInfoPanel: state.general.toggleInfoPanel,
-  model: state.nwbfile.model
+  model: state.nwbfile.model,
+  widgets: state.flexlayout.widgets
 });
 
 const mapDispatchToProps = dispatch => ({ 
