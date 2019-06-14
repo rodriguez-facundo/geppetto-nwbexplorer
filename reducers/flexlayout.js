@@ -5,13 +5,17 @@ import {
   CREATE_WIDGET,
   MAXIMIZE_WIDGET,
   DELETE_ALL,
-  CHANGE_DETAILS_WIDGET_INSTANCE_PATH
+  CHANGE_DETAILS_WIDGET_INSTANCE_PATH,
+  CHANGE_INSTANCE_PATH_OF_CURRENT_SELECTED_PLOT,
+  CHANGE_TS_DATA_RETRIEVE_STATUS
 } from '../actions/flexlayout';
 
 export const FLEXLAYOUT_DEFAULT_STATUS = { 
   widgets: [],
   detailsWidgetInstancePath: 'empty',
-  newWidget: false
+  newWidget: false,
+  currentSelectedPlotInstancePath: 'empty',
+  timeseriesDataRetrieveStatus: 'COMPLETED'
 };
 
 
@@ -36,7 +40,8 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
   
   let newWidget = false;
   let detailsWidgetInstancePath = state.detailsWidgetInstancePath;
-  
+  let currentSelectedPlotInstancePath = state.currentSelectedPlotInstancePath;
+  let timeseriesDataRetrieveStatus = state.timeseriesDataRetrieveStatus;
   
   switch (action.type) {
     
@@ -61,17 +66,24 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
     break;
 
   case CREATE_WIDGET:
-    newWidget = action.json
+    newWidget = action.jsonDescribingWidget
     break;
 
   case CHANGE_DETAILS_WIDGET_INSTANCE_PATH:
     detailsWidgetInstancePath = action.instancePath;
     break;
-  
+
+  case CHANGE_INSTANCE_PATH_OF_CURRENT_SELECTED_PLOT:
+    currentSelectedPlotInstancePath = action.instancePath;
+    break;
+
+  case CHANGE_TS_DATA_RETRIEVE_STATUS:
+    timeseriesDataRetrieveStatus = action.newStatus;
+    break;
+    
   case DELETE_ALL:
     return FLEXLAYOUT_DEFAULT_STATUS
-  
   }
   
-  return { widgets, newWidget, detailsWidgetInstancePath }
+  return { widgets, newWidget, detailsWidgetInstancePath, currentSelectedPlotInstancePath, timeseriesDataRetrieveStatus }
 }

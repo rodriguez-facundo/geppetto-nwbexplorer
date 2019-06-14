@@ -6,9 +6,6 @@ import MetadataContainer from './metadata/MetadataContainer'
 
 const PlotContainer = React.lazy(() => import('./PlotContainer'));
 
-
-// import PlotContainer from './PlotContainer';
-
 const json = {
   "global": { sideBorders: 8 },
   "layout": {
@@ -65,13 +62,6 @@ const json = {
             "weight": 100,
             "id": "top3",
             "children": [
-              {
-                "type": "tab",
-                "name": "Plot1",
-                "component": "Plot",
-                "id":"Plot1",
-                "enableRename": false
-              }
             ]
           }
         ]
@@ -129,6 +119,7 @@ export default class Flexy extends Component {
         // if event is visible == false, then hide the tab
         hideWidget(node.getId())
       }
+      window.dispatchEvent(new Event('resize'));
     })
 
     if (component === "Explorer" ) { 
@@ -143,13 +134,13 @@ export default class Flexy extends Component {
     } else if (component === "Plot" ) { 
       return (
         <Suspense fallback={<div>Loading...</div>}>
-          <PlotContainer />
+          <PlotContainer instancePath={node.getConfig().instancePath}/>
         </Suspense>
       )
     }
   }
 
-  createTab (jsonDescription) {
+  createPanel (jsonDescription) {
     const { model } = this;
     const panels = model.getRoot().getChildren();
     let panel = new FlexLayout.TabSetNode(model, { type: "tabset", weight: 50 });
@@ -168,13 +159,15 @@ export default class Flexy extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     const { model } = this;
-    const { newWidget, createWidget, activateWidget, detailsWidgetInstancePath } = this.props;
+    const { newWidget, createWidget, activateWidget, detailsWidgetInstancePath, changeDetailsWidgetInstancePath } = this.props;
     if (newWidget) {
       if (!model.getNodeById(newWidget.id)){
-        this.createTab(newWidget);
+        this.createPanel(newWidget);
         activateWidget(newWidget.id);
       }
       createWidget(false);
+      changeDetailsWidgetInstancePath(newWidget.id)
+      window.dispatchEvent(new Event('resize'));
     }
     if (detailsWidgetInstancePath != prevProps.detailsWidgetInstancePath) {
       model.getNodeById('leftPanel')._setSelected(1)
@@ -183,14 +176,30 @@ export default class Flexy extends Component {
   }
 
   onAction (action) {
-    if (action.type == Actions.DELETE_TAB) {
+    const { detailsWidgetInstancePath, changeDetailsWidgetInstancePath } = this.props;
+
+    if (action.type == Actions.SET_ACTIVE_TABSET){
+      const widget = this.model.getActiveTabset().getSelectedNode()
+
+      if (widget) {
+        const widgetConfig = widget.getConfig();
+
+        if (widgetConfig && widgetConfig.instancePath != undefined && widgetConfig.instancePath != detailsWidgetInstancePath) {
+          changeDetailsWidgetInstancePath(widgetConfig.instancePath)
+        }
+      }
+    } else if (action.type == Actions.DELETE_TAB) {
       this.deleteWidget(action);
+
     } else if (action.type == Actions.MAXIMIZE_TOGGLE) {
       this.maximizeWidget(action);
-    } else if (action.type == Actions.ADJUST_SPLIT) {
-      // plotly.js listens for this to resize
+
+    } 
+    if ( Actions.ADJUST_SPLIT == action.type || Actions.MOVE_NODE == action.type || Actions.ADD_NODE == action.type || Actions.MAXIMIZE_TOGGLE == action.type || Actions.DELETE_TAB == action.type){
+      // All plots need to resize if panels are resized
       window.dispatchEvent(new Event('resize'));
     }
+       
     this.model.doAction(action)
   }
 

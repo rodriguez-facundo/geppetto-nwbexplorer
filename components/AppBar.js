@@ -19,6 +19,7 @@ import {
 
 import GeppettoPathService from "../services/GeppettoPathService";
 
+import { TS_STATUS } from '../actions/flexlayout';
 
 const styles = {
   modal: {
@@ -75,8 +76,51 @@ export default class Appbar extends React.Component {
   }
   
   componentDidUpdate (prevProps, prevState) {
-    if (!prevProps.model && this.props.model) {
+    const {
+      model, widgets, createWidget,
+      changeDetailsWidgetInstancePath,
+      currentSelectedPlotInstancePath,
+      timeseriesDataRetrieveStatus, changeTsDataRetrieveStatus 
+    } = this.props;
+
+    if (!prevProps.model && model) {
       this.initControlPanel();
+    }
+    const widget = widgets.find(({ id }) => id == currentSelectedPlotInstancePath);
+    
+
+    if (prevProps.currentSelectedPlotInstancePath != currentSelectedPlotInstancePath) {    
+      if (widget){
+        changeDetailsWidgetInstancePath(currentSelectedPlotInstancePath)
+      } else {
+        changeTsDataRetrieveStatus(TS_STATUS.START)
+      }
+    }
+
+    if (!widget && timeseriesDataRetrieveStatus != prevProps.timeseriesDataRetrieveStatus) {
+      switch (timeseriesDataRetrieveStatus) {
+      
+      case "START": {
+        this.retrieveTimeSeries(currentSelectedPlotInstancePath)
+        break;
+      }
+        
+      case "COMPLETED": {
+        let [ , , tsName ] = currentSelectedPlotInstancePath.split('.', );
+        createWidget({
+          type: "tab",
+          config: { instancePath: currentSelectedPlotInstancePath },
+          id: currentSelectedPlotInstancePath,
+          component: "Plot",
+          name: tsName,
+          enableRename: false,
+        })
+        break;
+      }
+        
+      default:
+        break;
+      }
     }
   }
 
@@ -92,6 +136,7 @@ export default class Appbar extends React.Component {
      * Create instances for all variables with getInstance
      * Instances.addInstances seems not to be working, we add with getInstance
      */
+    
     let timeseriesInstances = GEPPETTO.ModelFactory.allPaths.
       // filter(pathobj => ~pathobj.type.indexOf('timeseries')).
       map(pathobj => Instances.getInstance(pathobj.path));
@@ -120,15 +165,12 @@ export default class Appbar extends React.Component {
    * Operates on an instance of a state variable and plots in accordance
    */
   clickAction ($instance$) {
-    const { changeDetailsWidgetInstancePath } = this.props;
+    const { changeInstancePathOfCurrentSelectedPlot } = this.props;
     // TODO handle time series loading with redux actions
     
-    // get path for selected timeseries metadata
-    changeDetailsWidgetInstancePath($instance$.getInstancePath())    
-    
-    this.plotInstance($instance$);
+    const instancePath = $instance$.getInstancePath();
 
-
+    changeInstancePathOfCurrentSelectedPlot(instancePath)
     this.refs.controlpanelref.close();
   }
 
@@ -137,58 +179,97 @@ export default class Appbar extends React.Component {
     let instanceX = $instance$;
     let instanceType = $instance$.getVariable().getType();
 
-    const widget = widgets.find(({ id }) => id == $instance$.getName)
+    const instanceName = $instance$.getName();
+    const instancePath = $instance$.getInstancePath();
+    const widget = widgets.find(({ id }) => id == instanceName)
     if (!widget) {
       if (instanceType.getName() === 'timeseries') {
-        this.retrieveAndPlotTimeSeries($instance$);
+        this.retrieveAndPlotTimeSeries($instance$, instanceName, instancePath);
       } else if (instanceType === 'MDTimeSeries') {
         this.plotMDTimeSeries(instanceX);
       } 
     } else if (widget.status == "DESTROYED") {
-
+      // plotInstance($instance$)
     }
 
     
   }
 
-  async retrieveAndPlotTimeSeries ($instance$) {
-    const data_path = $instance$.getPath() + '.data';
+  async retrieveTimeSeries (instancePath) {
+    const { changeTsDataRetrieveStatus } = this.props;
+    const data_path = instancePath + '.data';
     let data = Instances.getInstance(data_path);
-    const time_path = $instance$.getPath() + '.time';
+    const time_path = instancePath + '.time';
     let time = Instances.getInstance(time_path);
 
     if (data.getValue().wrappedObj.value.eClass == 'ImportValue') {
-    // Trick to resolve with the instance path instead than the type path. TODO remove when fixed 
+      changeTsDataRetrieveStatus(TS_STATUS.PENDING)
+      // Trick to resolve with the instance path instead than the type path. TODO remove when fixed 
       data.getValue().getPath = () => data.getPath()
       time.getValue().getPath = () => time.getPath()
       GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Loading timeseries data');
     
       // Using the resolve capability should be the proper way to resolve the values, but the paths coming from values are not correct
       data.getValue().resolve(dataValue => {
-        time.getValue().resolve(timeValue => {
-          G.addWidget(0).then(w => {
-            GEPPETTO.ModelFactory.deleteInstance(data);
-            GEPPETTO.ModelFactory.deleteInstance(time);
-            w.plotOptions.xaxis.title.font.color = '#3E3264'
-            w.plotOptions.yaxis.title.font.color = '#3E3264'
-            w.plotXYData(Instances.getInstance(data_path), Instances.getInstance(time_path)).setPosition(130, 100).setName($instance$.getPath());
-            if (!w.plotOptions.yaxis.title.text) {
-              w.setOptions({ yaxis: { title: { text: 'Arbitrary unit (Au)' } }, margin: { l: 40 } })
-            }
-            GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-          });
-        });
-      });
+        time.getValue().resolve(timeValue => {      
+          GEPPETTO.ModelFactory.deleteInstance(data),
+          GEPPETTO.ModelFactory.deleteInstance(time),
+          Instances.getInstance(data_path),
+          Instances.getInstance(time_path)
+          GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+
+          changeTsDataRetrieveStatus(TS_STATUS.COMPLETED)
+        })
+      })
+       
     } else {
-      G.addWidget(0).then(w => {
-        w.plotOptions.xaxis.title.font.color = '#3E3264'
-        w.plotOptions.yaxis.title.font.color = '#3E3264'
-        w.plotXYData(data, time).setPosition(130, 100).setName($instance$.getPath());
-        if (!w.plotOptions.yaxis.title.text) {
-          w.setOptions({ yaxis: { title: { text: 'Arbitrary unit (Au)' } }, margin: { l: 40 } })
-        }
-      });
+      changeTsDataRetrieveStatus(TS_STATUS.COMPLETED)
     }
+
+    /*
+     * if (data.getValue().wrappedObj.value.eClass == 'ImportValue') {
+     * // Trick to resolve with the instance path instead than the type path. TODO remove when fixed 
+     *   data.getValue().getPath = () => data.getPath()
+     *   time.getValue().getPath = () => time.getPath()
+     *   GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Loading timeseries data');
+     */
+    
+    /*
+     *   // Using the resolve capability should be the proper way to resolve the values, but the paths coming from values are not correct
+     *   data.getValue().resolve(dataValue => {
+     *     time.getValue().resolve(timeValue => {
+     *       GEPPETTO.ModelFactory.deleteInstance(data);
+     *       GEPPETTO.ModelFactory.deleteInstance(time);
+     *       Instances.getInstance(data_path)
+     *       Instances.getInstance(time_path)
+     */
+
+    //       GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+    //       /*
+    //        * G.addWidget(0).then(w => {
+    //        *   GEPPETTO.ModelFactory.deleteInstance(data);
+    //        *   GEPPETTO.ModelFactory.deleteInstance(time);
+    //        *   w.plotOptions.xaxis.title.font.color = '#3E3264'
+    //        *   w.plotOptions.yaxis.title.font.color = '#3E3264'
+    //        *   w.plotXYData(Instances.getInstance(data_path), Instances.getInstance(time_path)).setPosition(130, 100).setName($instance$.getPath());
+    //        *   if (!w.plotOptions.yaxis.title.text) {
+    //        *     w.setOptions({ yaxis: { title: { text: 'Arbitrary unit (Au)' } }, margin: { l: 40 } })
+    //        *   }
+    //        *   GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
+    //        * });
+    //        */
+    //     });
+    //   });
+    // } else {
+    //   G.addWidget(0).then(w => {
+    //     w.plotOptions.xaxis.title.font.color = '#3E3264'
+    //     w.plotOptions.yaxis.title.font.color = '#3E3264'
+    //     w.plotXYData(data, time).setPosition(130, 100).setName($instance$.getPath());
+    //     if (!w.plotOptions.yaxis.title.text) {
+    //       w.setOptions({ yaxis: { title: { text: 'Arbitrary unit (Au)' } }, margin: { l: 40 } })
+    //     }
+    //   });
+    // }
      
 
     // TODO add the value coming from importValue to current data and time instances
@@ -342,44 +423,6 @@ export default class Appbar extends React.Component {
     this.props.unloadNWBFile();
     
   }
-
-
-  /*
-   * async createWidget () {
-   *   const w = await G.addWidget(1, { isStateless: true });
-   *   w.setName('Metadata');
-   *   w.setData(window.Instances.nwbfile.metadata);
-   * }
-   */
-
-  /*
-   * async toggleInfoPanel () {
-   *   // TODO move info panel visualization to proper react component logic
-   *   let infoWidgetVisibility = undefined;
-   *   const popUpController = await GEPPETTO.WidgetFactory.getController(1)
-   *   const widgets = popUpController.getWidgets();
-   */
-    
-  /*
-   *   widgets.forEach(w => {
-   *     if (w.getName() == 'Metadata') {
-   *       infoWidgetVisibility = w.visible;
-   *       infoWidgetVisibility ? w.hide() : w.show()
-   *     }
-   *   })
-   */
-      
-  /*
-   *   if (infoWidgetVisibility === undefined) {
-   *     this.createWidget();
-   *     this.props.enableInfoPanel();
-   *     return;
-   *   }
-   */
-    
-  //   this.props.disableInfoPanel();
-    
-  // }
 
   handleClose () {
     this.setState({ anchorEl: null })

@@ -6,6 +6,7 @@ import {
   hideWidget,
   createWidget,
   maximizeWidget,
+  changeDetailsWidgetInstancePath
 } from '../actions/flexlayout';
 
 const mapStateToProps = state => state.flexlayout;
@@ -16,6 +17,7 @@ const mapDispatchToProps = dispatch => ({
   maximizeWidget: id => dispatch(maximizeWidget(id)),
   activateWidget: id => dispatch(activateWidget(id)),
   createWidget: json => dispatch(createWidget(json)),
+  changeDetailsWidgetInstancePath: instancePath => dispatch(changeDetailsWidgetInstancePath(instancePath))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Flexy);

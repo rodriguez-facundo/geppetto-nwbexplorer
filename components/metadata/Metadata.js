@@ -14,21 +14,7 @@ export default class Metadata extends React.Component {
   constructor (props) {
     super(props);
 
-    this.state = {
-      html: undefined,
-      coordX: this.getDefaultX(),
-      coordY: this.getDefaultY(),
-      widgetHeight: this.getDefaultHeight(),
-      widgetWidth: this.getDefaultWidth()
-    }
-
-    
-    this.getDefaultX = this.getDefaultX.bind(this);
-    this.getDefaultY = this.getDefaultY.bind(this);
-    this.getDefaultWidth = this.getDefaultWidth.bind(this);
-    this.getDefaultHeight = this.getDefaultHeight.bind(this);
-    this.updateDimensions = this.updateDimensions.bind(this);
-
+    this.state = { html: undefined, }
     
     this.setData = this.setData.bind(this);
     
@@ -38,24 +24,7 @@ export default class Metadata extends React.Component {
       keys : [],
       values : []
     };
-    
 
-  }
-
-  getDefaultWidth () {
-    return Math.ceil(window.innerWidth / 4);
-  }
-
-  getDefaultHeight () {
-    return ((window.innerHeight - Math.ceil(window.innerHeight / 4)) - 65);
-  }
-
-  getDefaultX () {
-    return (window.innerWidth - (Math.ceil(window.innerWidth / 4) + 10));
-  }
-
-  getDefaultY () { 
-    return 55;
   }
 
   setData (anyInstance, counter, firstOne = true) {
@@ -87,7 +56,7 @@ export default class Metadata extends React.Component {
         var v = type.getVariables()[i];
         var nameKey = v.getName();
         this.content.keys[i] = nameKey;
-        var id = `VFB_el_${i}`;
+        var id = `OSB_el_${i}`;
         this.setData(v, i, false);
       }
     } else if (type.getMetaType() == GEPPETTO.Resources.TEXT_TYPE) {
@@ -143,28 +112,11 @@ export default class Metadata extends React.Component {
   componentDidMount () {
     const { mode, model, instancePath } = this.props;
     if (model && typeof Instances != "undefined") {
-      /*
-       * if metadata is related to the General tab, we get the general instance
-       * if metadata is related to a particular acquisition / stimulus, we get the specific instance
-       */
       const path = mode == "description" ? instancePath : 'nwbfile.general'
       this.setData(Instances.getInstance(path))
     }
-    window.addEventListener("resize", this.updateDimensions);
   }
 
-  componentWillUnmount () {
-    window.removeEventListener("resize", this.updateDimensions);
-  }
-
-  updateDimensions () {
-    this.setState({
-      coordX: this.getDefaultX(),
-      coordY: this.getDefaultY(),
-      widgetHeight: this.getDefaultHeight(),
-      widgetWidth: this.getDefaultWidth()
-    });
-  }
 
   render () {
     return (
