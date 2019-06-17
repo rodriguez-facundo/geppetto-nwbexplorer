@@ -4,7 +4,7 @@ import {
   HIDE_WIDGET,
   CREATE_WIDGET,
   MAXIMIZE_WIDGET,
-  DELETE_ALL,
+  RESET_LAYOUT,
   CHANGE_DETAILS_WIDGET_INSTANCE_PATH
 } from '../actions/flexlayout';
 
@@ -68,7 +68,7 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
     detailsWidgetInstancePath = action.instancePath;
     break;
   
-  case DELETE_ALL:
+  case RESET_LAYOUT:
     return FLEXLAYOUT_DEFAULT_STATUS
   
   }

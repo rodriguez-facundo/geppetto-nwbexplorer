@@ -1,4 +1,4 @@
-export const DELETE_ALL = 'DELETE_ALL';
+export const RESET_LAYOUT = 'RESET_LAYOUT';
 export const HIDE_WIDGET = 'HIDE_WIDGET';
 export const DESTROY_WIDGET = 'DESTROY_WIDGET';
 export const MAXIMIZE_WIDGET = 'MAXIMIZE_WIDGET';
@@ -37,5 +37,3 @@ export const changeDetailsWidgetInstancePath = instancePath => ({
   instancePath,
   type: CHANGE_DETAILS_WIDGET_INSTANCE_PATH
 })
-
-export const deleteAll = () => ({ type: DELETE_ALL })
