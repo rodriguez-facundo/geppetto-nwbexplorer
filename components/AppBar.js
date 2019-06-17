@@ -80,7 +80,8 @@ export default class Appbar extends React.Component {
       model, widgets, createWidget,
       changeDetailsWidgetInstancePath,
       currentSelectedPlotInstancePath,
-      timeseriesDataRetrieveStatus, changeTsDataRetrieveStatus 
+      timeseriesDataRetrieveStatus, 
+      requestDataRetrieve
     } = this.props;
 
     if (!prevProps.model && model) {
@@ -93,7 +94,7 @@ export default class Appbar extends React.Component {
       if (widget){
         changeDetailsWidgetInstancePath(currentSelectedPlotInstancePath)
       } else {
-        changeTsDataRetrieveStatus(TS_STATUS.START)
+        requestDataRetrieve()
       }
     }
 
@@ -196,14 +197,15 @@ export default class Appbar extends React.Component {
   }
 
   async retrieveTimeSeries (instancePath) {
-    const { changeTsDataRetrieveStatus } = this.props;
+    const { startDataRetrieve,finishDataRetrieve } = this.props;
     const data_path = instancePath + '.data';
     let data = Instances.getInstance(data_path);
     const time_path = instancePath + '.time';
     let time = Instances.getInstance(time_path);
 
     if (data.getValue().wrappedObj.value.eClass == 'ImportValue') {
-      changeTsDataRetrieveStatus(TS_STATUS.PENDING)
+      startDataRetrieve()
+      
       // Trick to resolve with the instance path instead than the type path. TODO remove when fixed 
       data.getValue().getPath = () => data.getPath()
       time.getValue().getPath = () => time.getPath()
@@ -217,63 +219,14 @@ export default class Appbar extends React.Component {
           Instances.getInstance(data_path),
           Instances.getInstance(time_path)
           GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-
-          changeTsDataRetrieveStatus(TS_STATUS.COMPLETED)
+          finishDataRetrieve()
         })
       })
        
     } else {
-      changeTsDataRetrieveStatus(TS_STATUS.COMPLETED)
+      finishDataRetrieve()
     }
-
-    /*
-     * if (data.getValue().wrappedObj.value.eClass == 'ImportValue') {
-     * // Trick to resolve with the instance path instead than the type path. TODO remove when fixed 
-     *   data.getValue().getPath = () => data.getPath()
-     *   time.getValue().getPath = () => time.getPath()
-     *   GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Loading timeseries data');
-     */
-    
-    /*
-     *   // Using the resolve capability should be the proper way to resolve the values, but the paths coming from values are not correct
-     *   data.getValue().resolve(dataValue => {
-     *     time.getValue().resolve(timeValue => {
-     *       GEPPETTO.ModelFactory.deleteInstance(data);
-     *       GEPPETTO.ModelFactory.deleteInstance(time);
-     *       Instances.getInstance(data_path)
-     *       Instances.getInstance(time_path)
-     */
-
-    //       GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-    //       /*
-    //        * G.addWidget(0).then(w => {
-    //        *   GEPPETTO.ModelFactory.deleteInstance(data);
-    //        *   GEPPETTO.ModelFactory.deleteInstance(time);
-    //        *   w.plotOptions.xaxis.title.font.color = '#3E3264'
-    //        *   w.plotOptions.yaxis.title.font.color = '#3E3264'
-    //        *   w.plotXYData(Instances.getInstance(data_path), Instances.getInstance(time_path)).setPosition(130, 100).setName($instance$.getPath());
-    //        *   if (!w.plotOptions.yaxis.title.text) {
-    //        *     w.setOptions({ yaxis: { title: { text: 'Arbitrary unit (Au)' } }, margin: { l: 40 } })
-    //        *   }
-    //        *   GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-    //        * });
-    //        */
-    //     });
-    //   });
-    // } else {
-    //   G.addWidget(0).then(w => {
-    //     w.plotOptions.xaxis.title.font.color = '#3E3264'
-    //     w.plotOptions.yaxis.title.font.color = '#3E3264'
-    //     w.plotXYData(data, time).setPosition(130, 100).setName($instance$.getPath());
-    //     if (!w.plotOptions.yaxis.title.text) {
-    //       w.setOptions({ yaxis: { title: { text: 'Arbitrary unit (Au)' } }, margin: { l: 40 } })
-    //     }
-    //   });
-    // }
-     
-
     // TODO add the value coming from importValue to current data and time instances
-    
   }
 
   plotMDTimeSeries ($instance$) {

@@ -167,6 +167,7 @@ export default class Flexy extends Component {
       }
       createWidget(false);
       changeDetailsWidgetInstancePath(newWidget.id)
+      // TODO: this updates plotly.js plots to new panels sizes
       window.dispatchEvent(new Event('resize'));
     }
     if (detailsWidgetInstancePath != prevProps.detailsWidgetInstancePath) {

@@ -7,7 +7,11 @@ import {
   DELETE_ALL,
   CHANGE_DETAILS_WIDGET_INSTANCE_PATH,
   CHANGE_INSTANCE_PATH_OF_CURRENT_SELECTED_PLOT,
-  CHANGE_TS_DATA_RETRIEVE_STATUS
+  CHANGE_TS_DATA_RETRIEVE_STATUS,
+  REQUEST_DATA_RETRIEVE,
+  START_DATA_RETRIEVE,
+  FINISH_DATA_RETRIEVE,
+  TS_STATUS
 } from '../actions/flexlayout';
 
 export const FLEXLAYOUT_DEFAULT_STATUS = { 
@@ -79,6 +83,18 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
 
   case CHANGE_TS_DATA_RETRIEVE_STATUS:
     timeseriesDataRetrieveStatus = action.newStatus;
+    break;
+
+  case REQUEST_DATA_RETRIEVE:
+    timeseriesDataRetrieveStatus = TS_STATUS.START
+    break;
+  
+  case START_DATA_RETRIEVE:
+    timeseriesDataRetrieveStatus = TS_STATUS.PENDING
+    break;
+  
+  case FINISH_DATA_RETRIEVE:
+    timeseriesDataRetrieveStatus = TS_STATUS.COMPLETED
     break;
     
   case DELETE_ALL:

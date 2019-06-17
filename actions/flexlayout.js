@@ -8,6 +8,10 @@ export const CHANGE_DETAILS_WIDGET_INSTANCE_PATH = 'CHANGE_DETAILS_WIDGET_INSTAN
 export const CREATE_WIDGET = 'CREATE_WIDGET';
 export const CHANGE_TS_DATA_RETRIEVE_STATUS = 'CHANGE_TS_DATA_RETRIEVE_STATUS';
 
+export const REQUEST_DATA_RETRIEVE = 'REQUEST_DATA_RETRIEVE';
+export const START_DATA_RETRIEVE = 'START_DATA_RETRIEVE';
+export const FINISH_DATA_RETRIEVE = 'FINISH_DATA_RETRIEVE';
+
 export const activateWidget = id => ({
   id,
   type: ACTIVATE_WIDGET
@@ -43,10 +47,11 @@ export const changeInstancePathOfCurrentSelectedPlot = instancePath => ({
   type: CHANGE_INSTANCE_PATH_OF_CURRENT_SELECTED_PLOT
 })
 
-export const changeTsDataRetrieveStatus = newStatus => ({
-  newStatus,
-  type: CHANGE_TS_DATA_RETRIEVE_STATUS
-})
+export const requestDataRetrieve = () => ({ type: REQUEST_DATA_RETRIEVE })
+
+export const startDataRetrieve = () => ({ type: START_DATA_RETRIEVE })
+
+export const finishDataRetrieve = () => ({ type: FINISH_DATA_RETRIEVE })
 
 export const deleteAll = () => ({ type: DELETE_ALL })
 
