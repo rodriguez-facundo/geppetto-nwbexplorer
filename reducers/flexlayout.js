@@ -11,17 +11,9 @@ import {
   REQUEST_DATA_RETRIEVE,
   START_DATA_RETRIEVE,
   FINISH_DATA_RETRIEVE,
-  TS_STATUS
+  TS_STATUS,
+  FINISH_WIDGET_CREATION
 } from '../actions/flexlayout';
-
-export const FLEXLAYOUT_DEFAULT_STATUS = { 
-  widgets: [],
-  detailsWidgetInstancePath: 'empty',
-  newWidget: false,
-  currentSelectedPlotInstancePath: 'empty',
-  timeseriesDataRetrieveStatus: 'COMPLETED'
-};
-
 
 /*
  * status could be one of:
@@ -30,19 +22,36 @@ export const FLEXLAYOUT_DEFAULT_STATUS = {
  *  - DESTROYED:  the tab was deleted from flexlayout.
  *  - MAXIMIZED:  the tab is maximized (only one tab can be maximized simultaneously)
  */
-const createNewWidgetState = id => ({
+const createNewWidgetState = ({ id, name, component = 'Plot', instancePath = '', status = 'ACTIVE' }) => ({
   id,
-  status: "ACTIVE"
+  name,
+  status,
+  component,
+  type: "tab",
+  enableRename: false,
+  // attr defined inside config, will also be available from within flexlayout nodes.  For example:  node.getNodeById(id).getConfig()
+  config: { instancePath, panel: component == "Plot" ? "rightPanel" : "leftPanel" },
 })
 
+
+export const FLEXLAYOUT_DEFAULT_STATUS = { 
+  widgets: [
+    createNewWidgetState({ id: 'general', name: 'General', component: 'General' }),
+    createNewWidgetState({ id: 'details', name: 'Details', component: 'details', status: 'HIDDEN' }), 
+  ],
+  detailsWidgetInstancePath: 'empty',
+  newWidgetDescriptor: false,
+  currentSelectedPlotInstancePath: 'empty',
+  timeseriesDataRetrieveStatus: 'COMPLETED'
+};
 
 export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
   // clone widgets
   const widgets = state.widgets.map(widget => ({ ...widget }))
   // find widget
-  const widget = widgets.find(widget => widget.id == action.id)
+  let widget = widgets.find(widget => widget.id == action.id)
   
-  let newWidget = false;
+  let newWidgetDescriptor = false;
   let detailsWidgetInstancePath = state.detailsWidgetInstancePath;
   let currentSelectedPlotInstancePath = state.currentSelectedPlotInstancePath;
   let timeseriesDataRetrieveStatus = state.timeseriesDataRetrieveStatus;
@@ -50,11 +59,7 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
   switch (action.type) {
     
   case ACTIVATE_WIDGET:
-    if (widget){
-      widget.status = "ACTIVE"
-    } else {
-      widgets.push(createNewWidgetState(action.id))
-    }
+    widget.status = "ACTIVE"
     break;
   
   case DESTROY_WIDGET:
@@ -70,7 +75,21 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
     break;
 
   case CREATE_WIDGET:
-    newWidget = action.jsonDescribingWidget
+    if (action.jsonDescribingWidget) {
+      newWidgetDescriptor = createNewWidgetState(action.jsonDescribingWidget);
+      widget = widgets.find(widget => widget.id == action.jsonDescribingWidget.id);
+
+      if (widget) {
+        widget.status = 'ACTIVE'
+      } else {
+        widgets.push(newWidgetDescriptor)
+      }
+      
+    }
+    break;
+
+  case FINISH_WIDGET_CREATION:
+    // set back newWidgetDescriptor to false
     break;
 
   case CHANGE_DETAILS_WIDGET_INSTANCE_PATH:
@@ -101,5 +120,5 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
     return FLEXLAYOUT_DEFAULT_STATUS
   }
   
-  return { widgets, newWidget, detailsWidgetInstancePath, currentSelectedPlotInstancePath, timeseriesDataRetrieveStatus }
+  return { widgets, newWidgetDescriptor, detailsWidgetInstancePath, currentSelectedPlotInstancePath, timeseriesDataRetrieveStatus }
 }

@@ -88,37 +88,37 @@ export default class Appbar extends React.Component {
       this.initControlPanel();
     }
     const widget = widgets.find(({ id }) => id == currentSelectedPlotInstancePath);
-    
 
-    if (prevProps.currentSelectedPlotInstancePath != currentSelectedPlotInstancePath) {    
-      if (widget){
-        changeDetailsWidgetInstancePath(currentSelectedPlotInstancePath)
-      } else {
-        requestDataRetrieve()
-      }
-    }
+
+    /*
+     * if (prevProps.currentSelectedPlotInstancePath != currentSelectedPlotInstancePath) {    
+     *   if (widget){
+     *     changeDetailsWidgetInstancePath(currentSelectedPlotInstancePath)
+     *   } else {
+     *     requestDataRetrieve()
+     *   }
+     * }
+     */
 
     if (!widget && timeseriesDataRetrieveStatus != prevProps.timeseriesDataRetrieveStatus) {
       switch (timeseriesDataRetrieveStatus) {
-      
+
       case "START": {
         this.retrieveTimeSeries(currentSelectedPlotInstancePath)
         break;
       }
-        
+
       case "COMPLETED": {
-        let [ , , tsName ] = currentSelectedPlotInstancePath.split('.', );
+        const [ , , tsName ] = currentSelectedPlotInstancePath.split('.', );
         createWidget({
-          type: "tab",
-          config: { instancePath: currentSelectedPlotInstancePath },
+          instancePath: currentSelectedPlotInstancePath,
           id: currentSelectedPlotInstancePath,
           component: "Plot",
           name: tsName,
-          enableRename: false,
         })
         break;
       }
-        
+
       default:
         break;
       }
@@ -132,16 +132,16 @@ export default class Appbar extends React.Component {
       this.refs.controlpanelref.setControlsConfig(controlPanelConfig);
       this.refs.controlpanelref.setControls(controlPanelControlConfigs);
     }
-    
+
     /*
      * Create instances for all variables with getInstance
      * Instances.addInstances seems not to be working, we add with getInstance
      */
-    
+
     let timeseriesInstances = GEPPETTO.ModelFactory.allPaths.
       // filter(pathobj => ~pathobj.type.indexOf('timeseries')).
       map(pathobj => Instances.getInstance(pathobj.path));
-    
+
 
     /*
      * Change the data filter on the control panel
@@ -166,12 +166,33 @@ export default class Appbar extends React.Component {
    * Operates on an instance of a state variable and plots in accordance
    */
   clickAction ($instance$) {
-    const { changeInstancePathOfCurrentSelectedPlot } = this.props;
-    // TODO handle time series loading with redux actions
-    
+    const { 
+      widgets, createWidget, requestDataRetrieve,
+      currentSelectedPlotInstancePath, 
+      changeInstancePathOfCurrentSelectedPlot,
+    } = this.props;
+
     const instancePath = $instance$.getInstancePath();
 
-    changeInstancePathOfCurrentSelectedPlot(instancePath)
+    const widget = widgets.find(({ id }) => id == instancePath);
+
+    if (currentSelectedPlotInstancePath != instancePath) {
+      changeInstancePathOfCurrentSelectedPlot(instancePath)
+    }
+    
+    if (widget){
+      if (widget.status == 'DESTROYED') {
+        const [ , , tsName ] = instancePath.split('.', );
+        createWidget({
+          name: tsName,
+          instancePath,
+          id: instancePath,
+        })
+      }
+    } else {
+      requestDataRetrieve()
+    }
+
     this.refs.controlpanelref.close();
   }
 
@@ -192,8 +213,6 @@ export default class Appbar extends React.Component {
     } else if (widget.status == "DESTROYED") {
       // plotInstance($instance$)
     }
-
-    
   }
 
   async retrieveTimeSeries (instancePath) {
@@ -382,7 +401,7 @@ export default class Appbar extends React.Component {
   }
   
   render () {
-    const { model, createWidget } = this.props;
+    const { model } = this.props;
     
 
     if (!model) {
@@ -423,20 +442,6 @@ export default class Appbar extends React.Component {
                 >
                   <Icon color="error" className='fa fa-arrow-left' />
                 </IconButton>
-                  
-                {/* <IconButton
-                  onClick={ event => {
-                    createWidget({
-                      type: "tab",
-                      name: "General",
-                      id: "general",
-                      component: "Description",
-                      enableRename: false
-                    })
-                  }}
-                >
-                  <Icon color="primary" className='fa fa-info' />
-                </IconButton> */}
                 
                 
                 <IconButton 

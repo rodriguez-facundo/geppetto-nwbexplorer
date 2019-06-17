@@ -6,6 +6,7 @@ import {
   hideWidget,
   createWidget,
   maximizeWidget,
+  finishWidgetCreation,
   changeDetailsWidgetInstancePath
 } from '../actions/flexlayout';
 
@@ -17,6 +18,7 @@ const mapDispatchToProps = dispatch => ({
   maximizeWidget: id => dispatch(maximizeWidget(id)),
   activateWidget: id => dispatch(activateWidget(id)),
   createWidget: json => dispatch(createWidget(json)),
+  finishWidgetCreation: () => dispatch(finishWidgetCreation()),
   changeDetailsWidgetInstancePath: instancePath => dispatch(changeDetailsWidgetInstancePath(instancePath))
 });
 

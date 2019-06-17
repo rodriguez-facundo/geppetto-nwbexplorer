@@ -6,6 +6,7 @@ export const ACTIVATE_WIDGET = 'ACTIVATE_WIDGET';
 export const CHANGE_INSTANCE_PATH_OF_CURRENT_SELECTED_PLOT = 'CHANGE_INSTANCE_PATH_OF_CURRENT_SELECTED_PLOT';
 export const CHANGE_DETAILS_WIDGET_INSTANCE_PATH = 'CHANGE_DETAILS_WIDGET_INSTANCE_PATH';
 export const CREATE_WIDGET = 'CREATE_WIDGET';
+export const FINISH_WIDGET_CREATION = 'FINISH_WIDGET_CREATION';
 export const CHANGE_TS_DATA_RETRIEVE_STATUS = 'CHANGE_TS_DATA_RETRIEVE_STATUS';
 
 export const REQUEST_DATA_RETRIEVE = 'REQUEST_DATA_RETRIEVE';
@@ -36,6 +37,8 @@ export const createWidget = jsonDescribingWidget => ({
   jsonDescribingWidget,
   type: CREATE_WIDGET
 })
+
+export const finishWidgetCreation = () => ({ type: FINISH_WIDGET_CREATION })
 
 export const changeDetailsWidgetInstancePath = instancePath => ({ 
   instancePath,
