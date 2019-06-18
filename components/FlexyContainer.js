@@ -1,24 +1,21 @@
 import { connect } from 'react-redux';
 import Flexy from './Flexy';
 import { 
-  activateNode,
-  destroyNode,
-  hideNode,
-  createNode,
-  maximizeNode,
+  activateWidget,
+  destroyWidget,
+  hideWidget,
+  createWidget,
+  maximizeWidget,
 } from '../actions/flexlayout';
 
-const mapStateToProps = state => ({ 
-  nodes: state.flexlayout.nodes, 
-  newNode: state.flexlayout.newNode
-});
+const mapStateToProps = state => state.flexlayout;
 
 const mapDispatchToProps = dispatch => ({ 
-  hideNode: id => dispatch(hideNode(id)),
-  destroyNode: id => dispatch(destroyNode(id)),
-  maximizeNode: id => dispatch(maximizeNode(id)),
-  activateNode: id => dispatch(activateNode(id)),
-  createNode: json => dispatch(createNode(json)),
+  hideWidget: id => dispatch(hideWidget(id)),
+  destroyWidget: id => dispatch(destroyWidget(id)),
+  maximizeWidget: id => dispatch(maximizeWidget(id)),
+  activateWidget: id => dispatch(activateWidget(id)),
+  createWidget: json => dispatch(createWidget(json)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Flexy);

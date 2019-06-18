@@ -1,6 +1,5 @@
 import React from 'react';
 import Collapsible from 'react-collapsible';
-// import GEPPETTO.Resources from 'geppetto-client/js/common/GEPPETTO.GEPPETTO.Resources';
 import HTMLViewer from 'geppetto-client/js/components/interface/htmlViewer/HTMLViewer';
 
 const anchorme = require('anchorme');
@@ -74,6 +73,11 @@ export default class Metadata extends React.Component {
       defaultProtocol: "http://"
     };
     var type = anyInstance;
+    if (!type) {
+      return 
+    }
+
+
     if (!(type instanceof Type)) {
       type = anyInstance.getType();
     }
@@ -122,16 +126,29 @@ export default class Metadata extends React.Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    const { model } = this.props;
-    if (!!model && !!model != !!prevProps.model) {
-      this.setData(Instances.getInstance('nwbfile.metadata'))
+    const { mode, model, instancePath } = this.props;
+    if (model){ 
+      if (mode == 'general') {
+        if (!!model != !!prevProps.model) {
+          this.setData(Instances.getInstance('nwbfile.general'))  
+        }
+      } else {
+        if (instancePath != prevProps.instancePath) {
+          this.setData(Instances.getInstance(instancePath))
+        }
+      }
     }
   }
 
   componentDidMount () {
-    const { model } = this.props;
+    const { mode, model, instancePath } = this.props;
     if (model && typeof Instances != "undefined") {
-      this.setData(Instances.getInstance('nwbfile.metadata'))
+      /*
+       * if metadata is related to the General tab, we get the general instance
+       * if metadata is related to a particular acquisition / stimulus, we get the specific instance
+       */
+      const path = mode == "description" ? instancePath : 'nwbfile.general'
+      this.setData(Instances.getInstance(path))
     }
     window.addEventListener("resize", this.updateDimensions);
   }

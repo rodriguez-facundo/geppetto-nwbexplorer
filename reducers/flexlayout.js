@@ -1,68 +1,77 @@
 import { 
-  ACTIVATE_NODE,
-  DESTROY_NODE,
-  HIDE_NODE,
-  CREATE_NODE,
-  MAXIMIZE_NODE,
-  DELETE_ALL
+  ACTIVATE_WIDGET,
+  DESTROY_WIDGET,
+  HIDE_WIDGET,
+  CREATE_WIDGET,
+  MAXIMIZE_WIDGET,
+  RESET_LAYOUT,
+  CHANGE_DETAILS_WIDGET_INSTANCE_PATH
 } from '../actions/flexlayout';
 
 export const FLEXLAYOUT_DEFAULT_STATUS = { 
-  nodes: [],
-  newNode: false
+  widgets: [],
+  detailsWidgetInstancePath: 'empty',
+  newWidget: false
 };
 
 
 /*
  * status could be one of:
  *  - ACTIVE:     the user can see the tab content.
- *  - HIDED:       the tab is minimized, or other tab in the node is currently selected.
+ *  - HIDDEN:       the tab is minimized, or other tab in the node is currently selected.
  *  - DESTROYED:  the tab was deleted from flexlayout.
  *  - MAXIMIZED:  the tab is maximized (only one tab can be maximized simultaneously)
  */
-const newTabNode = id => ({
+const createNewWidgetState = id => ({
   id,
   status: "ACTIVE"
 })
 
 
 export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
-  // clone nodes
-  const nodes = state.nodes.map(node => ({ ...node }))
-  // find node
-  const node = nodes.find(node => node.id == action.id)
+  // clone widgets
+  const widgets = state.widgets.map(widget => ({ ...widget }))
+  // find widget
+  const widget = widgets.find(widget => widget.id == action.id)
   
-  let newNode = false;
+  let newWidget = false;
+  let detailsWidgetInstancePath = state.detailsWidgetInstancePath;
+  
+  
   switch (action.type) {
     
-  case ACTIVATE_NODE:
-    if (node){
-      node.status = "ACTIVE"
+  case ACTIVATE_WIDGET:
+    if (widget){
+      widget.status = "ACTIVE"
     } else {
-      nodes.push(newTabNode(action.id))
+      widgets.push(createNewWidgetState(action.id))
     }
     break;
   
-  case DESTROY_NODE:
-    node.status = "DESTROYED"
+  case DESTROY_WIDGET:
+    widget.status = "DESTROYED"
     break;
   
-  case HIDE_NODE:
-    node.status = "HIDED"
+  case HIDE_WIDGET:
+    widget.status = "HIDDEN"
     break;
   
-  case MAXIMIZE_NODE:
-    node.status = "MAXIMIZED"
+  case MAXIMIZE_WIDGET:
+    widget.status = "MAXIMIZED"
     break;
 
-  case CREATE_NODE:
-    newNode = action.json
+  case CREATE_WIDGET:
+    newWidget = action.json
+    break;
+
+  case CHANGE_DETAILS_WIDGET_INSTANCE_PATH:
+    detailsWidgetInstancePath = action.instancePath;
     break;
   
-  case DELETE_ALL:
+  case RESET_LAYOUT:
     return FLEXLAYOUT_DEFAULT_STATUS
   
   }
   
-  return { nodes, newNode }
+  return { widgets, newWidget, detailsWidgetInstancePath }
 }

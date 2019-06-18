@@ -1,34 +1,39 @@
-export const ACTIVATE_NODE = 'ACTIVATE_NODE';
-export const DESTROY_NODE = 'DESTROY_NODE';
-export const HIDE_NODE = 'HIDE_NODE';
-export const MAXIMIZE_NODE = 'MAXIMIZE_NODE';
-export const DELETE_ALL = 'DELETE_ALL'
+export const RESET_LAYOUT = 'RESET_LAYOUT';
+export const HIDE_WIDGET = 'HIDE_WIDGET';
+export const DESTROY_WIDGET = 'DESTROY_WIDGET';
+export const MAXIMIZE_WIDGET = 'MAXIMIZE_WIDGET';
+export const ACTIVATE_WIDGET = 'ACTIVATE_WIDGET';
 
-export const CREATE_NODE = "CREATE_NODE"
+export const CHANGE_DETAILS_WIDGET_INSTANCE_PATH = 'CHANGE_DETAILS_WIDGET_INSTANCE_PATH';
 
-export const activateNode = id => ({
+export const CREATE_WIDGET = "CREATE_WIDGET"
+
+export const activateWidget = id => ({
   id,
-  type: ACTIVATE_NODE
+  type: ACTIVATE_WIDGET
 })
 
-export const destroyNode = id => ({ 
+export const destroyWidget = id => ({ 
   id,
-  type: DESTROY_NODE 
+  type: DESTROY_WIDGET 
 })
 
-export const hideNode = id => ({ 
+export const hideWidget = id => ({ 
   id,
-  type: HIDE_NODE
+  type: HIDE_WIDGET
 })
 
-export const maximizeNode = id => ({ 
+export const maximizeWidget = id => ({ 
   id,
-  type: MAXIMIZE_NODE
+  type: MAXIMIZE_WIDGET
 })
 
-export const createNode = json => ({ 
+export const createWidget = json => ({ 
   json,
-  type: CREATE_NODE
+  type: CREATE_WIDGET
 })
 
-export const deleteAll = () => ({ type: DELETE_ALL })
+export const changeDetailsWidgetInstancePath = instancePath => ({ 
+  instancePath,
+  type: CHANGE_DETAILS_WIDGET_INSTANCE_PATH
+})

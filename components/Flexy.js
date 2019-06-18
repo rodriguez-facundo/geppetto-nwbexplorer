@@ -18,14 +18,34 @@ const json = {
           {
             "type": "tabset",
             "weight": 100,
-            "id": "top2",
+            "id": "leftPanel",
+            "enableDeleteWhenEmpty": false,
+            "enableDrop": false,
+            "enableDrag": false,
+            "enableDivide": false,
+            "enableMaximize": false,
             "children": [
               {
                 "type": "tab",
-                "name": "Description",
-                "component": "Description",
-                "id":"Description",
+                "name": "General",
+                "component": "General",
+                "id":"general",
+                "enableClose":false,
+                "enableDrag": false,
                 "enableRename": false,
+                "enableRenderOnDemand": false,
+                "enableMinimize": false,
+              },
+              {
+                "type": "tab",
+                "name": "Details",
+                "component": "Details",
+                "id": "details",
+                "enableClose":false,
+                "enableDrag": false,
+                "enableRename": false,
+                "enableRenderOnDemand": false,
+                "enableMinimize": false,
               }
             ]
           }
@@ -76,145 +96,160 @@ export default class Flexy extends Component {
   factory (node) {
     const { model } = this;
     const component = node.getComponent();
-    const { nodes, activateNode, hideNode, maximizeNode } = this.props;
+    const { widgets, activateWidget, hideWidget, maximizeWidget } = this.props;
 
-    if (!nodes.find(_node => _node.id == node.getId())){
-      activateNode(node.getId())
+    if (!widgets.find(widget => widget.id == node.getId())){
+      activateWidget(node.getId())
     }
 
     node.setEventListener("visibility", event => {
       // Find if there is a tab maximized
-      const currentMaximizedNode = nodes.find(node => node.status == "MAXIMIZED");      
+      const currentMaximizedWidget = widgets.find(widget => widget.status == "MAXIMIZED");      
 
       if (event.visible){
-        if (currentMaximizedNode){
+        if (currentMaximizedWidget){
           // find if the tab to visualize is hosted by the node that is maximized
-          const node2maximize = model.getMaximizedTabset().getChildren().find(tab => tab.getId() == node.getId())
-          if (node2maximize) {
-            maximizeNode(node.getId())
+          const widget2maximize = model.getMaximizedTabset().getChildren().find(tab => tab.getId() == node.getId())
+          if (widget2maximize) {
+            maximizeWidget(node.getId())
           } else {
             // activate in the background
-            activateNode(node.getId())  
+            activateWidget(node.getId())  
           }
 
         } else {
-          activateNode(node.getId())
+          activateWidget(node.getId())
         }
       } else {
         // if event is visible == false, then hide the tab
-        hideNode(node.getId())
+        hideWidget(node.getId())
       }
     })
 
     if (component === "Explorer" ) { 
       return <FileExplorerPage />;
-    } else if (component === "Description" ) { 
-      return <MetadataContainer instancePath='nwbfile.metadata' />
+
+    } else if (component === "General" ) { 
+      return <MetadataContainer mode="general"/>
+
+    } else if (component === "Details" ) { 
+      return <MetadataContainer mode="details"/>
+
     } else if (component === "Plot" ) { 
       return <h3 style={{ marginLeft: '15px' }}>Stay tuned</h3>;
-    } else if (component === "Others" ) { 
-      return <h3 style={{ marginLeft: '15px' }}>More to come!</h3>;
     }
   }
 
-  createTab (json) {
+  createTab (jsonDescription) {
     const { model } = this;
-    const children = model.getRoot().getChildren();
-    let node = new FlexLayout.TabSetNode(model, { type: "tabset", weight: 50 });
+    const panels = model.getRoot().getChildren();
+    let panel = new FlexLayout.TabSetNode(model, { type: "tabset", weight: 50 });
     
-    if (children.length <= 1) {
-      model.getRoot()._addChild(node);
+    if (panels.length <= 1) {
+      model.getRoot()._addChild(panel);
     } else {
-      const max = Math.max(...children.map(child => child.getRect().getRight()))
-      node = children.find(child => child.getRect().getRight() == max);
+      const max = Math.max(...panels.map(child => child.getRect().getRight()))
+      panel = panels.find(child => child.getRect().getRight() == max);
     }
 
-    if (node instanceof FlexLayout.TabSetNode || node instanceof FlexLayout.BorderNode || node instanceof FlexLayout.RowNode) {
-      model.doAction(FlexLayout.Actions.addNode(json, node.getId(), FlexLayout.DockLocation.BOTTOM, 0));
+    if (panel instanceof FlexLayout.TabSetNode || panel instanceof FlexLayout.BorderNode || panel instanceof FlexLayout.RowNode) {
+      model.doAction(FlexLayout.Actions.addNode(jsonDescription, panel.getId(), FlexLayout.DockLocation.BOTTOM, 0));
     }
   }
 
   componentDidUpdate (prevProps, prevState) {
     const { model } = this;
-    const { newNode, createNode, activateNode } = this.props;
-    if (newNode) {
-      if (!model.getNodeById(newNode.id)){
-        this.createTab(newNode);
-        activateNode(newNode.id);
+    const { newWidget, createWidget, activateWidget, detailsWidgetInstancePath } = this.props;
+    if (newWidget) {
+      if (!model.getNodeById(newWidget.id)){
+        this.createTab(newWidget);
+        activateWidget(newWidget.id);
       }
-      createNode(false);
+      createWidget(false);
+    }
+    if (detailsWidgetInstancePath != prevProps.detailsWidgetInstancePath) {
+      model.getNodeById('leftPanel')._setSelected(1)
+      model.doAction(FlexLayout.Actions.setActiveTabset('details'))
     }
   }
 
   onAction (action) {
-    const { model } = this;
-    const { nodes, activateNode, maximizeNode, destroyNode } = this.props;
     if (action.type == Actions.DELETE_TAB) {
-      // find if a node is maximized
-      const maximizedNode = nodes.find(node => node.status == "MAXIMIZED")
-      // change node status
-      destroyNode(action.data.node)
-      // check if the current maximized node is the same that is in the action dispatched
-      if (maximizedNode && maximizedNode.id == action.data.node) {
-        // find if there exists another tab in the maximized node that could take its place
-        const children = model.getActiveTabset().getChildren();
-        const index = children.findIndex(child => child.getId() == action.data.node)
-        
-        if (index != -1 && children.length > 1) {
-          if (index == 0) {
-            maximizeNode(children[1].getId())  
-          } else {
-            maximizeNode(children[index - 1].getId())  
-          }
-        } 
-      }
+      this.deleteWidget(action);
     } else if (action.type == Actions.MAXIMIZE_TOGGLE){
-      const node2maximize = model.getNodeById(action.data.node);
-      const tabIndex2maximize = node2maximize.getSelected()
-      const tabId2maximize = node2maximize.getChildren()[tabIndex2maximize].getId()
-      const maximizedTab = nodes.find(node => node.status == "MAXIMIZED");
+      this.maximizeWidget(action);
+    }
+    this.model.doAction(action)
+  }
 
-      if (maximizedTab) {
-        if (maximizedTab.id !== tabId2maximize){
-          maximizeNode(tabId2maximize)
-        } 
-        activateNode(maximizedTab.id)
-      } else {
-        maximizeNode(tabId2maximize)
+  maximizeWidget (action) {
+    const { model } = this;
+    const { widgets, maximizeWidget, activateWidget } = this.props;
+    const panel2maximize = model.getNodeById(action.data.node);
+    const widgetIndex2maximize = panel2maximize.getSelected();
+    const widgetId2maximize = panel2maximize.getChildren()[widgetIndex2maximize].getId();
+    const maximizedWidget = widgets.find(widget => widget.status == "MAXIMIZED");
+    if (maximizedWidget) {
+      if (maximizedWidget.id !== widgetId2maximize) {
+        maximizeWidget(widgetId2maximize);
+      }
+      activateWidget(maximizedWidget.id);
+    } else {
+      maximizeWidget(widgetId2maximize);
+    }
+  }
+
+  deleteWidget (action) {
+    const { model } = this;
+    const { widgets, destroyWidget, maximizeWidget } = this.props;
+    const maximizedWidget = widgets.find(widget => widget.status == "MAXIMIZED");
+    // change widget status
+    destroyWidget(action.data.node);
+    // check if the current maximized widget is the same than in the action dispatched
+    if (maximizedWidget && maximizedWidget.id == action.data.node) {
+      // find if there exists another widget in the maximized panel that could take its place
+      const panelChildren = model.getActiveTabset().getChildren();
+      const index = panelChildren.findIndex(child => child.getId() == action.data.node);
+      // Understand if the tab to the left or right of the destroyed tab will be the next one to be maximized
+      if (index != -1 && panelChildren.length > 1) {
+        if (index == 0) {
+          maximizeWidget(panelChildren[1].getId());
+        } else {
+          maximizeWidget(panelChildren[index - 1].getId());
+        }
       }
     }
-
-    this.model.doAction(action)
   }
 
   clickOnBordersAction (node) {
     const model = node.getModel();
-    const children = model.getRoot().getChildren();
-    let tabSet = new FlexLayout.TabSetNode(model, { type: "tabset" });
+    const panels = model.getRoot().getChildren();
+    let newPanel = new FlexLayout.TabSetNode(model, { type: "tabset" });
 
     if (node instanceof FlexLayout.TabNode || node instanceof FlexLayout.TabSetNode) {
-      if (children.length <= 1) {
-        model.getRoot()._addChild(tabSet);
+      if (panels.length <= 1) {
+        model.getRoot()._addChild(newPanel);
       } else {
-        const max = Math.max(...children.map(child => child.getRect().getRight()))
-        tabSet = children.find(child => child.getRect().getRight() == max);
+        const max = Math.max(...panels.map(child => child.getRect().getRight()))
+        newPanel = panels.find(child => child.getRect().getRight() == max);
       }
     }
-    if (tabSet instanceof FlexLayout.TabSetNode || tabSet instanceof FlexLayout.BorderNode || tabSet instanceof FlexLayout.RowNode) {
-      this.model.doAction(FlexLayout.Actions.moveNode(node.getId(), tabSet.getId(), FlexLayout.DockLocation.BOTTOM, 0));
+    if (newPanel instanceof FlexLayout.TabSetNode || newPanel instanceof FlexLayout.BorderNode || newPanel instanceof FlexLayout.RowNode) {
+      this.model.doAction(FlexLayout.Actions.moveNode(node.getId(), newPanel.getId(), FlexLayout.DockLocation.BOTTOM, 0));
     }
   }
 
-  onRenderTabSet (node, renderValues) {
-    if (node.getType() === "tabset") {
-      renderValues.buttons.push(<div key={node.getId()} className="fa fa-window-minimize customIconFlexLayout" onClick={() => {
-        this.model.doAction(FlexLayout.Actions.moveNode(node.getSelectedNode().getId(), "border_bottom", FlexLayout.DockLocation.CENTER, 0));
-      }} />);
+  onRenderTabSet (panel, renderValues) {
+    if (panel.getType() === "tabset") {
+      if (panel.getId() != 'leftPanel'){
+        renderValues.buttons.push(<div key={panel.getId()} className="fa fa-window-minimize customIconFlexLayout" onClick={() => {
+          this.model.doAction(FlexLayout.Actions.moveNode(panel.getSelectedNode().getId(), "border_bottom", FlexLayout.DockLocation.CENTER, 0));
+        }} />);
+      }
     }
   }
   render () {
     
-
     return (
       <div >
         <FlexLayout.Layout
