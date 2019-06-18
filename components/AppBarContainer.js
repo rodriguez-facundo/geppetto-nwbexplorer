@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import Appbar from './AppBar';
 import { unloadNWBFile, unloadNWBFileInNotebook } from '../actions/nwbfile';
 import { enableInfoPanel, disableInfoPanel } from '../actions/general';
+
 import { 
   createWidget, 
   deleteAll, 
@@ -10,7 +11,9 @@ import {
   requestDataRetrieve,
   startDataRetrieve,
   finishDataRetrieve,
+  RESET_LAYOUT
 } from '../actions/flexlayout';
+
 
 const mapStateToProps = ({ general, nwbfile, flexlayout }) => ({
   toggleInfoPanel: general.toggleInfoPanel,
@@ -28,7 +31,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(unloadNWBFile);
   },
   createWidget: json => dispatch(createWidget(json)),
-  deleteAll: () => dispatch(deleteAll()),
+  resetFlexlayoutState: () => dispatch({ type: RESET_LAYOUT }),
   changeDetailsWidgetInstancePath: instancePath => dispatch(changeDetailsWidgetInstancePath(instancePath)),
   changeInstancePathOfCurrentSelectedPlot: instancePath => dispatch(changeInstancePathOfCurrentSelectedPlot(instancePath)),
   requestDataRetrieve: () => dispatch(requestDataRetrieve()),

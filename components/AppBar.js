@@ -383,8 +383,8 @@ export default class Appbar extends React.Component {
   }
 
   handleClickBack () {
-    const { deleteAll } = this.props;
-    deleteAll()
+    const { resetFlexlayoutState } = this.props;
+    resetFlexlayoutState()
     let controller;
 
     Object.values(window.Widgets).forEach(async wtype => {

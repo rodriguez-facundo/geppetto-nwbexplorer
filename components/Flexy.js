@@ -59,7 +59,7 @@ const json = {
         "children": [
           {
             "type": "tabset",
-            "weight": 100,
+            "weight": 50,
             "id": "rightPanel",
             "enableDeleteWhenEmpty": false,
             "children": [
@@ -145,6 +145,7 @@ export default class Flexy extends Component {
      * panel = panels.find(child => child.getRect().getRight() == max);
      * model.doAction(FlexLayout.Actions.addNode(jsonDescription, panel.getId(), FlexLayout.DockLocation.BOTTOM, 0));
      */
+    // TODO: rather than rightPanel, we will have Plot panel, image panel
     this.refs.layout.addTabToTabSet("rightPanel", jsonDescription);
   }
 

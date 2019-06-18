@@ -1,4 +1,4 @@
-export const DELETE_ALL = 'DELETE_ALL';
+export const RESET_LAYOUT = 'RESET_LAYOUT';
 export const HIDE_WIDGET = 'HIDE_WIDGET';
 export const DESTROY_WIDGET = 'DESTROY_WIDGET';
 export const MAXIMIZE_WIDGET = 'MAXIMIZE_WIDGET';
@@ -45,6 +45,7 @@ export const changeDetailsWidgetInstancePath = instancePath => ({
   type: CHANGE_DETAILS_WIDGET_INSTANCE_PATH
 })
 
+
 export const changeInstancePathOfCurrentSelectedPlot = instancePath => ({ 
   instancePath,
   type: CHANGE_INSTANCE_PATH_OF_CURRENT_SELECTED_PLOT
@@ -55,9 +56,6 @@ export const requestDataRetrieve = () => ({ type: REQUEST_DATA_RETRIEVE })
 export const startDataRetrieve = () => ({ type: START_DATA_RETRIEVE })
 
 export const finishDataRetrieve = () => ({ type: FINISH_DATA_RETRIEVE })
-
-export const deleteAll = () => ({ type: DELETE_ALL })
-
 
 export const TS_STATUS = {
   START: "START",
