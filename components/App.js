@@ -11,6 +11,7 @@ import { grey } from '@material-ui/core/colors';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import AppbarContainer from './AppBarContainer'
+import ErrorDialogContainer from './ErrorDialogContainer';
 
 const theme = createMuiTheme({
   typography: { 
@@ -33,8 +34,15 @@ export default class App extends React.Component{
   }
 
   componentDidMount () {
-    const { setNWBFile, loadNotebook, notebookReady, nwbFileLoaded } = this.props;
+    const { setNWBFile, loadNotebook, notebookReady, nwbFileLoaded, raiseError } = this.props;
     self = this;
+    
+    
+    GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, error => {
+      raiseError(error)
+    })
+
+    
     // A message from the parent frame can specify the file to load
     window.addEventListener('message', event => {
 
@@ -104,6 +112,7 @@ export default class App extends React.Component{
         <MuiThemeProvider theme={theme}>
           <AppbarContainer/>
           <FlexyContainer />
+          <ErrorDialogContainer/>
         </MuiThemeProvider>
       )
     } else {

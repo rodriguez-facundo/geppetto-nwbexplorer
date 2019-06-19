@@ -370,16 +370,17 @@ export default class Appbar extends React.Component {
   }
 
   handleClickBack () {
-    const { resetFlexlayoutState } = this.props;
+    const { resetFlexlayoutState, unloadNWBFile } = this.props;
     resetFlexlayoutState()
-    let controller;
-
-    Object.values(window.Widgets).forEach(async wtype => {
-      controller = await GEPPETTO.WidgetFactory.getController(wtype);
-      controller.getWidgets().forEach(w => w.destroy());
-    });
-
-    this.props.unloadNWBFile();
+    unloadNWBFile();
+    /*
+     * let controller;
+     * Object.values(window.Widgets).forEach(async wtype => {
+     *   controller = await GEPPETTO.WidgetFactory.getController(wtype);
+     *   controller.getWidgets().forEach(w => w.destroy());
+     * });
+     */
+    
     
   }
 
