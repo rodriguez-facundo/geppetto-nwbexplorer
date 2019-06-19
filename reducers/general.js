@@ -1,4 +1,4 @@
-import { ENABLE_INFO_PANEL, DISABLE_INFO_PANEL } from '../actions/general';
+import { ENABLE_INFO_PANEL, DISABLE_INFO_PANEL, NEW_ERROR_MESSAGE } from '../actions/general';
 import * as nwbfileActions from '../actions/nwbfile';
 import * as notebookActions from '../actions/notebook';
 
@@ -10,6 +10,7 @@ export const GENERAL_DEFAULT_STATUS = {
   embedded: isEmbeddedInIframe(),
   toggleInfoPanel: false,
   loading: false,
+  error: ''
 };
 
 export default ( state = {}, action ) => ({ 
@@ -23,6 +24,8 @@ function reduceGeneral (state, action) {
     return { toggleInfoPanel: true } 
   case DISABLE_INFO_PANEL:
     return { toggleInfoPanel: false } 
+  case NEW_ERROR_MESSAGE:
+    return { error: action.error }
   case nwbfileActions.LOAD_NWB_FILE:
     return { loading: 'Loading NWB file' }
   case nwbfileActions.LOAD_NWB_FILE_IN_NOTEBOOK: 

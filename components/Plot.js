@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import ReduxPlot from 'geppetto-client/js/components/interface/plot/ReduxPlot.js';
+import Plot from 'geppetto-client/js/components/interface/plot/Plot.js';
 
 
 export default ({ model, instancePath }) => {
@@ -7,7 +7,7 @@ export default ({ model, instancePath }) => {
     return 
   }
   return (
-    <ReduxPlot 
+    <Plot 
       instancePath={instancePath}
       id={instancePath ? instancePath : "empty"}
     />

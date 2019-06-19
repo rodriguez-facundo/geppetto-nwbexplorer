@@ -5,7 +5,6 @@ import { enableInfoPanel, disableInfoPanel } from '../actions/general';
 
 import { 
   createWidget, 
-  deleteAll, 
   changeDetailsWidgetInstancePath, 
   changeInstancePathOfCurrentSelectedPlot, 
   requestDataRetrieve,
