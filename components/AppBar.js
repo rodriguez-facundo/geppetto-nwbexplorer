@@ -8,8 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
 
-import MenuItem from '@material-ui/core/MenuItem';
-
 import { 
   controlPanelConfig,
   controlPanelColMeta, 
@@ -17,9 +15,6 @@ import {
   controlPanelColumns 
 } from './configuration/controlPanelConfiguration';
 
-import GeppettoPathService from "../services/GeppettoPathService";
-
-import { TS_STATUS } from '../actions/flexlayout';
 
 const styles = {
   modal: {
@@ -43,48 +38,26 @@ const styles = {
   icon: {
     position: 'absolute',
     left: 15,
-    /*
-     * color: 'white',
-     * backgroundColor: 'black'
-     */
   }
 };
-
-const IMAGES_PATH = '/styles/images/';
 
 export default class Appbar extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {
-      controlPanelHidden: true,
-      plotButtonOpen: false,
-      openDialog: false,
-    };
-    
-    this.plotsAvailable = (null);
-    this.widgets = [];
-    this.plotFigure = this.plotFigure.bind(this);
-    this.newPlotWidget = this.newPlotWidget.bind(this);
-    this.getOpenedWidgets = this.getOpenedWidgets.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleRequestClose = this.handleRequestClose.bind(this);
-    this.handleClickBack = this.handleClickBack.bind(this);
-    // this.toggleInfoPanel = this.toggleInfoPanel.bind(this);
     window.controlPanelClickAction = this.clickAction.bind(this); // we don't like global variables but we like less putting the code in a string
+  }
 
-
+  componentDidMount () {
+    this.initControlPanel();
   }
   
   componentDidUpdate (prevProps, prevState) {
     const {
-      model, widgets, createWidget,
+      widgets, createWidget,
       currentSelectedPlotInstancePath,
       timeseriesDataRetrieveStatus, 
     } = this.props;
 
-    if (!prevProps.model && model) {
-      this.initControlPanel();
-    }
     const widget = widgets.find(({ id }) => id == currentSelectedPlotInstancePath);
 
     if (!widget && timeseriesDataRetrieveStatus != prevProps.timeseriesDataRetrieveStatus) {
@@ -145,10 +118,6 @@ export default class Appbar extends React.Component {
     this.refs.controlpanelref.open();
   }
 
-  handleCloseDialog = () => {
-    this.setState({ openDialog: false });
-  };
-
   /**
    * Operates on an instance of a state variable and plots in accordance
    */
@@ -181,25 +150,6 @@ export default class Appbar extends React.Component {
     }
 
     this.refs.controlpanelref.close();
-  }
-
-  plotInstance ($instance$) {
-    const { widgets } = this.props;
-    let instanceX = $instance$;
-    let instanceType = $instance$.getVariable().getType();
-
-    const instanceName = $instance$.getName();
-    const instancePath = $instance$.getInstancePath();
-    const widget = widgets.find(({ id }) => id == instanceName)
-    if (!widget) {
-      if (instanceType.getName() === 'timeseries') {
-        this.retrieveAndPlotTimeSeries($instance$, instanceName, instancePath);
-      } else if (instanceType === 'MDTimeSeries') {
-        this.plotMDTimeSeries(instanceX);
-      } 
-    } else if (widget.status == "DESTROYED") {
-      // plotInstance($instance$)
-    }
   }
 
   async retrieveTimeSeries (instancePath) {
@@ -235,163 +185,15 @@ export default class Appbar extends React.Component {
     // TODO add the value coming from importValue to current data and time instances
   }
 
-  plotMDTimeSeries ($instance$) {
-    let instanceX = Instances.getInstance($instance$.getPath());
-    let instanceX_values = instanceX.getVariable().getWrappedObj().initialValues;
-    if (typeof instanceX_values[0].value.value[0] !== 'undefined') {
-      if (instanceX_values[0].value.value[0].eClass === 'Image') {
-        G.addWidget('CAROUSEL', {
-          files: ['data:image/png;base64,' + instanceX_values[0].value.value[0].data],
-          onClick: function () {
-            return 0;
-          },
-          onMouseEnter: function () {
-            return 0;
-          },
-          onMouseLeave: function () {
-            return 0;
-          },
-        });
-      }
-    }
-  }
-
-  getOpenedWidgets () {
-    return this.widgets;
-  }
-
-  static isImage (instance) {
-    return false
-  }
-  
-
-  handleClick (event) {
-    // This prevents ghost click.
-    event.preventDefault();
-
-    this.setState({
-      plotButtonOpen: true,
-      anchorEl: event.currentTarget,
-    });
-  }
-
-
-  handleRequestClose () {
-    this.setState({ plotButtonOpen: false, });
-  }
-
-  /**
-   * Handles plots generated on the backend with holoviews
-   * Unused, should be revised both on the frontend and backend to work properly
-   * @returns {Promise<void>}
-   */
-  async loadExternalPlots () {
-    fetch(GeppettoPathService.serverPath("/api/plots_available"))
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        } else {
-          throw new Error('Something went wrong');
-        }
-      })
-      .then(responseJson => {
-        let response = responseJson;
-        let plotsAvailable = response.map(function (plot) {
-          /** fill plotsAvailable (controls) with the response and with onClick = fetch("api/plot?plot=plot_id") */
-          return <MenuItem key={plot.id}
-            style={styles.menuItem} innerDivStyle={styles.menuItemDiv}
-            primaryText={plot.name}
-            onClick={() => {
-              this.plotExternalHTML(GeppettoPathService.serverPath('/api/plot?plot=' + plot.id, plot.name))
-            }} />
-        });
-      })
-      .catch(error => console.error(error)); //
-  }
-  newPlotWidget (name, image) {
-    let that = this;
-    G.addWidget(1).then(w => {
-      w.setName(name);
-      let file = IMAGES_PATH + image;
-      w.$el.append("<img src='" + file + "'/>");
-      /*
-       * var svg = $(w.$el).find("svg")[0];
-       * svg.removeAttribute('width');
-       * svg.removeAttribute('height');
-       * svg.setAttribute('width', '100%');
-       * svg.setAttribute('height', '98%');
-       */
-      that.widgets.push(w);
-      w.showHistoryIcon(false);
-      w.showHelpIcon(false);
-    });
-  }
-
-  /**
-   * Injects .html plot in a iframe tag
-   * @param name A string that is presented in the widget
-   * @param url url to locate plot
-   */
-  newPlotWidgetIframe (name, url) {
-    var that = this;
-    G.addWidget(1).then(w => {
-      w.setName(name);
-
-      w.$el.append("<iframe src='" + url + "' width='100%' height='100%s'/>");
-      that.widgets.push(w);
-      w.showHistoryIcon(false);
-      w.showHelpIcon(false);
-    });
-  }
-
-  plotFigure (image, plotName) {
-    this.newPlotWidget(plotName, image)
-  }
-
-  /**
-   * Fetches url to retrieve plot external html
-   * @param url url such as api/plot?plot=plot_id
-   * @param plot_id
-   */
-  plotExternalHTML (url, plot_name) {
-    fetch(url)
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        } else {
-          throw new Error('Something went wrong');
-        }
-      })
-      .then(responseJson => {
-        let data = responseJson;
-        this.newPlotWidgetIframe(plot_name, data.url);
-      })
-      .catch(error => console.error(error));
-  }
-
   handleClickBack () {
     const { resetFlexlayoutState, unloadNWBFile } = this.props;
     resetFlexlayoutState()
     unloadNWBFile();
-    /*
-     * let controller;
-     * Object.values(window.Widgets).forEach(async wtype => {
-     *   controller = await GEPPETTO.WidgetFactory.getController(wtype);
-     *   controller.getWidgets().forEach(w => w.destroy());
-     * });
-     */
-    
-    
-  }
-
-  handleClose () {
-    this.setState({ anchorEl: null })
   }
   
   render () {
     const { model } = this.props;
-    
-
+ 
     if (!model) {
       return '';
     }
@@ -426,7 +228,7 @@ export default class Appbar extends React.Component {
               <Grid item >
 
                 <IconButton
-                  onClick={this.handleClickBack}
+                  onClick={() => this.handleClickBack()}
                 >
                   <Icon color="error" className='fa fa-arrow-left' />
                 </IconButton>
@@ -435,7 +237,7 @@ export default class Appbar extends React.Component {
                 <IconButton 
                   onClick={() => this.refs.controlpanelref.open()}
                 >
-                  <Icon color="primary" className='fa fa-list' />
+                  <Icon color="error" className='fa fa-list' />
                 </IconButton>
                 
               </Grid>

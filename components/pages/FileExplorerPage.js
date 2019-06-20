@@ -1,17 +1,10 @@
-import React from 'react';
-import NWBExplorerContainer from '../NWBExplorerContainer';
+import React, { Fragment } from 'react';
+import FlexyContainer from '../FlexyContainer';
+import AppbarContainer from '../AppBarContainer'
 
-export default class FileExplorerPage extends React.Component{
-
-  render () {
-    return (
-      <div className="mainContainer">
-        <div className="midContainer">
-          <div id="instantiatedContainer" style={{ height: '90%', width: '100%' }}>
-            <NWBExplorerContainer />
-          </div>
-        </div>
-      </div>
-    )
-  }
-}
+export default () => (
+  <Fragment>
+    <AppbarContainer/>
+    <FlexyContainer />
+  </Fragment>
+)

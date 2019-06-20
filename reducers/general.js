@@ -2,10 +2,10 @@ import {
   ENABLE_INFO_PANEL, 
   DISABLE_INFO_PANEL, 
   RAISE_ERROR, 
-  START_RECOVERY_FROM_ERROR, 
-  RECOVERED_FROM_ERROR 
+  RECOVER_FROM_ERROR
 } from '../actions/general';
 
+import { NWB_FILE_NOT_FOUND_ERROR,MODULE_NOT_FOUND_ERROR, NAME_ERROR } from 'constants';
 import * as nwbfileActions from '../actions/nwbfile';
 import * as notebookActions from '../actions/notebook';
 
@@ -17,8 +17,7 @@ export const GENERAL_DEFAULT_STATUS = {
   embedded: isEmbeddedInIframe(),
   toggleInfoPanel: false,
   loading: false,
-  error: undefined,
-  need2RecoverFromError: false
+  error: undefined
 };
 
 export default ( state = {}, action ) => ({ 
@@ -37,12 +36,24 @@ function reduceGeneral (state, action) {
   
   case RAISE_ERROR:
     return { error: action.error }
+
   
-  case START_RECOVERY_FROM_ERROR:
-    return { need2RecoverFromError: true }  
+  case RECOVER_FROM_ERROR:{
+    switch (state.error.ename) {
+      
+    case NWB_FILE_NOT_FOUND_ERROR:
+      return { error: false }
+  
+    case MODULE_NOT_FOUND_ERROR:
+      return { error: false }
     
-  case RECOVERED_FROM_ERROR:
-    return { error: undefined, need2RecoverFromError: false }
+    case NAME_ERROR:
+      return { error: false }
+    default:
+      return { error: false }
+    }
+  }
+
 
   case nwbfileActions.LOAD_NWB_FILE:
     return { loading: 'Loading NWB file' }
