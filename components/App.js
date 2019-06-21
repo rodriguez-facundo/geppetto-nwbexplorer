@@ -5,7 +5,6 @@ import ConsoleTabs from './ConsoleTabs';
 import SplashPage from './pages/SplashPage';
 import nwbFileService from '../services/NWBFileService';
 import FileExplorerPage from './pages/FileExplorerPage';
-import ErrorDialogContainer from './ErrorDialogContainer';
 // import { Route, Switch, Redirect, BrowserRouter as Router } from 'react-router-dom';
 
 
@@ -113,7 +112,6 @@ export default class App extends React.Component{
         <div id="main-container-inner">
           <MuiThemeProvider theme={theme}>
             { page }
-            <ErrorDialogContainer/>
           </MuiThemeProvider>
           <div id="footer">
             <div id="footerHeader">
