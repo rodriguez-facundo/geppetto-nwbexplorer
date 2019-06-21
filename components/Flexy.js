@@ -154,6 +154,7 @@ export default class Flexy extends Component {
   componentDidUpdate (prevProps, prevState) {
     const { model } = this;
     const { newWidgetDescriptor, finishWidgetCreation, detailsWidgetInstancePath, changeDetailsWidgetInstancePath } = this.props;
+    
     if (newWidgetDescriptor) {
       if (!model.getNodeById(newWidgetDescriptor.id)){
         this.createPanel(newWidgetDescriptor);

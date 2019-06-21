@@ -8,17 +8,13 @@
 html, body {
     font-family: 'Source Sans Pro', sans-serif;
 }
+:focus {
+    outline: none;
+}
 #logo{
     background-image: url("images/nwbExplorer.png");
     width: 200px;
     height:76px;
-}
-
-#controlpanel {
-    background-color: rgba(66,66,66,0.9)!important;
-    .griddle td {
-    color: @primary_color;
-    }
 }
 
 .contextMenuView {
@@ -38,7 +34,6 @@ iframe{
         background-color: transparent!important;
     }
 }
-
 
 .tabButton {
     border-top-left-radius: 10px;
@@ -331,4 +326,111 @@ iframe{
 }
 .ytick > text {
     fill: white!important
+}
+
+
+
+// Collapsible 
+.Collapsible {
+    background-color: transparent;
+}
+
+.Collapsible__contentInner {
+    padding: 0px 30px 8px 15px;
+    border-top: 0;
+    font-size: 13px;
+    color: white;
+    text-align: justify;
+}
+
+.Collapsible__contentInner p {
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.Collapsible__contentInner p:last-child {
+    margin-bottom: 0;
+}
+
+.Collapsible__trigger {
+    margin-left: 5px;
+    display: block;
+    text-transform: capitalize;
+    font-weight: 600;
+    font-size: 13px;
+    color: @primary_color;
+    position: relative;
+    padding: 2px;
+    background: transparent;
+    cursor: pointer;
+}
+.Collapsible__trigger:hover {
+    color: #cccccc!important;
+}
+
+.Collapsible__trigger:after {
+    font-family: 'FontAwesome';
+    content: '\f139';
+    position: absolute;
+    right: 10px;
+    top: 2px;
+    display: block;
+    transition: transform 300ms;
+}
+
+.Collapsible__trigger.is-open:after {
+    transform: rotateZ(180deg);
+    color: #cccccc!important;
+}
+
+
+// controlPanel
+#controlpanel {
+    background-color: rgba(66,66,66,0.9)!important;
+    .griddle {
+        td, th {
+            color: @primary_color;
+            background-color: rgba(55, 55, 55, 1);
+        }
+    }
+}
+
+#controlpanel .griddle{
+    td {
+        border-bottom: none;
+    };
+    th {
+        border-bottom: 1px solid;
+    };
+} 
+.tabButton:hover {
+    background-color: #171616;
+}
+
+// modal
+.modal-content {
+    background-color: rgba(66,66,66,0.9)!important;
+}
+#infomodal-btn{
+    background-color: rgba(66,66,66,0.9)!important;
+}
+#infomodal-btn:hover{
+    background-color: rgba(66,66,66,0.9)!important;
+}
+.fa:hover {
+    color: black;
+}
+.minIcons {
+    color: black
+}
+.maxIcons {
+    color: black
+}
+.closeIcons {
+    color: black
+}
+
+#commandInputArea {
+    color: black;
 }

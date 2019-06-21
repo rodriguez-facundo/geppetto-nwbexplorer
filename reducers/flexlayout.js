@@ -74,7 +74,7 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
     widget.status = "MAXIMIZED"
     break;
 
-  case CREATE_WIDGET:
+  case CREATE_WIDGET: {
     if (action.jsonDescribingWidget) {
       newWidgetDescriptor = createNewWidgetState(action.jsonDescribingWidget);
       widget = widgets.find(widget => widget.id == action.jsonDescribingWidget.id);
@@ -86,7 +86,8 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
       }
       
     }
-    break;
+    break
+  }
 
   case FINISH_WIDGET_CREATION:
     // set back newWidgetDescriptor to false

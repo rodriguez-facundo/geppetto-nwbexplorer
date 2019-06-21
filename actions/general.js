@@ -1,12 +1,13 @@
 export const ENABLE_INFO_PANEL = 'ENABLE_INFO_PANEL';
 export const DISABLE_INFO_PANEL = 'DISABLE_INFO_PANEL';
-export const NEW_ERROR_MESSAGE = 'NEW_ERROR_MESSAGE';
+export const RAISE_ERROR = 'RAISE_ERROR';
+export const RECOVER_FROM_ERROR = 'RECOVER_FROM_ERROR';
 
 export const enableInfoPanel = { type: ENABLE_INFO_PANEL, };
 
 export const disableInfoPanel = { type: DISABLE_INFO_PANEL, };
 
-export const newErrorMessage = error => ({ 
+export const raiseError = error => ({ 
   error,
-  type: NEW_ERROR_MESSAGE 
+  type: RAISE_ERROR 
 })

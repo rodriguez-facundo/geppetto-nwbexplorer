@@ -6,7 +6,7 @@ const anchorme = require('anchorme');
 const Type = require('geppetto-client/js/geppettoModel/model/Type');
 
 const GEPPETTO = require('geppetto');
-require('./style.less');
+// require('./style.less');
  
 
 export default class Metadata extends React.Component {
@@ -112,7 +112,7 @@ export default class Metadata extends React.Component {
   componentDidMount () {
     const { mode, model, instancePath } = this.props;
     if (model && typeof Instances != "undefined") {
-      const path = mode == "description" ? instancePath : 'nwbfile.general'
+      const path = mode == "details" ? instancePath : 'nwbfile.general'
       this.setData(Instances.getInstance(path))
     }
   }

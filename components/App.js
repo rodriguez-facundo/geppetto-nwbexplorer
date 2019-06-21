@@ -1,16 +1,12 @@
 import React from 'react';
-import FlexyContainer from './FlexyContainer';
+import { grey } from '@material-ui/core/colors';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import ConsoleTabs from './ConsoleTabs';
 import SplashPage from './pages/SplashPage';
 import nwbFileService from '../services/NWBFileService';
 import FileExplorerPage from './pages/FileExplorerPage';
 // import { Route, Switch, Redirect, BrowserRouter as Router } from 'react-router-dom';
 
-
-import { grey } from '@material-ui/core/colors';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-
-import AppbarContainer from './AppBarContainer'
 
 const theme = createMuiTheme({
   typography: { 
@@ -20,11 +16,10 @@ const theme = createMuiTheme({
   palette: {
     primary: { main: grey[500] },
     secondary: { main: '#202020' },
-    error: { main: '#b0ac9a' },
+    error: { main: '#ffffff' },
     text: { secondary: "white" }
   }
 });
-
 
 export default class App extends React.Component{
 
@@ -33,8 +28,15 @@ export default class App extends React.Component{
   }
 
   componentDidMount () {
-    const { setNWBFile, loadNotebook, notebookReady, nwbFileLoaded } = this.props;
+    const { setNWBFile, loadNotebook, notebookReady, nwbFileLoaded, raiseError } = this.props;
     self = this;
+    
+    
+    GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, error => {
+      raiseError(error)
+    })
+
+    
     // A message from the parent frame can specify the file to load
     window.addEventListener('message', event => {
 
@@ -72,14 +74,14 @@ export default class App extends React.Component{
   componentDidUpdate () {
     const {
       notebookReady, nwbFileUrl, model, nwbFileLoading, loading, 
-      loadNWBFile, isLoadedInNotebook, isLoadingInNotebook, loadNWBFileInNotebook
+      loadNWBFile, isLoadedInNotebook, isLoadingInNotebook, loadNWBFileInNotebook, error
     } = this.props;
 
     if (notebookReady && nwbFileUrl && !model && !nwbFileLoading ){
       loadNWBFile(nwbFileUrl);
     }
 
-    if (!isLoadedInNotebook && nwbFileUrl && notebookReady && !isLoadingInNotebook) {
+    if (!isLoadedInNotebook && model && notebookReady && !isLoadingInNotebook && !error) {
       loadNWBFileInNotebook(nwbFileUrl); // We may have missed the loading if notebook was not initialized at the time of the url change
     }
 
@@ -96,16 +98,11 @@ export default class App extends React.Component{
  
  
   render () {
-    const { nwbFileUrl, embedded, showNotebook, isLoadedInNotebook } = this.props;
+    const { model, embedded, showNotebook, isLoadedInNotebook } = this.props;
     
     var page;
-    if (nwbFileUrl || embedded) {
-      page = (
-        <MuiThemeProvider theme={theme}>
-          <AppbarContainer/>
-          <FlexyContainer />
-        </MuiThemeProvider>
-      )
+    if (model || embedded) {
+      page = <FileExplorerPage/>
     } else {
       page = <SplashPage />
     }
@@ -113,7 +110,9 @@ export default class App extends React.Component{
     return (
       <div style={{ height: '100%', width: '100%' }}>
         <div id="main-container-inner">
-          { page }
+          <MuiThemeProvider theme={theme}>
+            { page }
+          </MuiThemeProvider>
           <div id="footer">
             <div id="footerHeader">
               <ConsoleTabs 
@@ -126,5 +125,4 @@ export default class App extends React.Component{
       </div>
     )
   }
-  
 }
