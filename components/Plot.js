@@ -8,7 +8,7 @@ export default ({ model, instancePath }) => {
   return (
     <Plot 
       instancePath={instancePath}
-      lineOptions={{ color: 'rgb(255, 255, 255)' }}
+      lineOptions={{ color: '#C5E7F1' }}
       id={instancePath ? instancePath : "empty"}
     />
   )

@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 
 const SAMPLE_LINK_FERGUSON = 'https://github.com/OpenSourceBrain/NWBShowcase/raw/master/FergusonEtAl2015/FergusonEtAl2015.nwb';
 const SAMPLE_LINK_TIMESERIES = 'https://github.com/OpenSourceBrain/NWBShowcase/raw/master/NWB/time_series_data.nwb';
-
+const SAMPLE_LINK_TRIPLETT = 'https://github.com/OpenSourceBrain/NWBShowcase/blob/master/TriplettEtAl2018/TriplettEtAl2018.nwb';
 
 export default class FileSampleSelector extends React.Component {
 
@@ -46,9 +46,17 @@ export default class FileSampleSelector extends React.Component {
           onClick={ e => this.handleClickLoadFile(SAMPLE_LINK_FERGUSON)}
           disabled={false}
         >
-          Ferguson et al.
+          Ferguson et al. 2015
         </Button>
-
+        <br />
+        <Button
+          id="loadFile"
+          variant="outlined"
+          onClick={ e => this.handleClickLoadFile(SAMPLE_LINK_TRIPLETT)}
+          disabled={false}
+        >
+          Triplett et al. 2018 
+        </Button>
       </div>
     );
   }
