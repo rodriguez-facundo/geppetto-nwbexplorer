@@ -82,7 +82,7 @@ export default class App extends React.Component{
       loadNWBFile(nwbFileUrl);
     }
 
-    if (!isLoadedInNotebook && nwbFileUrl && notebookReady && !isLoadingInNotebook && !error) {
+    if (!isLoadedInNotebook && model && notebookReady && !isLoadingInNotebook && !error) {
       loadNWBFileInNotebook(nwbFileUrl); // We may have missed the loading if notebook was not initialized at the time of the url change
     }
 
