@@ -35,7 +35,7 @@ export default class FileUrlSelector extends React.Component {
         <div className="aligned-form-elements-wrapper">
           <TextField
             id="nwb-url-input"
-            placeholder="Paste a NWB file URL"
+            placeholder="Paste a URL pointing to an NWB file"
             // helperText="Insert a public url or local absolute path of an NWB file"
             className = 'aligned-form-element input'
             variant="outlined"

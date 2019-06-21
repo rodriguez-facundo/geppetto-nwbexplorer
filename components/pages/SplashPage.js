@@ -5,6 +5,11 @@ import FileUrlSelectorContainer from '../FileUrlSelectorContainer';
 import FileSampleSelectorContainer from '../FileSampleSelectorContainer';
 
 import img from '../../resources/splash.jpg';
+import logo_osb from '../../resources/logos/osb.png';
+import logo_openworm from '../../resources/logos/openworm.png';
+import logo_metacell from '../../resources/logos/metacell.png';
+import logo_gsoc from '../../resources/logos/gsoc.png';
+import logo_wellcome from '../../resources/logos/wellcome.png';
 
 export default () => (
   <div id="splash">

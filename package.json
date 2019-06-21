@@ -1,8 +1,8 @@
 {
-  "name": "org.geppetto.frontend",
-  "version": "0.4.2",
-  "description": "Geppetto web frontend. Geppetto is an open-source platform to build web-based tools to visualize and simulate neuroscience data and models.",
-  "repository": "http://git.geppetto.org",
+  "name": "nwb-explorer",
+  "version": "0.2.0",
+  "description": "NWB Explorer is an application that can be used by scientists to read, visualize and explore the content of NWB 2 files.",
+  "repository": "https://github.com/MetaCell/geppetto-nwbexplorer",
   "license": "MIT",
   "scripts": {
     "prebuild": "eslint --ignore-pattern 'node_modules/*' . --color && eslint ./node_modules/@geppettoengine/geppetto-client/js/**/*.js --color",

@@ -2,7 +2,7 @@
   <img src="https://github.com/tarelli/bucket/blob/master/geppetto%20logo.png?raw=true" alt="Geppetto logo"/>
 </p>
 
-# NWB Explorer Geppetto Extension
+# NWB Explorer Geppetto Application
 ## Build
 ### Standard build
 For the standard, production build just run
