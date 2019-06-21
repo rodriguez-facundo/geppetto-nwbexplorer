@@ -78,27 +78,14 @@ export default class Appbar extends React.Component {
   componentDidUpdate (prevProps, prevState) {
     const {
       model, widgets, createWidget,
-      changeDetailsWidgetInstancePath,
       currentSelectedPlotInstancePath,
       timeseriesDataRetrieveStatus, 
-      requestDataRetrieve
     } = this.props;
 
     if (!prevProps.model && model) {
       this.initControlPanel();
     }
     const widget = widgets.find(({ id }) => id == currentSelectedPlotInstancePath);
-
-
-    /*
-     * if (prevProps.currentSelectedPlotInstancePath != currentSelectedPlotInstancePath) {    
-     *   if (widget){
-     *     changeDetailsWidgetInstancePath(currentSelectedPlotInstancePath)
-     *   } else {
-     *     requestDataRetrieve()
-     *   }
-     * }
-     */
 
     if (!widget && timeseriesDataRetrieveStatus != prevProps.timeseriesDataRetrieveStatus) {
       switch (timeseriesDataRetrieveStatus) {

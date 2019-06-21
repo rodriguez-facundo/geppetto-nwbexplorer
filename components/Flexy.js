@@ -4,7 +4,7 @@ import Actions from 'geppetto-client/js/components/interface/flexLayout2/src/mod
 import FileExplorerPage from './pages/FileExplorerPage';
 import MetadataContainer from './metadata/MetadataContainer'
 
-const PlotContainer = React.lazy(() => import('./PlotContainer'));
+const PlotContainer = lazy(() => import('./PlotContainer'));
 
 const json = {
   "global": { sideBorders: 8 },
@@ -129,9 +129,11 @@ export default class Flexy extends Component {
       return <MetadataContainer mode="details"/>
 
     } else if (component === "Plot" ) { 
+      const instancePath = node.getConfig().instancePath;
+
       return (
         <Suspense fallback={<div>Loading...</div>}>
-          <PlotContainer instancePath={node.getConfig().instancePath}/>
+          <PlotContainer instancePath={{ x: `${instancePath}.time`, y:`${instancePath}.data` }}/>
         </Suspense>
       )
     }
