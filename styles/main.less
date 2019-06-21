@@ -64,20 +64,26 @@ iframe{
         text-transform: none;
         font-size: 1.5rem;
         margin: 1rem 0;
-            }
-            fieldset {
-                border: none;
-            }
+        padding: 0.5em 1em;
+        line-height: 1.5;
+    }
+    fieldset {
+        border: none;
+    }
+
     h1, h2{
         margin-top: 0.3rem;
         margin-bottom: 1.2rem;
     }
     
-        margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
 
     
    
 }
+
+
+
 .flexlayout__tabset {
     background-color: #2a2a2a;
     overflow: visible;
@@ -119,6 +125,7 @@ iframe{
 }
 .flex-filler {
     flex: 2;
+    margin-bottom: 0;
 }
 
 .flexlayout__tab_button_content{
@@ -185,13 +192,21 @@ iframe{
 #main-header {
     text-align: right;
     width: 100%;
-    >h1 {
-        margin-right: 30px;
-    }
+}
+
+#mainContainer, #mainContainer > div, #main-container-inner {
+    height: 100%;
+
+}
+
+.center-filler {
+    max-height: 80%;
     
 }
-#mainContainer > div{
-    height: 100%;
+
+.slide-image {
+    overflow: hidden;
+    max-height: 100%;
 }
 
 .font-small {
@@ -231,11 +246,48 @@ iframe{
         }
     }
 
-    img{
+    img.grid-fill{
         width: 100%;
         margin-bottom: 1.5rem;
     }
 }
+
+#nwb-footer {
+    display: flex;
+    align-self: flex-end;
+    justify-content: space-between;
+    color: #ccc;
+    font-size: 0.9em;
+    
+
+    .footer-aligned-container{
+        margin: 0 -1rem;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        a{
+            color: white;
+            
+            &:hover {
+                text-decoration: none;
+                color: @primary_color;
+            }
+        }
+        .footer-aligned{
+            padding: 1rem 1rem;
+            
+            img {
+                height: 1.5em;
+                width: auto;
+                &:hover{
+                    opacity: 0.9;
+                }
+            }
+        }
+    }
+}
+
 
 .sidebar{
     display: flex;
@@ -249,9 +301,7 @@ iframe{
     align-items: stretch;
 }
 .aligned-form-element {
-    input, button {
-        padding: 1em;
-    }
+  
     &.input {
         flex: 3;
         padding-right: 1em;

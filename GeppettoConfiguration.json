@@ -8,8 +8,8 @@
     "noTest": false,
     "themes": "styles/colors",
     "properties": {
-        "title" : "geppetto",
-        "description": "Geppetto is an open-source platform to build web-based tools to visualize and simulate neuroscience data and models. This is a live deployment to showcase its functionalities.",
+        "title" : "NWB Explorer",
+        "description": "NWB Explorer is an application that can be used by scientists to read, visualize and explore the content of NWB 2 files.",
         "type": "website",
         "url": "http://live.geppetto.org",
         "icon" :"geppetto/style/favicon.png",
