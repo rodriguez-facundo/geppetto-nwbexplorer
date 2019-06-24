@@ -80,6 +80,27 @@ export default class Metadata extends React.Component {
           </div>
         </Collapsible>
       );
+    } else if (type.getMetaType() == GEPPETTO.Resources.HTML_TYPE) {
+      const value = this.getVariable(anyInstance).getInitialValues()[0].value;
+      var prevCounter = this.content.keys.length;
+      
+      if (counter !== undefined) {
+        prevCounter = counter;
+      }
+
+      this.content.values[prevCounter] = (
+        <Collapsible 
+          open={true}
+          trigger={this.content.keys[prevCounter]}
+        >
+          <div style={{ textAlign: 'center' }}>
+            <HTMLViewer 
+              id={id} 
+              content={value.html}
+            /> 
+          </div>
+        </Collapsible>
+      );
     }
     if (firstOne) {
       this.forceUpdate()
