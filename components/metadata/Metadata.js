@@ -2,11 +2,10 @@ import React from 'react';
 import Collapsible from 'react-collapsible';
 import HTMLViewer from 'geppetto-client/js/components/interface/htmlViewer/HTMLViewer';
 
-const anchorme = require('anchorme');
+
 const Type = require('geppetto-client/js/geppettoModel/model/Type');
 
 const GEPPETTO = require('geppetto');
-// require('./style.less');
  
 
 export default class Metadata extends React.Component {
@@ -28,24 +27,10 @@ export default class Metadata extends React.Component {
   }
 
   setData (anyInstance, counter, firstOne = true) {
-    var anchorOptions = {
-      "attributes": {
-        "target": "_blank",
-        "class": "popup_link"
-      },
-      "html": true,
-      ips: false,
-      emails: true,
-      urls: true,
-      TLDs: 20,
-      truncate: 0,
-      defaultProtocol: "http://"
-    };
     var type = anyInstance;
     if (!type) {
       return 
     }
-
 
     if (!(type instanceof Type)) {
       type = anyInstance.getType();
@@ -66,20 +51,16 @@ export default class Metadata extends React.Component {
       if (counter !== undefined) {
         prevCounter = counter;
       }
-
+      
       this.content.values[prevCounter] = (
         <Collapsible 
           open={true}
           trigger={this.content.keys[prevCounter]}
         >
-          <div>
-            <HTMLViewer 
-              id={id} 
-              content={anchorme(value.text, anchorOptions)}
-            />
-          </div>
+          {value.text.split('\n').map(line => <p key={line}>{line}</p>)}
         </Collapsible>
       );
+
     } else if (type.getMetaType() == GEPPETTO.Resources.HTML_TYPE) {
       const value = this.getVariable(anyInstance).getInitialValues()[0].value;
       var prevCounter = this.content.keys.length;
