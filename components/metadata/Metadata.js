@@ -1,64 +1,66 @@
 import React from 'react';
 import Collapsible from 'react-collapsible';
-import HTMLViewer from 'geppetto-client/js/components/interface/htmlViewer/HTMLViewer';
 
-const anchorme = require('anchorme');
 const Type = require('geppetto-client/js/geppettoModel/model/Type');
 
 const GEPPETTO = require('geppetto');
-// require('./style.less');
  
 
 export default class Metadata extends React.Component {
 
   constructor (props) {
     super(props);
-
-    this.state = { html: undefined, }
-    
-    this.setData = this.setData.bind(this);
-    
-    this.getVariable = this.getVariable.bind(this);
-
     this.content = {
       keys : [],
       values : []
     };
+  }
 
+  prettyFormat (string) {
+    let output = string.charAt(0).toUpperCase() + string.slice(1);
+    return output.replace('_interface_map', '').replace('_', ' ')
   }
 
   setData (anyInstance, counter, firstOne = true) {
-    var anchorOptions = {
-      "attributes": {
-        "target": "_blank",
-        "class": "popup_link"
-      },
-      "html": true,
-      ips: false,
-      emails: true,
-      urls: true,
-      TLDs: 20,
-      truncate: 0,
-      defaultProtocol: "http://"
-    };
-    var type = anyInstance;
+    const { prettyFormat } = this;
+    let type = anyInstance;
+    
     if (!type) {
       return 
     }
 
-
     if (!(type instanceof Type)) {
       type = anyInstance.getType();
     }
+    let typeName = type.getName();
 
-    if (type.getMetaType() == GEPPETTO.Resources.COMPOSITE_TYPE_NODE) {
-      for (var i = 0; i < type.getVariables().length; i++) {
-        var v = type.getVariables()[i];
-        var nameKey = v.getName();
-        this.content.keys[i] = nameKey;
-        var id = `OSB_el_${i}`;
-        this.setData(v, i, false);
-      }
+    if ( typeName == "general") {
+      type.getVariables().forEach((instance, index) => {
+        this.content.keys[index] = instance.getName();
+        this.setData(instance, index, false);
+      })
+
+    } else if (typeName == "timeseries"){
+      const detailsInstance = type.getChildren().find(child => child.getId() == 'details')
+      
+      detailsInstance.getType().getChildren().forEach((instance, index) => {
+        this.content.keys[index] = instance.getName();
+        this.setData(instance, index, false);
+      })
+
+    } else if (typeName.endsWith("interface_map")) {
+      let prevCounter = this.content.keys.length;
+      this.content.values[prevCounter] = (
+        <Collapsible
+          open={true}
+          trigger={prettyFormat(typeName)}
+        >
+          {type.getChildren().map(instance => {
+            const name = instance.getInitialValue().value.text;
+            return <p key={name}>{prettyFormat(name)}</p>
+          })}
+        </Collapsible>
+      )
     } else if (type.getMetaType() == GEPPETTO.Resources.TEXT_TYPE) {
       const value = this.getVariable(anyInstance).getInitialValues()[0].value;
       var prevCounter = this.content.keys.length;
@@ -66,21 +68,17 @@ export default class Metadata extends React.Component {
       if (counter !== undefined) {
         prevCounter = counter;
       }
-
+      
       this.content.values[prevCounter] = (
         <Collapsible 
           open={true}
-          trigger={this.content.keys[prevCounter]}
+          trigger={prettyFormat(this.content.keys[prevCounter])}
         >
-          <div>
-            <HTMLViewer 
-              id={id} 
-              content={anchorme(value.text, anchorOptions)}
-            />
-          </div>
+          <p>{prettyFormat(value.text)}</p>
         </Collapsible>
       );
-    }
+
+    } 
     if (firstOne) {
       this.forceUpdate()
     }
