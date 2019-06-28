@@ -25,6 +25,7 @@ require('./styles/main.less');
 G.enableLocalStorage(false);
 G.setIdleTimeOut(-1);
 
+const store = configureStore();
 
 (function init () {
   GEPPETTO.G.setIdleTimeOut(-1);
@@ -33,9 +34,9 @@ G.setIdleTimeOut(-1);
   GEPPETTO.Manager = nwbManager; // Override standard Geppetto manager
   console.log(Utils);
 
-
+  
   ReactDOM.render(
-    <Provider store={configureStore()}>
+    <Provider store={store}>
       <AppContainer />
     </Provider>
     , document.getElementById('mainContainer'));
