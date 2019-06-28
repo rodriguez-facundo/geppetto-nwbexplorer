@@ -16,7 +16,13 @@ export default class Metadata extends React.Component {
     };
   }
 
+  prettyFormat (string) {
+    let output = string.charAt(0).toUpperCase() + string.slice(1);
+    return output.replace('_interface_map', '').replace('_', ' ')
+  }
+
   setData (anyInstance, counter, firstOne = true) {
+    const { prettyFormat } = this;
     let type = anyInstance;
     
     if (!type) {
@@ -42,16 +48,16 @@ export default class Metadata extends React.Component {
         this.setData(instance, index, false);
       })
 
-    } else if (typeName == "Experiment_summary") {
+    } else if (typeName.endsWith("interface_map")) {
       let prevCounter = this.content.keys.length;
       this.content.values[prevCounter] = (
         <Collapsible
           open={true}
-          trigger={typeName}
+          trigger={prettyFormat(typeName)}
         >
           {type.getChildren().map(instance => {
             const name = instance.getInitialValue().value.text;
-            return <p key={name}>{name}</p>
+            return <p key={name}>{prettyFormat(name)}</p>
           })}
         </Collapsible>
       )
@@ -66,9 +72,9 @@ export default class Metadata extends React.Component {
       this.content.values[prevCounter] = (
         <Collapsible 
           open={true}
-          trigger={this.content.keys[prevCounter]}
+          trigger={prettyFormat(this.content.keys[prevCounter])}
         >
-          <p>{value.text}</p>
+          <p>{prettyFormat(value.text)}</p>
         </Collapsible>
       );
 
