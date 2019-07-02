@@ -1,15 +1,17 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import Plot from 'geppetto-client/js/components/interface/plot/Plot.js';
 
-export default ({ model, instancePath }) => {
-  if (!model) {
-    return 
+export default class PlotComponent extends React.Component{
+  constructor (props) {
+    super(props);
   }
-  return (
-    <Plot 
-      instancePath={instancePath}
+
+  render () {
+    const { instancePath } = this.props;
+    return <Plot 
+      instancePath={{ x: `${instancePath}.time`, y:`${instancePath}.data` }}
       lineOptions={{ color: '#C5E7F1' }}
       id={instancePath ? instancePath : "empty"}
-    />
-  )
+    />;
+  }
 }

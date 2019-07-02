@@ -3,24 +3,9 @@ import Appbar from './AppBar';
 import { unloadNWBFile, unloadNWBFileInNotebook } from '../actions/nwbfile';
 import { enableInfoPanel, disableInfoPanel } from '../actions/general';
 
-import { 
-  createWidget, 
-  changeDetailsWidgetInstancePath, 
-  changeInstancePathOfCurrentSelectedPlot, 
-  requestDataRetrieve,
-  startDataRetrieve,
-  finishDataRetrieve,
-  RESET_LAYOUT
-} from '../actions/flexlayout';
+import { showPlot, resetLayout } from '../actions/flexlayout';
 
-
-const mapStateToProps = ({ general, nwbfile, flexlayout }) => ({
-  toggleInfoPanel: general.toggleInfoPanel,
-  model: nwbfile.model,
-  widgets: flexlayout.widgets,
-  currentSelectedPlotInstancePath: flexlayout.currentSelectedPlotInstancePath,
-  timeseriesDataRetrieveStatus: flexlayout.timeseriesDataRetrieveStatus
-});
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = dispatch => ({ 
   enableInfoPanel: () => dispatch(enableInfoPanel),
@@ -29,13 +14,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(unloadNWBFileInNotebook());
     dispatch(unloadNWBFile);
   },
-  createWidget: json => dispatch(createWidget(json)),
-  resetFlexlayoutState: () => dispatch({ type: RESET_LAYOUT }),
-  changeDetailsWidgetInstancePath: instancePath => dispatch(changeDetailsWidgetInstancePath(instancePath)),
-  changeInstancePathOfCurrentSelectedPlot: instancePath => dispatch(changeInstancePathOfCurrentSelectedPlot(instancePath)),
-  requestDataRetrieve: () => dispatch(requestDataRetrieve()),
-  startDataRetrieve: () => dispatch(startDataRetrieve()),
-  finishDataRetrieve: () => dispatch(finishDataRetrieve())
+  showPlot: instanceDescriptor => dispatch(showPlot(instanceDescriptor)),
+  resetLayout: () => dispatch(resetLayout)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Appbar);

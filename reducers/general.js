@@ -2,7 +2,8 @@ import {
   ENABLE_INFO_PANEL, 
   DISABLE_INFO_PANEL, 
   RAISE_ERROR, 
-  RECOVER_FROM_ERROR
+  RECOVER_FROM_ERROR,
+  WAIT_DATA
 } from '../actions/general';
 
 import { NWB_FILE_NOT_FOUND_ERROR,MODULE_NOT_FOUND_ERROR, NAME_ERROR } from 'constants';
@@ -33,6 +34,9 @@ function reduceGeneral (state, action) {
   
   case DISABLE_INFO_PANEL:
     return { toggleInfoPanel: false } 
+
+  case WAIT_DATA:
+    return { loading: action.data.message }
   
   case RAISE_ERROR:
     return { error: action.error }
@@ -68,16 +72,7 @@ function reduceGeneral (state, action) {
       notebookReady: false
     }
   
-  case nwbfileActions.UNLOAD_NWB_FILE:
-  case nwbfileActions.NWB_FILE_LOADED:
-  case nwbfileActions.SET_NWB_FILE:
-  case notebookActions.NOTEBOOK_READY:
-  case nwbfileActions.LOADED_NWB_FILE_IN_NOTEBOOK:
-    return { loading: false };
   default:
-    return state;
+    return { loading: false };
   }
-
 }
-
-

@@ -44,7 +44,7 @@ const styles = {
 export default class Appbar extends React.Component {
   constructor (props) {
     super(props);
-    window.controlPanelClickAction = this.clickAction.bind(this); // we don't like global variables but we like less putting the code in a string
+    window.controlPanelClickAction = this.clickPlotAction.bind(this); // we don't like global variables but we like less putting the code in a string
   }
 
   componentDidMount () {
@@ -52,37 +52,7 @@ export default class Appbar extends React.Component {
   }
   
   componentDidUpdate (prevProps, prevState) {
-    const {
-      widgets, createWidget,
-      currentSelectedPlotInstancePath,
-      timeseriesDataRetrieveStatus, 
-    } = this.props;
 
-    const widget = widgets.find(({ id }) => id == currentSelectedPlotInstancePath);
-
-    if (!widget && timeseriesDataRetrieveStatus != prevProps.timeseriesDataRetrieveStatus) {
-      switch (timeseriesDataRetrieveStatus) {
-
-      case "START": {
-        this.retrieveTimeSeries(currentSelectedPlotInstancePath)
-        break;
-      }
-
-      case "COMPLETED": {
-        const [ , , tsName ] = currentSelectedPlotInstancePath.split('.', );
-        createWidget({
-          instancePath: currentSelectedPlotInstancePath,
-          id: currentSelectedPlotInstancePath,
-          component: "Plot",
-          name: tsName,
-        })
-        break;
-      }
-
-      default:
-        break;
-      }
-    }
   }
 
   async initControlPanel () {
@@ -121,82 +91,22 @@ export default class Appbar extends React.Component {
   /**
    * Operates on an instance of a state variable and plots in accordance
    */
-  clickAction ($instance$) {
-    const { 
-      widgets, createWidget, requestDataRetrieve,
-      currentSelectedPlotInstancePath, 
-      changeInstancePathOfCurrentSelectedPlot,
-    } = this.props;
-
-    const instancePath = $instance$.getInstancePath();
-
-    const widget = widgets.find(({ id }) => id == instancePath);
-
-    if (currentSelectedPlotInstancePath != instancePath) {
-      changeInstancePathOfCurrentSelectedPlot(instancePath)
-    }
-    
-    if (widget){
-      if (widget.status == 'DESTROYED') {
-        const [ , , tsName ] = instancePath.split('.', );
-        createWidget({
-          name: tsName,
-          instancePath,
-          id: instancePath,
-        })
-      }
-    } else {
-      requestDataRetrieve()
-    }
+  clickPlotAction (instance) {
+    const { showPlot } = this.props;
+    showPlot({ path: instance.getPath(), type: instance.getVariable().getType().getName() });
 
     this.refs.controlpanelref.close();
   }
 
-  async retrieveTimeSeries (instancePath) {
-    const { startDataRetrieve,finishDataRetrieve } = this.props;
-    const data_path = instancePath + '.data';
-    let data = Instances.getInstance(data_path);
-    const time_path = instancePath + '.time';
-    let time = Instances.getInstance(time_path);
-
-    if (data.getValue().wrappedObj.value.eClass == 'ImportValue') {
-      startDataRetrieve()
-      
-      // Trick to resolve with the instance path instead than the type path. TODO remove when fixed 
-      data.getValue().getPath = () => data.getPath()
-      time.getValue().getPath = () => time.getPath()
-      GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, 'Loading timeseries data');
-    
-      // Using the resolve capability should be the proper way to resolve the values, but the paths coming from values are not correct
-      data.getValue().resolve(dataValue => {
-        time.getValue().resolve(timeValue => {      
-          GEPPETTO.ModelFactory.deleteInstance(data),
-          GEPPETTO.ModelFactory.deleteInstance(time),
-          Instances.getInstance(data_path),
-          Instances.getInstance(time_path)
-          GEPPETTO.trigger(GEPPETTO.Events.Hide_spinner);
-          finishDataRetrieve()
-        })
-      })
-       
-    } else {
-      finishDataRetrieve()
-    }
-    // TODO add the value coming from importValue to current data and time instances
-  }
-
+  
   handleClickBack () {
     const { resetFlexlayoutState, unloadNWBFile } = this.props;
-    resetFlexlayoutState()
+    resetFlexlayoutState();
     unloadNWBFile();
   }
   
   render () {
-    const { model } = this.props;
  
-    if (!model) {
-      return '';
-    }
     return (
       <Fragment>
         <div id="controls">

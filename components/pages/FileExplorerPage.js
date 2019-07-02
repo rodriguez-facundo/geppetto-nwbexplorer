@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
-import FlexyContainer from '../FlexyContainer';
+import FlexyContainer from '../LayoutManagerContainer';
 import AppbarContainer from '../AppBarContainer'
 
-export default () => (
+export default model => (
   <Fragment>
     <AppbarContainer/>
     <FlexyContainer />

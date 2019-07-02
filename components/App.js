@@ -98,10 +98,12 @@ export default class App extends React.Component{
     const { model, embedded, showNotebook, isLoadedInNotebook } = this.props;
     
     var page;
-    if (model || embedded) {
+    if (model) {
       page = <FileExplorerPage/>
-    } else {
+    } else if (!embedded) {
       page = <SplashPage />
+    } else {
+      page = '<h1>Waiting for data...</h1>';
     }
 
     return (

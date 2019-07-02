@@ -2,11 +2,13 @@ import React, { Component, lazy, Suspense } from 'react'
 import * as FlexLayout from 'geppetto-client/js/components/interface/flexLayout2/src/index';
 import Actions from 'geppetto-client/js/components/interface/flexLayout2/src/model/Actions';
 import FileExplorerPage from './pages/FileExplorerPage';
-import MetadataContainer from './metadata/MetadataContainer'
+import Metadata from './Metadata';
 
-const PlotContainer = lazy(() => import('./PlotContainer'));
+import { isEqual } from '../Utils';
 
-const json = {
+const Plot = lazy(() => import('./Plot'));
+
+const defaultLayoutConfiguration = {
   "global": { sideBorders: 8 },
   "layout": {
     "type": "row",
@@ -27,28 +29,7 @@ const json = {
             "enableDivide": false,
             "enableMaximize": false,
             "children": [
-              {
-                "type": "tab",
-                "name": "General",
-                "component": "General",
-                "id":"general",
-                "enableClose":false,
-                "enableDrag": false,
-                "enableRename": false,
-                "enableRenderOnDemand": false,
-                "enableMinimize": false,
-              },
-              {
-                "type": "tab",
-                "name": "Details",
-                "component": "Details",
-                "id": "details",
-                "enableClose":false,
-                "enableDrag": false,
-                "enableRename": false,
-                "enableRenderOnDemand": false,
-                "enableMinimize": false,
-              }
+            
             ]
           }
         ]
@@ -80,96 +61,177 @@ const json = {
   ]
 };
 
-export default class Flexy extends Component {
+export default class LayoutManager extends Component {
 
   constructor (props) {
     super(props);
+    const configuration = this.props.configuration ? this.props.configuration : defaultLayoutConfiguration;
+    this.model = FlexLayout.Model.fromJson(configuration);
 
-    this.model = FlexLayout.Model.fromJson(json);
+  }
+  componentDidMount () {
+    const { widgets } = this.props;
+    this.addWidgets(Object.values(widgets));
+  }
 
+  componentDidUpdate (prevProps, prevState) {
+    const { model } = this;
+    const { widgets, detailsWidgetInstancePath } = this.props;
+    const oldWidgets = prevProps.widgets;
+    const newWidgets = this.findNewWidgets(widgets, oldWidgets);
+    if (newWidgets) {
+      this.addWidgets(newWidgets);
+    }
+    
+    const updatedWidgets = this.findUpdatedWidgets(widgets, oldWidgets);
+    if (updatedWidgets) {
+      this.updateWidgets(updatedWidgets);
+    }
+
+
+  }
+
+  addWidgets (widgets) {
+    const { model } = this;
+    for (let newWidgetDescriptor of widgets) {
+
+      if (!model.getNodeById(newWidgetDescriptor.id)) {
+        this.createPanel(newWidgetDescriptor);
+      }
+      // This updates plotly.js plots to new panel sizes
+      
+    }
+    window.dispatchEvent(new Event('resize'));
+  }
+
+  updateWidgets (widgets) {
+
+    for (let widget of widgets) {
+
+      this.updateWidget(widget);
+      // This updates plotly.js plots to new panel sizes
+      if (widget.status == 'ACTIVE') {
+        // this.model.getNodeById(widget.panelName)._setSelected(1)
+        this.model.doAction(FlexLayout.Actions.selectTab(widget.id))
+      }
+      
+    }
+    window.dispatchEvent(new Event('resize'));
+  }
+
+  updateWidget (widget) {
+    this.model.doAction(Actions.updateNodeAttributes(widget.id, this.createWidgetDescription(widget)));
+  }
+
+  activateWidget (nodeId) {
+    console.warn("TODO activateWidget")
+    // TODO
+  }
+
+
+  hideWidget (nodeId) {
+    console.warn("TODO hideWidget")
+    // TODO
+  }
+
+
+  destroyWidget (nodeId) {
+    console.warn("TODO destroyWidget")
+    // TODO
   }
   
   factory (node) {
     const { model } = this;
     const component = node.getComponent();
-    const { widgets, createWidget, activateWidget, hideWidget, maximizeWidget } = this.props;
+    const { widgets } = this.props;
 
     node.setEventListener("visibility", event => {
-      // Find if there is a tab maximized
-      const currentMaximizedWidget = widgets.find(widget => widget.status == "MAXIMIZED");      
+      /*
+       * Find if there is a tab maximized
+       * const currentMaximizedWidget = Object.vwidgets.find(widget => widget.status == "MAXIMIZED");      
+       */
 
-      if (event.visible){
-        if (currentMaximizedWidget){
-          // find if the tab to visualize is hosted by the node that is maximized
-          const widget2maximize = model.getMaximizedTabset().getChildren().find(tab => tab.getId() == node.getId())
-          if (widget2maximize) {
-            maximizeWidget(node.getId())
-          } else {
-            // activate in the background
-            activateWidget(node.getId())  
-          }
+      /*
+       * if (event.visible){
+       *   if (currentMaximizedWidget){
+       *     // find if the tab to visualize is hosted by the node that is maximized
+       *     const widget2maximize = model.getMaximizedTabset().getChildren().find(tab => tab.getId() == node.getId())
+       *     if (widget2maximize) {
+       *       this.maximizeWidget(node.getId())
+       *     } else {
+       *       // activate in the background
+       *       this.activateWidget(node.getId())  
+       *     }
+       */
 
-        } else {
-          activateWidget(node.getId())
-        }
-      } else {
-        // if event is visible == false, then hide the tab
-        hideWidget(node.getId())
-      }
+      /*
+       *   } else {
+       *     this.activateWidget(node.getId())
+       *   }
+       * } else {
+       *   // if event is visible == false, then hide the tab
+       *   this.hideWidget(node.getId())
+       * }
+       */
       window.dispatchEvent(new Event('resize'));
-    })
+    });
 
+    
+    // TODO move to WidgetFactory
     if (component === "Explorer" ) { 
       return <FileExplorerPage />;
-
-    } else if (component === "General" ) { 
-      return <MetadataContainer mode="general"/>
-
-    } else if (component === "Details" ) { 
-      return <MetadataContainer mode="details"/>
+      
+    } else if (component === "Metadata" ) { 
+      const { instancePath } = node.getConfig();
+      return instancePath ? <Metadata instancePath = { instancePath } /> : '';
 
     } else if (component === "Plot" ) { 
-      const instancePath = node.getConfig().instancePath;
-
+      
+      const { instancePath } = node.getConfig();
       return (
         <Suspense fallback={<div>Loading...</div>}>
-          <PlotContainer instancePath={{ x: `${instancePath}.time`, y:`${instancePath}.data` }}/>
+          <Plot instancePath={ instancePath}/>
         </Suspense>
       )
     }
   }
+  
 
-  createPanel (jsonDescription) {
-    /*
-     * keep code in case we need it later
-     * new FlexLayout.TabSetNode(model, { type: "tabset" });
-     * const max = Math.max(...panels.map(child => child.getRect().getRight()))
-     * panel = panels.find(child => child.getRect().getRight() == max);
-     * model.doAction(FlexLayout.Actions.addNode(jsonDescription, panel.getId(), FlexLayout.DockLocation.BOTTOM, 0));
-     */
-    // TODO: rather than rightPanel, we will have Plot panel, image panel
-    this.refs.layout.addTabToTabSet("rightPanel", jsonDescription);
+  /*
+   * status could be one of:
+   *  - ACTIVE:     the user can see the tab content.
+   *  - HIDDEN:       the tab is minimized, or other tab in the node is currently selected.
+   *  - DESTROYED:  the tab was deleted from flexlayout.
+   *  - MAXIMIZED:  the tab is maximized (only one tab can be maximized simultaneously)
+   */
+  createWidgetDescription ({ id, name, component, instancePath, status, panelName }) {
+    return {
+      id,
+      name,
+      status,
+      component,
+      type: "tab",
+      enableRename: false,
+      // attr defined inside config, will also be available from within flexlayout nodes.  For example:  node.getNodeById(id).getConfig()
+      config: { instancePath, panel: panelName },
+    };
   }
 
-  componentDidUpdate (prevProps, prevState) {
-    const { model } = this;
-    const { newWidgetDescriptor, finishWidgetCreation, detailsWidgetInstancePath, changeDetailsWidgetInstancePath } = this.props;
-    
-    if (newWidgetDescriptor) {
-      if (!model.getNodeById(newWidgetDescriptor.id)){
-        this.createPanel(newWidgetDescriptor);
-        // activateWidget(newWidgetDescriptor.id);
-      }
-      finishWidgetCreation();
-      changeDetailsWidgetInstancePath(newWidgetDescriptor.id)
-      // TODO: this updates plotly.js plots to new panel sizes
-      window.dispatchEvent(new Event('resize'));
-    }
-    if (detailsWidgetInstancePath != prevProps.detailsWidgetInstancePath) {
-      model.getNodeById('leftPanel')._setSelected(1)
-      model.doAction(FlexLayout.Actions.setActiveTabset('details'))
-    }
+  createPanel (widgetConfiguration) {
+    this.refs.layout.addTabToTabSet(widgetConfiguration.panelName, this.createWidgetDescription(widgetConfiguration));
   }
+
+  findNewWidgets (widgets, oldWidgets) {
+    return oldWidgets ? Object.values(widgets).filter(({ id }) => !oldWidgets[id]) : Object.values(widgets);
+  }
+
+  findUpdatedWidgets (widgets, oldWidgets) {
+    return oldWidgets 
+      ? Object.values(widgets)
+        .filter(widget => oldWidgets[widget.id] && !isEqual(widget, oldWidgets[widget.id])) 
+      : Object.values(widgets);
+  }
+  
 
   onAction (action) {
     const { model } = this;
@@ -226,10 +288,10 @@ export default class Flexy extends Component {
 
   deleteWidget (action) {
     const { model } = this;
-    const { widgets, destroyWidget, maximizeWidget } = this.props;
-    const maximizedWidget = widgets.find(widget => widget.status == "MAXIMIZED");
+    const { widgets } = this.props;
+    const maximizedWidget = Object.values(widgets).find(widget => widget.status == "MAXIMIZED");
     // change widget status
-    destroyWidget(action.data.node);
+    this.destroyWidget(action.data.node);
     // check if the current maximized widget is the same than in the action dispatched
     if (maximizedWidget && maximizedWidget.id == action.data.node) {
       // find if there exists another widget in the maximized panel that could take its place
@@ -238,9 +300,9 @@ export default class Flexy extends Component {
       // Understand if the tab to the left or right of the destroyed tab will be the next one to be maximized
       if (index != -1 && panelChildren.length > 1) {
         if (index == 0) {
-          maximizeWidget(panelChildren[1].getId());
+          this.maximizeWidget(panelChildren[1].getId());
         } else {
-          maximizeWidget(panelChildren[index - 1].getId());
+          this.maximizeWidget(panelChildren[index - 1].getId());
         }
       }
     }

@@ -93,26 +93,19 @@ export default class Metadata extends React.Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    const { mode, model, instancePath } = this.props;
-    if (model){ 
-      if (mode == 'general') {
-        if (!!model != !!prevProps.model) {
-          this.setData(Instances.getInstance('nwbfile.general'))  
-        }
-      } else {
-        if (instancePath != prevProps.instancePath) {
-          this.setData(Instances.getInstance(instancePath))
-        }
-      }
+    const { instancePath } = this.props;
+ 
+      
+    if (instancePath != prevProps.instancePath) {
+      this.setData(Instances.getInstance(instancePath))
     }
+
   }
 
   componentDidMount () {
-    const { mode, model, instancePath } = this.props;
-    if (model && typeof Instances != "undefined") {
-      const path = mode == "details" ? instancePath : 'nwbfile.general'
-      this.setData(Instances.getInstance(path))
-    }
+    const { instancePath } = this.props;
+
+    this.setData(Instances.getInstance(instancePath))
   }
 
 
