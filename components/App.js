@@ -33,7 +33,9 @@ export default class App extends React.Component{
     
     
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, error => {
-      raiseError(error);
+      if (error) {
+        raiseError(error);
+      }
     })
 
     
