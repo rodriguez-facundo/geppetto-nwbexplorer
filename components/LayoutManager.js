@@ -1,14 +1,12 @@
 import React, { Component, lazy, Suspense } from 'react'
 import * as FlexLayout from 'geppetto-client/js/components/interface/flexLayout2/src/index';
 import Actions from 'geppetto-client/js/components/interface/flexLayout2/src/model/Actions';
-import FileExplorerPage from './pages/FileExplorerPage';
-import Metadata from './Metadata';
+
 
 import { WidgetStatus } from './constants';
 import { isEqual } from '../Utils';
+import widgetFactory from './widgetFactory';
 
-
-const Plot = lazy(() => import('./Plot'));
 
 const defaultLayoutConfiguration = {
   "global": { sideBorders: 8 },
@@ -73,6 +71,7 @@ export default class LayoutManager extends Component {
     this.activateWidget = this.props.activateWidget ? this.props.activateWidget : () => console.debug('activateWidget not defined');
     this.maximizeWidget = this.props.maximizeWidget ? this.props.maximizeWidget : () => console.debug('maximizeWidget not defined');
     this.minimizeWidget = this.props.minimizeWidget ? this.props.minimizeWidget : () => console.debug('minimizeWidget not defined');
+    this.widgetFactory = this.props.widgetFactory ? this.props.widgetFactory : widgetFactory;
   }
   componentDidMount () {
     const { widgets } = this.props;
@@ -110,6 +109,10 @@ export default class LayoutManager extends Component {
     window.dispatchEvent(new Event('resize'));
   }
 
+  addWidget (widgetConfiguration) {
+    this.refs.layout.addTabToTabSet(widgetConfiguration.panelName, this.createWidgetDescription(widgetConfiguration));
+  }
+
   updateWidgets (widgets) {
 
     for (let widget of widgets) {
@@ -131,59 +134,7 @@ export default class LayoutManager extends Component {
 
   
   factory (node) {
-    const { model } = this;
-    const component = node.getComponent();
-    const { widgets } = this.props;
-
-    node.setEventListener("visibility", event => {
-      /*
-       * Find if there is a tab maximized
-       * const currentMaximizedWidget = Object.vwidgets.find(widget => widget.status == WidgetStatus.MAXIMIZED);      
-       */
-
-      /*
-       * if (event.visible){
-       *   if (currentMaximizedWidget){
-       *     // find if the tab to visualize is hosted by the node that is maximized
-       *     const widget2maximize = model.getMaximizedTabset().getChildren().find(tab => tab.getId() == node.getId())
-       *     if (widget2maximize) {
-       *       this.maximizeWidget(node.getId())
-       *     } else {
-       *       // activate in the background
-       *       this.activateWidget(node.getId())  
-       *     }
-       */
-
-      /*
-       *   } else {
-       *     this.activateWidget(node.getId())
-       *   }
-       * } else {
-       *   // if event is visible == false, then hide the tab
-       *   this.hideWidget(node.getId())
-       * }
-       */
-      window.dispatchEvent(new Event('resize'));
-    });
-
-    
-    // TODO move to WidgetFactory
-    if (component === "Explorer" ) { 
-      return <FileExplorerPage />;
-      
-    } else if (component === "Metadata" ) { 
-      const { instancePath } = node.getConfig();
-      return instancePath ? <Metadata instancePath = { instancePath } /> : '';
-
-    } else if (component === "Plot" ) { 
-      
-      const { instancePath } = node.getConfig();
-      return (
-        <Suspense fallback={<div>Loading...</div>}>
-          <Plot instancePath={ instancePath}/>
-        </Suspense>
-      )
-    }
+    return this.widgetFactory(node);
   }
   
 
@@ -207,9 +158,6 @@ export default class LayoutManager extends Component {
     };
   }
 
-  addWidget (widgetConfiguration) {
-    this.refs.layout.addTabToTabSet(widgetConfiguration.panelName, this.createWidgetDescription(widgetConfiguration));
-  }
 
   findNewWidgets (widgets, oldWidgets) {
     return oldWidgets ? Object.values(widgets).filter(widget => widget && !oldWidgets[widget.id]) : Object.values(widgets);

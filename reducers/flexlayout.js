@@ -11,7 +11,14 @@ import { WidgetStatus } from '../components/constants';
 export const FLEXLAYOUT_DEFAULT_STATUS = { 
   widgets: {
     'details': { id: 'details', name: 'Details', component: 'Metadata', panelName: "leftPanel" }, 
-    'general': { id: 'general', name: 'General', status: WidgetStatus.ACTIVE, instancePath: 'nwbfile.general', component: 'Metadata', panelName: "leftPanel" },
+    'general': { 
+      id: 'general', 
+      name: 'General', 
+      status: WidgetStatus.ACTIVE, 
+      instancePath: 'nwbfile.general', 
+      component: 'Metadata', 
+      panelName: "leftPanel" 
+    },
   },
 
 };
@@ -25,7 +32,7 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
     const newWidget = { ...state.widgets[action.data.id], panelName: extractPanelName(action), ...action.data, };
     return {
       ...state, widgets: { 
-        ...Object.fromEntries(Object.values(state.widgets).map(widget => [
+        ...Object.fromEntries(Object.values(state.widgets).filter(widget => widget).map(widget => [
           widget.id, 
           {
             ...widget, 

@@ -16,7 +16,22 @@ export const showPlot = ({ path, type }) => ({
     type, 
     component: 'Plot', 
     name: path.split('.').slice(-1).pop(),
-    status: WidgetStatus.ACTIVE
+    status: WidgetStatus.ACTIVE,
+    panelName: 'rightPanel'
+  }
+});
+
+
+export const newWidget = ({ path, type, component, panelName }) => ({ 
+  type: UPDATE_WIDGET,
+  data: {
+    id: path.replace('.', '_'), 
+    instancePath: path, 
+    type, 
+    component: component, 
+    name: path.split('.').slice(-1).pop(),
+    status: WidgetStatus.ACTIVE,
+    panelName: panelName
   }
 });
 
