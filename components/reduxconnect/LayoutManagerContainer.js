@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
-import LayoutManager from './LayoutManager';
+import LayoutManager from '../LayoutManager';
 import { 
   activateWidget,
   destroyWidget,
   minimizeWidget,
   maximizeWidget,
-} from '../actions/flexlayout';
+} from '../../actions/flexlayout';
 
 const mapStateToProps = state => state.flexlayout;
 

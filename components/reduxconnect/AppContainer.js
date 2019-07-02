@@ -1,8 +1,8 @@
-import App from './App';
+import App from '../App';
 import { connect } from "react-redux";
-import { loadNWBFile, nwbFileLoaded } from '../actions/nwbfile';
-import { notebookReady, loadNotebook } from '../actions/notebook';
-import { raiseError } from '../actions/general'
+import { loadNWBFile, nwbFileLoaded } from '../../actions/nwbfile';
+import { notebookReady, loadNotebook } from '../../actions/notebook';
+import { raiseError } from '../../actions/general'
 
 
 const mapStateToProps = state => ({

@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react';
-import FlexyContainer from '../LayoutManagerContainer';
-import AppbarContainer from '../AppBarContainer'
+import LayoutManager from '../reduxconnect/LayoutManagerContainer';
+import Appbar from '../reduxconnect/AppBarContainer'
 
 export default model => (
   <Fragment>
-    <AppbarContainer/>
-    <FlexyContainer />
+    <Appbar/>
+    <LayoutManager />
   </Fragment>
 )

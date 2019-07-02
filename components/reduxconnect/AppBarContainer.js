@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
-import Appbar from './AppBar';
-import { unloadNWBFile, unloadNWBFileInNotebook } from '../actions/nwbfile';
+import Appbar from '../AppBar';
+import { unloadNWBFile, unloadNWBFileInNotebook } from '../../actions/nwbfile';
 
-import { showPlot, resetLayout } from '../actions/flexlayout';
+import { showPlot, resetLayout } from '../../actions/flexlayout';
 
 const mapStateToProps = () => ({});
 

@@ -12,7 +12,7 @@ const React = require('react');
 
 const Utils = require('./Utils').default;
 
-const AppContainer = require('./components/AppContainer').default;
+const App = require('./components/reduxconnect/AppContainer').default;
 
 // The service is also called from the parent frame to change file
 const nwbFileService = require('./services/NWBFileService').default;
@@ -37,7 +37,7 @@ const store = configureStore();
   
   ReactDOM.render(
     <Provider store={store}>
-      <AppContainer />
+      <App />
     </Provider>
     , document.getElementById('mainContainer'));
 
