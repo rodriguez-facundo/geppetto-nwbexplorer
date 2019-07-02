@@ -3,7 +3,7 @@ export const MODULE_NOT_FOUND_ERROR = 'ModuleNotFoundError';
 export const NAME_ERROR = "NameError";
 
 export const WidgetStatus = {
-  // HIDDEN: 'HIDDEN',
+  HIDDEN: 'HIDDEN',
   ACTIVE: 'ACTIVE',
   MAXIMIZED: 'MAXIMIZED',
   MINIMIZED: 'MINIMIZED'

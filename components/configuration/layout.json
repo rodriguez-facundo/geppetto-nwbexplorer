@@ -1,0 +1,52 @@
+{
+    "global": { "sideBorders": 8 },
+    "layout": {
+      "type": "row",
+      "weight": 100,
+      "id": "root",
+      "children": [
+        {
+          "type": "row",
+          "weight": 20,
+          "children": [
+            {
+              "type": "tabset",
+              "weight": 100,
+              "id": "leftPanel",
+              "enableDeleteWhenEmpty": false,
+              "enableDrop": false,
+              "enableDrag": false,
+              "enableDivide": false,
+              "enableMaximize": false,
+              "children": [
+              
+              ]
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "weight": 80,
+          "children": [
+            {
+              "type": "tabset",
+              "weight": 50,
+              "id": "rightPanel",
+              "enableDeleteWhenEmpty": false,
+              "children": [
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "borders": [
+      {
+        "type": "border",
+        "location": "bottom",
+        "size": 100,
+        "children": [],
+        "barSize": 10
+      }
+    ]
+}

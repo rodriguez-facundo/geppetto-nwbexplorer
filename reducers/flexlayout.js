@@ -25,7 +25,13 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
     const newWidget = { ...state.widgets[action.data.id], panelName: extractPanelName(action), ...action.data, };
     return {
       ...state, widgets: { 
-        ...state.widgets, 
+        ...Object.fromEntries(Object.values(state.widgets).map(widget => [
+          widget.id, 
+          {
+            ...widget, 
+            status: widget.panelName == newWidget.panelName && newWidget.status == WidgetStatus.ACTIVE ? WidgetStatus.HIDDEN : widget.status // Other tabs in the panel must be hidden
+          }
+        ])), 
         [action.data.id]: newWidget 
       }
     } ;

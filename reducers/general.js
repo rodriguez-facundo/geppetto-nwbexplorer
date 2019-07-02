@@ -1,6 +1,4 @@
 import { 
-  ENABLE_INFO_PANEL, 
-  DISABLE_INFO_PANEL, 
   RAISE_ERROR, 
   RECOVER_FROM_ERROR,
   WAIT_DATA
@@ -28,12 +26,6 @@ export default ( state = {}, action ) => ({
 
 function reduceGeneral (state, action) {
   switch (action.type) {
-  
-  case ENABLE_INFO_PANEL:
-    return { toggleInfoPanel: true } 
-  
-  case DISABLE_INFO_PANEL:
-    return { toggleInfoPanel: false } 
 
   case WAIT_DATA:
     return { loading: action.data.message }

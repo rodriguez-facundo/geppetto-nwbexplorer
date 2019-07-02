@@ -67,8 +67,8 @@ export default class LayoutManager extends Component {
 
   constructor (props) {
     super(props);
-    const configuration = this.props.configuration ? this.props.configuration : defaultLayoutConfiguration;
-    this.model = FlexLayout.Model.fromJson(configuration);
+    const layout = this.props.layout ? this.props.layout : defaultLayoutConfiguration;
+    this.model = FlexLayout.Model.fromJson(layout);
     this.destroyWidget = this.props.destroyWidget ? this.props.destroyWidget : () => console.debug('destroyWidget not defined');
     this.activateWidget = this.props.activateWidget ? this.props.activateWidget : () => console.debug('activateWidget not defined');
     this.maximizeWidget = this.props.maximizeWidget ? this.props.maximizeWidget : () => console.debug('maximizeWidget not defined');
@@ -278,7 +278,7 @@ export default class LayoutManager extends Component {
   }
 
   findMaximizedWidget (widgets) {
-    return Object.values(widgets).find(widget => widget.status == WidgetStatus.MAXIMIZED);
+    return Object.values(widgets).find(widget => widget && widget.status == WidgetStatus.MAXIMIZED);
   }
 
   onActionDeleteWidget (action) {
