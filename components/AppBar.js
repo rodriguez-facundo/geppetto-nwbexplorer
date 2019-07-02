@@ -45,6 +45,10 @@ export default class Appbar extends React.Component {
   constructor (props) {
     super(props);
     window.controlPanelClickAction = this.clickPlotAction.bind(this); // we don't like global variables but we like less putting the code in a string
+    this.exit = this.props.exit ? this.props.exit : () => console.debug('exit not defined');
+    this.showPlot = this.props.showPlot ? this.props.showPlot : () => console.debug('showPlot not defined');
+   
+  
   }
 
   componentDidMount () {
@@ -92,17 +96,14 @@ export default class Appbar extends React.Component {
    * Operates on an instance of a state variable and plots in accordance
    */
   clickPlotAction (instance) {
-    const { showPlot } = this.props;
-    showPlot({ path: instance.getPath(), type: instance.getVariable().getType().getName() });
+    this.showPlot({ path: instance.getPath(), type: instance.getVariable().getType().getName() });
 
     this.refs.controlpanelref.close();
   }
 
   
   handleClickBack () {
-    const { resetFlexlayoutState, unloadNWBFile } = this.props;
-    resetFlexlayoutState();
-    unloadNWBFile();
+    this.exit();
   }
   
   render () {
