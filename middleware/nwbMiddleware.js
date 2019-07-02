@@ -6,7 +6,7 @@ import {
   loadedNWBFileInNotebook, loadNWBFileInNotebook 
 } from '../actions/nwbfile';
 
-import { SHOW_WIDGET, updateDetailsWidget } from '../actions/flexlayout';
+import { UPDATE_WIDGET, updateDetailsWidget } from '../actions/flexlayout';
 import { waitData } from '../actions/general';
 import { NOTEBOOK_READY } from '../actions/notebook';
 
@@ -72,7 +72,7 @@ const nwbMiddleware = store => next => action => {
     // FIXME for some reason the callback for python messages is not being always called
     Utils.execPythonMessage('from nwb_explorer.nwb_main import main');
     break;
-  case SHOW_WIDGET:
+  case UPDATE_WIDGET:
     return handleShowWidget(store, next, action);
   }
 
