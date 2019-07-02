@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
-import FileSampleSelector from './FileSampleSelector';
-import { loadNWBFile } from '../actions/nwbfile';
+import FileSampleSelector from '../FileSampleSelector';
+import { loadNWBFile } from '../../actions/nwbfile';
 
 FileSampleSelector.defaultProps = {};
 

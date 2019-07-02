@@ -12,7 +12,7 @@ const React = require('react');
 
 const Utils = require('./Utils').default;
 
-const AppContainer = require('./components/AppContainer').default;
+const App = require('./components/reduxconnect/AppContainer').default;
 
 // The service is also called from the parent frame to change file
 const nwbFileService = require('./services/NWBFileService').default;
@@ -25,6 +25,7 @@ require('./styles/main.less');
 G.enableLocalStorage(false);
 G.setIdleTimeOut(-1);
 
+const store = configureStore();
 
 (function init () {
   GEPPETTO.G.setIdleTimeOut(-1);
@@ -33,10 +34,10 @@ G.setIdleTimeOut(-1);
   GEPPETTO.Manager = nwbManager; // Override standard Geppetto manager
   console.log(Utils);
 
-
+  
   ReactDOM.render(
-    <Provider store={configureStore()}>
-      <AppContainer />
+    <Provider store={store}>
+      <App />
     </Provider>
     , document.getElementById('mainContainer'));
 

@@ -28,12 +28,14 @@ export default class App extends React.Component{
   }
 
   componentDidMount () {
-    const { setNWBFile, loadNotebook, notebookReady, nwbFileLoaded, raiseError } = this.props;
+    const { loadNWBFile, loadNotebook, notebookReady, nwbFileLoaded, raiseError } = this.props;
     self = this;
     
     
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, error => {
-      raiseError(error)
+      if (error) {
+        raiseError(error);
+      }
     })
 
     
@@ -42,14 +44,14 @@ export default class App extends React.Component{
 
       // Here we would expect some cross-origin check, but we don't do anything more than load a nwb file here
       if (typeof (event.data) == 'string') {
-        setNWBFile(event.data);
+        loadNWBFile(event.data);
         // The message may be triggered after the notebook was ready
 
       }
     });
 
     if (nwbFileService.getNWBFileUrl()){
-      setNWBFile(nwbFileService.getNWBFileUrl());
+      loadNWBFile(nwbFileService.getNWBFileUrl());
 
     }
 
@@ -73,16 +75,13 @@ export default class App extends React.Component{
 
   componentDidUpdate () {
     const {
-      notebookReady, nwbFileUrl, model, nwbFileLoading, loading, 
-      loadNWBFile, isLoadedInNotebook, isLoadingInNotebook, loadNWBFileInNotebook, error
+      notebookReady, model, loading, 
+      isLoadedInNotebook, isLoadingInNotebook, error
     } = this.props;
-
-    if (notebookReady && nwbFileUrl && !model && !nwbFileLoading ){
-      loadNWBFile(nwbFileUrl);
-    }
+    
 
     if (!isLoadedInNotebook && model && notebookReady && !isLoadingInNotebook && !error) {
-      loadNWBFileInNotebook(nwbFileUrl); // We may have missed the loading if notebook was not initialized at the time of the url change
+      // We may have missed the loading if notebook was not initialized at the time of the url change
     }
 
     // It would be better having the spinner as a parametrized react component
@@ -101,10 +100,12 @@ export default class App extends React.Component{
     const { model, embedded, showNotebook, isLoadedInNotebook } = this.props;
     
     var page;
-    if (model || embedded) {
+    if (model) {
       page = <FileExplorerPage/>
-    } else {
+    } else if (!embedded) {
       page = <SplashPage />
+    } else {
+      page = '<h1>Waiting for data...</h1>';
     }
 
     return (

@@ -1,64 +1,73 @@
-export const RESET_LAYOUT = 'RESET_LAYOUT';
-export const HIDE_WIDGET = 'HIDE_WIDGET';
-export const DESTROY_WIDGET = 'DESTROY_WIDGET';
-export const MAXIMIZE_WIDGET = 'MAXIMIZE_WIDGET';
+export const UPDATE_WIDGET = 'UPDATE_WIDGET';
 export const ACTIVATE_WIDGET = 'ACTIVATE_WIDGET';
-export const CHANGE_INSTANCE_PATH_OF_CURRENT_SELECTED_PLOT = 'CHANGE_INSTANCE_PATH_OF_CURRENT_SELECTED_PLOT';
-export const CHANGE_DETAILS_WIDGET_INSTANCE_PATH = 'CHANGE_DETAILS_WIDGET_INSTANCE_PATH';
-export const CREATE_WIDGET = 'CREATE_WIDGET';
-export const FINISH_WIDGET_CREATION = 'FINISH_WIDGET_CREATION';
-export const CHANGE_TS_DATA_RETRIEVE_STATUS = 'CHANGE_TS_DATA_RETRIEVE_STATUS';
+export const ADD_WIDGET = 'ADD_WIDGET';
+export const RESET_LAYOUT = 'RESET_LAYOUT';
+export const DESTROY_WIDGET = 'DESTROY_WIDGET';
 
-export const REQUEST_DATA_RETRIEVE = 'REQUEST_DATA_RETRIEVE';
-export const START_DATA_RETRIEVE = 'START_DATA_RETRIEVE';
-export const FINISH_DATA_RETRIEVE = 'FINISH_DATA_RETRIEVE';
 
-export const activateWidget = id => ({
-  id,
-  type: ACTIVATE_WIDGET
-})
+import { WidgetStatus } from '../components/constants';
 
-export const destroyWidget = id => ({ 
-  id,
-  type: DESTROY_WIDGET 
-})
 
-export const hideWidget = id => ({ 
-  id,
-  type: HIDE_WIDGET
-})
+export const showPlot = ({ path, type }) => ({ 
+  type: UPDATE_WIDGET,
+  data: {
+    id: path.replace('.', '_'), 
+    instancePath: path, 
+    type, 
+    component: 'Plot', 
+    name: path.split('.').slice(-1).pop(),
+    status: WidgetStatus.ACTIVE,
+    panelName: 'rightPanel'
+  }
+});
+
+
+export const newWidget = ({ path, type, component, panelName }) => ({ 
+  type: UPDATE_WIDGET,
+  data: {
+    id: path.replace('.', '_'), 
+    instancePath: path, 
+    type, 
+    component: component, 
+    name: path.split('.').slice(-1).pop(),
+    status: WidgetStatus.ACTIVE,
+    panelName: panelName
+  }
+});
+
+
+export const minimizeWidget = id => ({ 
+  type: UPDATE_WIDGET,
+  data: {
+    id,
+    status: WidgetStatus.MINIMIZED
+  }
+  
+});
 
 export const maximizeWidget = id => ({ 
-  id,
-  type: MAXIMIZE_WIDGET
-})
+  type: UPDATE_WIDGET,
+  data: {
+    id,
+    status: WidgetStatus.MAXIMIZED
+  }
+});
+export const activateWidget = id => ({ 
+  type: ACTIVATE_WIDGET,
+  data: { id }
 
-export const createWidget = jsonDescribingWidget => ({ 
-  jsonDescribingWidget,
-  type: CREATE_WIDGET
-})
+});
 
-export const finishWidgetCreation = () => ({ type: FINISH_WIDGET_CREATION })
+export const updateDetailsWidget = path => ({ 
+  type: UPDATE_WIDGET,
+  data: { id: 'details', instancePath: path, status: WidgetStatus.ACTIVE }
+});
 
-export const changeDetailsWidgetInstancePath = instancePath => ({ 
-  instancePath,
-  type: CHANGE_DETAILS_WIDGET_INSTANCE_PATH
-})
+export const destroyWidget = id => ({ 
+  type: DESTROY_WIDGET,
+  data: { id }
+  
+});
 
+export const resetLayout = { type: RESET_LAYOUT, };
 
-export const changeInstancePathOfCurrentSelectedPlot = instancePath => ({ 
-  instancePath,
-  type: CHANGE_INSTANCE_PATH_OF_CURRENT_SELECTED_PLOT
-})
-
-export const requestDataRetrieve = () => ({ type: REQUEST_DATA_RETRIEVE })
-
-export const startDataRetrieve = () => ({ type: START_DATA_RETRIEVE })
-
-export const finishDataRetrieve = () => ({ type: FINISH_DATA_RETRIEVE })
-
-export const TS_STATUS = {
-  START: "START",
-  PENDING: "PENDING",
-  COMPLETED: "COMPLETED"
-}

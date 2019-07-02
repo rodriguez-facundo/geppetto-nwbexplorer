@@ -1,8 +1,8 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 
-import FileUrlSelectorContainer from '../FileUrlSelectorContainer';
-import FileSampleSelectorContainer from '../FileSampleSelectorContainer';
+import FileUrlSelector from '../reduxconnect/FileUrlSelectorContainer';
+import FileSampleSelector from '../reduxconnect/FileSampleSelectorContainer';
 
 import img from '../../resources/splash.jpg';
 import logo_osb from '../../resources/logos/osb.png';
@@ -25,10 +25,10 @@ export default class SplashPage extends React.Component{
 
         <Grid className="sidebar center-filler" item xs={12} sm={12} md={6} lg={5} xl={4} >
           <div className="greybox">
-            <FileUrlSelectorContainer/>
+            <FileUrlSelector/>
           </div>
           <div className="greybox flex-filler">
-            <FileSampleSelectorContainer/>
+            <FileSampleSelector/>
           </div>
         </Grid>
         <Grid className="center-filler" item xs={12} sm={12} md={6} lg={7} xl={8} >
