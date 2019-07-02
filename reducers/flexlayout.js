@@ -19,6 +19,14 @@ export const FLEXLAYOUT_DEFAULT_STATUS = {
       component: 'Metadata', 
       panelName: "leftPanel" 
     },
+    'list__acquisition': {
+      id: 'list__acquisition', 
+      instancePath: 'nwbfile.acquisition.', 
+      component: 'NWBListViewer', 
+      name: 'Acquisition',
+      status: WidgetStatus.ACTIVE,
+      panelName: 'rightPanel'
+    }
   },
 
 };

@@ -11,23 +11,36 @@ import { WidgetStatus } from '../components/constants';
 export const showPlot = ({ path, type }) => ({ 
   type: UPDATE_WIDGET,
   data: {
-    id: path.replace('.', '_'), 
-    instancePath: path, 
-    type, 
+    id: 'plot__' + path.replace('.', '_'), 
+    instancePath: path,
     component: 'Plot', 
+    type: type,
     name: path.split('.').slice(-1).pop(),
+    status: WidgetStatus.ACTIVE,
+    panelName: 'rightPanel',
+    config: {}
+  }
+});
+
+
+export const showList = (name, basePath) => ({ 
+  type: UPDATE_WIDGET,
+  data: {
+    id: 'list__' + basePath.replace('.', '_'), 
+    instancePath: basePath, 
+    component: 'NWBListViewer', 
+    name: name,
     status: WidgetStatus.ACTIVE,
     panelName: 'rightPanel'
   }
 });
 
 
-export const newWidget = ({ path, type, component, panelName }) => ({ 
+export const newWidget = ({ path, component, panelName }) => ({ 
   type: UPDATE_WIDGET,
   data: {
     id: path.replace('.', '_'), 
     instancePath: path, 
-    type, 
     component: component, 
     name: path.split('.').slice(-1).pop(),
     status: WidgetStatus.ACTIVE,

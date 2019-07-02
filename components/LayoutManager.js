@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react'
+import React, { Component } from 'react';
 import * as FlexLayout from 'geppetto-client/js/components/interface/flexLayout2/src/index';
 import Actions from 'geppetto-client/js/components/interface/flexLayout2/src/model/Actions';
 

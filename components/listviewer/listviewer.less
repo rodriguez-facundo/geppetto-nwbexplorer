@@ -1,0 +1,38 @@
+.listviewer {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    div, table {
+        width: 100%;
+        height: auto !important; // Override default 70% for PositionPlugin
+    }
+    .listviewer-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: space-between;
+        
+    }
+
+    .griddle-filter {
+       padding: 0.5em;
+       margin-bottom: 1em;
+    }
+    td, th {
+        padding: 0.3em;
+        text-align: left;
+        max-width: 50%;
+    }
+
+    .list-icon{
+        cursor: pointer;
+        padding: 0.2em;
+        font-size: 1.5em;
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+
+
+}
+    

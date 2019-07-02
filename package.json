@@ -18,7 +18,9 @@
   "dependencies": {
     "@geppettoengine/geppetto-client": "openworm/geppetto-client#nwbdev",
     "babel-polyfill": "^6.26.0",
+    "griddle-react": "^1.13.1",
     "react-collapsible": "^2.3.1",
+    "react-fontawesome": "^1.6.1",
     "react-redux": "^7.0.3",
     "react-scripts": "0.9.5",
     "redux": "^4.0.1"
