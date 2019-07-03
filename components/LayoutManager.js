@@ -61,6 +61,24 @@ const defaultLayoutConfiguration = {
   ]
 };
 
+/**
+ * Transforms a widget configutation into a flexlayout node descriptor
+ */
+function widget2Node (configuration) {
+  const { id, name, component, instancePath, status, panelName, enableClose = true } = configuration;
+  return {
+    id,
+    name,
+    status,
+    component,
+    type: "tab",
+    enableRename: false,
+    enableClose: enableClose,
+    // attr defined inside config, will also be available from within flexlayout nodes.  For example:  node.getNodeById(id).getConfig()
+    config: configuration ,
+  };
+}
+
 export default class LayoutManager extends Component {
 
   constructor (props) {
@@ -103,14 +121,20 @@ export default class LayoutManager extends Component {
       } else {
         console.warn('Should not be here in addWidgets...');
       }
-      // This updates plotly.js plots to new panel sizes
+      
+    }
+    for (let widget of widgets) {
+   
+      if (widget.status == WidgetStatus.ACTIVE) {
+        this.model.doAction(FlexLayout.Actions.selectTab(widget.id));
+      }
       
     }
     window.dispatchEvent(new Event('resize'));
   }
 
   addWidget (widgetConfiguration) {
-    this.refs.layout.addTabToTabSet(widgetConfiguration.panelName, this.createWidgetDescription(widgetConfiguration));
+    this.refs.layout.addTabToTabSet(widgetConfiguration.panelName, widget2Node(widgetConfiguration));
   }
 
   updateWidgets (widgets) {
@@ -121,7 +145,7 @@ export default class LayoutManager extends Component {
       // This updates plotly.js plots to new panel sizes
       if (widget.status == WidgetStatus.ACTIVE) {
         // this.model.getNodeById(widget.panelName)._setSelected(1)
-        this.model.doAction(FlexLayout.Actions.selectTab(widget.id))
+        this.model.doAction(FlexLayout.Actions.selectTab(widget.id));
       }
       
     }
@@ -129,33 +153,15 @@ export default class LayoutManager extends Component {
   }
 
   updateWidget (widget) {
-    this.model.doAction(Actions.updateNodeAttributes(widget.id, this.createWidgetDescription(widget)));
+    if (widget) {
+      this.model.doAction(Actions.updateNodeAttributes(widget.id, widget2Node(widget)));
+    }
+    
   }
 
   
   factory (node) {
-    return this.widgetFactory(node);
-  }
-  
-
-  /*
-   * status could be one of:
-   *  - ACTIVE:     the user can see the tab content.
-   *  - MINIMIZED:       the tab is minimized, or other tab in the node is currently selected.
-   *  - DESTROYED:  the tab was deleted from flexlayout.
-   *  - MAXIMIZED:  the tab is maximized (only one tab can be maximized simultaneously)
-   */
-  createWidgetDescription ({ id, name, component, instancePath, status, panelName }) {
-    return {
-      id,
-      name,
-      status,
-      component,
-      type: "tab",
-      enableRename: false,
-      // attr defined inside config, will also be available from within flexlayout nodes.  For example:  node.getNodeById(id).getConfig()
-      config: { instancePath, panel: panelName },
-    };
+    return this.widgetFactory(node.getConfig());
   }
 
 
@@ -172,18 +178,7 @@ export default class LayoutManager extends Component {
   
 
   onAction (action) {
-    const { model } = this;
     switch (action.type){
-    case FlexLayout.Actions.SET_ACTIVE_TABSET: { // Not clear its use
-      const activePanel = model.getActiveTabset();
-      if (activePanel) {
-        const widget = activePanel.getSelectedNode();
-        if (widget) {
-          this.activateWidget(action.data.tabNode);
-        }
-      }
-    }
-      break;
     case Actions.SELECT_TAB: 
       this.activateWidget(action.data.tabNode);
       break;

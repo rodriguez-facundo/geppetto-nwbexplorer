@@ -18,20 +18,21 @@ export const showPlot = ({ path, type }) => ({
     name: path.split('.').slice(-1).pop(),
     status: WidgetStatus.ACTIVE,
     panelName: 'rightPanel',
+    color: 'cyan',
     config: {}
   }
 });
 
 
-export const showList = (name, basePath) => ({ 
+export const showList = (name, pathPattern, status = WidgetStatus.ACTIVE) => ({ 
   type: UPDATE_WIDGET,
   data: {
-    id: 'list__' + basePath.replace('.', '_'), 
-    instancePath: basePath, 
+    id: 'list__' + pathPattern.replace('.', '_'), 
+    pathPattern: pathPattern, 
     component: 'NWBListViewer', 
     name: name,
-    status: WidgetStatus.ACTIVE,
-    panelName: 'rightPanel'
+    status: status,
+    panelName: 'rightTop'
   }
 });
 

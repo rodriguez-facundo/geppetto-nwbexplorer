@@ -24,13 +24,22 @@
             }
           ]
         },
+        
         {
           "type": "row",
           "weight": 80,
           "children": [
             {
               "type": "tabset",
-              "weight": 50,
+              "weight": 60,
+              "id": "rightTop",
+              "enableDeleteWhenEmpty": false,
+              "children": [
+              ]
+            },
+            {
+              "type": "tabset",
+              "weight": 40,
               "id": "rightPanel",
               "enableDeleteWhenEmpty": false,
               "children": [

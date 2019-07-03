@@ -111,7 +111,7 @@ export default class Metadata extends React.Component {
 
   render () {
     return (
-      <div style={{ marginTop:'15px' }}>
+      <div style={{ marginBottom:'1em' }}>
         {
           this.content.values.map((item, key) => 
             <div key={key}>

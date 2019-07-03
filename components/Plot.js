@@ -1,16 +1,16 @@
 import React from 'react';
 import Plot from 'geppetto-client/js/components/interface/plot/Plot.js';
 
-export default class PlotComponent extends React.Component{
+export default class NWBTimeseriesPlotComponent extends React.Component{
   constructor (props) {
     super(props);
   }
 
   render () {
-    const { instancePath } = this.props;
+    const { instancePath, color = 'white' } = this.props;
     return <Plot 
       instancePath={{ x: `${instancePath}.time`, y:`${instancePath}.data` }}
-      lineOptions={{ color: '#C5E7F1' }}
+      lineOptions={{ color: color }}
       id={instancePath ? instancePath : "empty"}
     />;
   }

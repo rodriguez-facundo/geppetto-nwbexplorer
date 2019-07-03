@@ -6,123 +6,40 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import ControlPanel from 'geppetto-client/js/components/interface/controlPanel/controlpanel';
+import { WidgetStatus } from './constants';
 
-import { 
-  controlPanelConfig,
-  controlPanelColMeta, 
-  controlPanelControlConfigs, 
-  controlPanelColumns 
-} from './configuration/controlPanelConfiguration';
-
-
-const styles = {
-  modal: {
-    position: 'absolute !important',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    zIndex: '999',
-    height: '100%',
-    width: '100%',
-    top: 0
-  },
-  
-  menuItemDiv: {
-    fontSize: '12px',
-    lineHeight: '28px'
-  },
-  
-  menuItem: {
-    lineHeight: '28px',
-    minHeight: '28px'
-  },
-  icon: {
-    position: 'absolute',
-    left: 15,
-  }
-};
 
 export default class Appbar extends React.Component {
   constructor (props) {
     super(props);
-    window.controlPanelClickAction = this.clickPlotAction.bind(this); // we don't like global variables but we like less putting the code in a string
-    this.exit = this.props.exit ? this.props.exit : () => console.debug('exit not defined');
-    this.showPlot = this.props.showPlot ? this.props.showPlot : () => console.debug('showPlot not defined');
+    this.exit = this.props.exit ? this.props.exit : () => console.debug('exit not defined in ' + typeof this);
+    this.showList = this.props.showList ? this.props.showList : () => console.debug('showPlot not defined in ' + typeof this);
    
   
   }
 
   componentDidMount () {
-    this.initControlPanel();
+
   }
   
   componentDidUpdate (prevProps, prevState) {
 
   }
 
-  async initControlPanel () {
-    if (this.refs.controlpanelref !== undefined) {
-      this.refs.controlpanelref.setColumnMeta(controlPanelColMeta);
-      this.refs.controlpanelref.setColumns(controlPanelColumns);
-      this.refs.controlpanelref.setControlsConfig(controlPanelConfig);
-      this.refs.controlpanelref.setControls(controlPanelControlConfigs);
-    }
-
-    /*
-     * Create instances for all variables with getInstance
-     * Instances.addInstances seems not to be working, we add with getInstance
-     */
-
-    let timeseriesInstances = GEPPETTO.ModelFactory.allPaths.
-      // filter(pathobj => ~pathobj.type.indexOf('timeseries')).
-      map(pathobj => Instances.getInstance(pathobj.path));
-
-
-    /*
-     * Change the data filter on the control panel
-     * Note: await is needed because of setState in the control panel which is asyncronous
-     */
-    await this.refs.controlpanelref.setDataFilter(function (entities) { 
-      /** adds all non-time instances to control panel */
-      return entities.
-        filter(
-          instance => instance.getVariable().getType().getName() === 'timeseries'
-        );
-    });
-    this.refs.controlpanelref.addData(timeseriesInstances);
-    this.refs.controlpanelref.open();
-  }
-
-  /**
-   * Operates on an instance of a state variable and plots in accordance
-   */
-  clickPlotAction (instance) {
-    this.showPlot({ path: instance.getPath(), type: instance.getVariable().getType().getName() });
-
-    this.refs.controlpanelref.close();
-  }
-
   
   handleClickBack () {
     this.exit();
+  }
+
+  handleShowLists () {
+    this.showList('Acquisition', 'nwbfile.acquisition.');
+    this.showList('Stimulus', 'nwbfile.stimulus.', WidgetStatus.HIDDEN);
   }
   
   render () {
  
     return (
       <Fragment>
-        <div id="controls">
-          <div id="controlpanel" style={{ top: 0 }}>
-            <ControlPanel
-              icon={styles.modal}
-              useBuiltInFilters={false}
-              controlPanelColMeta={controlPanelColMeta}
-              controlPanelConfig={controlPanelConfig}
-              columns={controlPanelColumns}
-              controlPanelControlConfigs={controlPanelControlConfigs}
-              ref="controlpanelref"
-            />
-          </div>
-        </div>
         <AppBar position="static" color="secondary">
           <Toolbar>
             <Grid
@@ -146,7 +63,7 @@ export default class Appbar extends React.Component {
                 
                 
                 <IconButton 
-                  onClick={() => this.refs.controlpanelref.open()}
+                  onClick={() => this.handleShowLists()}
                 >
                   <Icon color="error" className='fa fa-list' />
                 </IconButton>

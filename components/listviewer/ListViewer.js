@@ -22,15 +22,15 @@ export const GroupComponent = conf => ({ value }) => conf.map(
  * Shows a fontAwesome icon. Allows an action to be specified
  * @param { icon, action, color, tooltip } 
  */
-export const IconComponent = ({ icon, action, color, tooltip }) => 
+export const IconComponent = ({ icon, action, color, tooltip, condition = value => true }) => 
   ({ value }) => 
-    <span 
+    condition(value) ? <span 
       style={{ color: color }} 
       className='list-icon' 
       title={tooltip}
       onClick={() => action(value)}>
       <FontAwesome name={icon} />
-    </span>
+    </span> : ''
 
 /**
  * Wraps a component implementing a click action on it.
@@ -100,14 +100,15 @@ export const defaultColumnConfiguration = [
 
 function extractGriddleData (data, listViewerColumnsConfiguration) {
   return data.map(row => listViewerColumnsConfiguration.reduce(
-    (processedRow, confItem) => {
-
-      processedRow[confItem.id] = confItem.source === undefined ? row : confItem.source instanceof Function ? confItem.source(row) : row[confItem.source];
-      return processedRow;
-    }, {})
-  );
+    reduceEntityToGriddleRow(row), {}
+  ));
 }
-
+function reduceEntityToGriddleRow (row) {
+  return (processedRow, { id, source }) => ({
+    ...processedRow,
+    [id]: source === undefined ? row : source instanceof Function ? source(row) : row[source]
+  });
+}
 
 export default class ListViewer extends React.Component {
   
@@ -259,3 +260,5 @@ export default class ListViewer extends React.Component {
   
  
 }
+
+

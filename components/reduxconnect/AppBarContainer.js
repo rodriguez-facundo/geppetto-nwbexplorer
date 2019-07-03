@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import Appbar from '../AppBar';
 import { unloadNWBFile, unloadNWBFileInNotebook } from '../../actions/nwbfile';
 
-import { showPlot, resetLayout } from '../../actions/flexlayout';
+import { showPlot, resetLayout, showList } from '../../actions/flexlayout';
 
 const mapStateToProps = () => ({});
 
@@ -13,7 +13,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(resetLayout)
   },
   showPlot: instanceDescriptor => dispatch(showPlot(instanceDescriptor)),
-  resetLayout: () => dispatch(resetLayout)
+  resetLayout: () => dispatch(resetLayout),
+  showList: (name, pathPattern) => dispatch(showList(name, pathPattern))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Appbar);

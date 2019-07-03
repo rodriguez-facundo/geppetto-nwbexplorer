@@ -3,30 +3,38 @@ import {
   UPDATE_WIDGET,
   RESET_LAYOUT,
   DESTROY_WIDGET,
-  ACTIVATE_WIDGET
+  ACTIVATE_WIDGET,
+  showList
 } from '../actions/flexlayout';
 
 import { WidgetStatus } from '../components/constants';
 
+const acquisitionWidget = showList('Acquisition', 'nwbfile.acquisition.').data;
+const stimulusWidget = showList('Stimulus', 'nwbfile.stimulus.', WidgetStatus.HIDDEN).data;
+
 export const FLEXLAYOUT_DEFAULT_STATUS = { 
   widgets: {
-    'details': { id: 'details', name: 'Details', component: 'Metadata', panelName: "leftPanel" }, 
     'general': { 
       id: 'general', 
       name: 'General', 
       status: WidgetStatus.ACTIVE, 
       instancePath: 'nwbfile.general', 
       component: 'Metadata', 
-      panelName: "leftPanel" 
+      panelName: "leftPanel" ,
+      enableClose: false
     },
-    'list__acquisition': {
-      id: 'list__acquisition', 
-      instancePath: 'nwbfile.acquisition.', 
-      component: 'NWBListViewer', 
-      name: 'Acquisition',
-      status: WidgetStatus.ACTIVE,
-      panelName: 'rightPanel'
-    }
+    'details': { 
+      id: 'details', 
+      name: 'Details', 
+      status: WidgetStatus.HIDDEN, 
+      component: 'Metadata', 
+      panelName: "leftPanel",
+      enableClose: false
+    }, 
+    
+    [acquisitionWidget.id]: acquisitionWidget ,
+    [stimulusWidget.id]: stimulusWidget ,
+    
   },
 
 };
@@ -40,13 +48,7 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
     const newWidget = { ...state.widgets[action.data.id], panelName: extractPanelName(action), ...action.data, };
     return {
       ...state, widgets: { 
-        ...Object.fromEntries(Object.values(state.widgets).filter(widget => widget).map(widget => [
-          widget.id, 
-          {
-            ...widget, 
-            status: widget.panelName == newWidget.panelName && newWidget.status == WidgetStatus.ACTIVE ? WidgetStatus.HIDDEN : widget.status // Other tabs in the panel must be hidden
-          }
-        ])), 
+        ...updateWidgetStatus(state.widgets, newWidget), 
         [action.data.id]: newWidget 
       }
     } ;
@@ -58,21 +60,43 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
         [action.data.id]: undefined
       }
     }
-  case ACTIVATE_WIDGET: 
+  case ACTIVATE_WIDGET: { 
+    const activatedWidget = state.widgets[action.data.id];
+    if (state.widgets['details'].panelName == activatedWidget.panelName) {
+      return state;
+    }
+    const newDetails = activatedWidget.instancePath
+      ? {
+        ...state.widgets['details'], 
+        instancePath: state.widgets[action.data.id].instancePath 
+      } : state.widgets['details']; // We always show the meta data of currently selected widget
     return {
       ...state, widgets: { 
-        ...state.widgets, 
-        details: { ...state.widgets['details'], instancePath: state.widgets[action.data.id].instancePath },
-        [action.data.id]: { ...state.widgets[action.data.id], status: WidgetStatus.ACTIVE }
+        ...updateWidgetStatus(state.widgets, { panelName: state.widgets[action.data.id], status: WidgetStatus.ACTIVE }), 
+        details: newDetails,
+        [action.data.id]: { ...activatedWidget, status: WidgetStatus.ACTIVE }
       }
     }
-  
+  }
   case RESET_LAYOUT:
     return FLEXLAYOUT_DEFAULT_STATUS;
   
   default:
     return state
   }
+}
+
+function updateWidgetStatus (widgets, { status, panelName }) {
+  if (status != WidgetStatus.ACTIVE) {
+    return widgets;
+  }
+  return Object.fromEntries(Object.values(widgets).filter(widget => widget).map(widget => [
+    widget.id,
+    {
+      ...widget,
+      status: widget.panelName == panelName ? WidgetStatus.HIDDEN : widget.status
+    }
+  ]));
 }
 
 function extractPanelName (action) {
