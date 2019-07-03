@@ -38,9 +38,15 @@ export default class NWBListViewer extends Component {
 
 function mapModelPathToList ({ path }) {
   const instance = Instances.getInstance(path);
+  try {
+    var description = Instances.getInstance(path + '.details.description');
+  } catch (Error){
+    
+  }
+  
   return {
     path,
     type: instance.getType().getName(),
-    description: instance.details ? instance.details.description.getValue().wrappedObj.value.text : '-'
+    description: description ? description.getValue().wrappedObj.value.text : '-'
   }
 }
