@@ -14,6 +14,7 @@ export default class Metadata extends React.Component {
 
   setData (anyInstance) {
     const { prettyFormat } = this;
+    let metadata;
     const content = []
     let type = anyInstance;
     
@@ -25,41 +26,35 @@ export default class Metadata extends React.Component {
       type = anyInstance.getType();
     }   
       
-    type.getChildren().forEach((variable, index) => {
+    type.getChildren().forEach(variable => {
+      const variableType = variable.getType().getName();
+      let name = variable.getId()
 
-      if (variable.getName() == 'str' ) {
+      if (variableType == 'Text' ) {
         let value = variable.getInitialValue().value.text
-        let name = variable.getId()
-          
-        content.push(
-          <Collapsible 
-            open={true}
-            trigger={prettyFormat(name)}
-          >
-            <p>{prettyFormat(value)}</p>
-          </Collapsible>
-        );
-      } else if (variable.getName() == 'subject' ) {
-        
-        let name = variable.getId()
-          
-        const subject = variable.getType().getChildren().map(v => {
-          if (v.getName() == 'str') {
+        metadata = prettyFormat(value)
+      
+      } else if (variableType == 'map' ) { 
+        metadata = variable.getType().getChildren().map(v => {
+          if (v.getType().getName() == 'Text') {
             let name = v.getId()
             let value = v.getInitialValue().value.text
             return <p key={name}>{`${prettyFormat(name)}: ${prettyFormat(value)}`}</p>
           }
         })
+      }
 
+      if (metadata) {
         content.push(
           <Collapsible 
             open={true}
             trigger={prettyFormat(name)}
           >
-            <div>{subject}</div>
+            <div>{metadata}</div>
           </Collapsible>
         );
       }
+      
     })
 
     this.setState({ content })
