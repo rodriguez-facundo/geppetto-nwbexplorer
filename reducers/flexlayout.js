@@ -18,7 +18,7 @@ export const FLEXLAYOUT_DEFAULT_STATUS = {
       id: 'general', 
       name: 'General', 
       status: WidgetStatus.ACTIVE, 
-      instancePath: 'nwbfile.general', 
+      instancePath: 'nwbfile', 
       component: 'Metadata', 
       panelName: "leftPanel" ,
       enableClose: false
