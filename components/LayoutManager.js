@@ -5,7 +5,7 @@ import Actions from 'geppetto-client/js/components/interface/flexLayout2/src/mod
 
 import { WidgetStatus } from './constants';
 import { isEqual } from '../Utils';
-import widgetFactory from './widgetFactory';
+import WidgetFactory from './WidgetFactory';
 
 
 const defaultLayoutConfiguration = {
@@ -89,7 +89,9 @@ export default class LayoutManager extends Component {
     this.activateWidget = this.props.activateWidget ? this.props.activateWidget : () => console.debug('activateWidget not defined');
     this.maximizeWidget = this.props.maximizeWidget ? this.props.maximizeWidget : () => console.debug('maximizeWidget not defined');
     this.minimizeWidget = this.props.minimizeWidget ? this.props.minimizeWidget : () => console.debug('minimizeWidget not defined');
-    this.widgetFactory = this.props.widgetFactory ? this.props.widgetFactory : widgetFactory;
+    
+
+    this.widgetFactory = this.props.widgetFactory ? this.props.widgetFactory : new WidgetFactory();
   }
   componentDidMount () {
     const { widgets } = this.props;
@@ -130,7 +132,7 @@ export default class LayoutManager extends Component {
       }
       
     }
-    window.dispatchEvent(new Event('resize'));
+    // window.dispatchEvent(new Event('resize'));
   }
 
   addWidget (widgetConfiguration) {
@@ -142,26 +144,27 @@ export default class LayoutManager extends Component {
     for (let widget of widgets) {
 
       this.updateWidget(widget);
+   
       // This updates plotly.js plots to new panel sizes
       if (widget.status == WidgetStatus.ACTIVE) {
-        // this.model.getNodeById(widget.panelName)._setSelected(1)
         this.model.doAction(FlexLayout.Actions.selectTab(widget.id));
       }
       
     }
-    window.dispatchEvent(new Event('resize'));
+    // window.dispatchEvent(new Event('resize'));
   }
 
   updateWidget (widget) {
     if (widget) {
-      this.model.doAction(Actions.updateNodeAttributes(widget.id, widget2Node(widget)));
+      this.widgetFactory.updateWidget(widget);
+      this.model.doAction(Actions.updateNodeAttributes(widget.id, widget2Node(widget))); 
     }
     
   }
 
   
   factory (node) {
-    return this.widgetFactory(node.getConfig());
+    return this.widgetFactory.factory(node.getConfig());
   }
 
 
@@ -179,23 +182,27 @@ export default class LayoutManager extends Component {
 
   onAction (action) {
     switch (action.type){
+    case Actions.SET_ACTIVE_TABSET:
+      break;
     case Actions.SELECT_TAB: 
       this.activateWidget(action.data.tabNode);
+      window.dispatchEvent(new Event('resize'));
       break;
     case Actions.DELETE_TAB:
       this.onActionDeleteWidget(action);
+      window.dispatchEvent(new Event('resize'));
       break;
     case Actions.MAXIMIZE_TOGGLE:
       this.onActionMaximizeWidget(action);
+      window.dispatchEvent(new Event('resize'));
       break;
     case Actions.ADJUST_SPLIT:
     case Actions.MOVE_NODE :
-    case Actions.ADD_NODE:
       window.dispatchEvent(new Event('resize'));
       break;
     }
        
-    this.model.doAction(action)
+    this.model.doAction(action);
   }
 
   onActionMaximizeWidget (action) {
@@ -244,7 +251,6 @@ export default class LayoutManager extends Component {
         }
       }
     }
-    window.dispatchEvent(new Event('resize'));
   }
 
 
@@ -273,6 +279,7 @@ export default class LayoutManager extends Component {
           clickOnBordersAction={node => this.clickOnBordersAction(node)}
           onRenderTabSet={(node, renderValues) => this.onRenderTabSet(node, renderValues)}
         />
+     
       </div>
     )
   }

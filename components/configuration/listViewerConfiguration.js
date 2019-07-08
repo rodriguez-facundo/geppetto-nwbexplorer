@@ -1,4 +1,4 @@
-import { GroupComponent, IconComponent, LinkComponent, ImageComponent, ParameterInputComponent } from "../listviewer/ListViewer";
+import { GroupComponent, IconComponent, ColorComponent } from "geppetto-client/js/components/interface/listViewer/ListViewer";
 
 const conf = [
   {
@@ -35,13 +35,16 @@ const conf = [
       },
       {
         id: "plot",
-        customComponent: IconComponent,
+        customComponent: ColorComponent,
+        visible: entity => entity.type === 'timeseries',
+        source: entity => entity,
         configuration: {
           action: "clickShowPlot",
           icon: "area-chart",
           label: "Plot",
           tooltip: "Plot time series",
-          condition: entity => entity.get('type') == 'timeseries'
+          defaultColor: entity => entity.color,
+          
         },
       },
     ]

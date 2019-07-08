@@ -12,6 +12,10 @@ import { WidgetStatus } from '../components/constants';
 const acquisitionWidget = showList('Acquisition', 'nwbfile.acquisition.').data;
 const stimulusWidget = showList('Stimulus', 'nwbfile.stimulus.', WidgetStatus.HIDDEN).data;
 
+function removeUndefined (obj) {
+  return Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : '');
+}
+
 export const FLEXLAYOUT_DEFAULT_STATUS = { 
   widgets: {
     'general': { 
@@ -40,7 +44,10 @@ export const FLEXLAYOUT_DEFAULT_STATUS = {
 };
 
 export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
-
+  if (action.data) {
+    removeUndefined(action.data); // Prevent deletion in case of unpolished update action
+  }
+  
   switch (action.type) {
     
   case ADD_WIDGET:
@@ -53,13 +60,11 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
       }
     } ;
   }
-  case DESTROY_WIDGET:
-    return {
-      ...state, widgets: { 
-        ...state.widgets, 
-        [action.data.id]: undefined
-      }
-    }
+  case DESTROY_WIDGET:{
+    const newWidgets = { ...state.widgets };
+    delete newWidgets[action.data.id];
+    return { ...state, widgets: newWidgets };
+  }
   case ACTIVATE_WIDGET: { 
     const activatedWidget = state.widgets[action.data.id];
     if (state.widgets['details'].panelName == activatedWidget.panelName) {
