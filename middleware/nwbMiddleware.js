@@ -6,7 +6,7 @@ import {
   loadedNWBFileInNotebook, loadNWBFileInNotebook 
 } from '../actions/nwbfile';
 
-import { UPDATE_WIDGET, updateDetailsWidget } from '../actions/flexlayout';
+import { ADD_WIDGET, UPDATE_WIDGET, updateDetailsWidget } from '../actions/flexlayout';
 import { waitData } from '../actions/general';
 import { NOTEBOOK_READY } from '../actions/notebook';
 
@@ -73,6 +73,7 @@ const nwbMiddleware = store => next => action => {
     Utils.execPythonMessage('from nwb_explorer.nwb_main import main');
     break;
   case UPDATE_WIDGET:
+  case ADD_WIDGET:
     return handleShowWidget(store, next, action);
   }
 

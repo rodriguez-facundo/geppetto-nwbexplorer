@@ -8,26 +8,26 @@ export const DESTROY_WIDGET = 'DESTROY_WIDGET';
 import { WidgetStatus } from '../components/constants';
 
 
-export const showPlot = ({ path, type }) => ({ 
-  type: UPDATE_WIDGET,
+export const showPlot = ({ path, type, color = 'red' }) => ({ 
+  type: ADD_WIDGET,
   data: {
-    id: 'plot__' + path.replace('.', '_'), 
+    id: 'plot@' + path, 
     instancePath: path,
     component: 'Plot', 
     type: type,
     name: path.split('.').slice(-1).pop(),
     status: WidgetStatus.ACTIVE,
     panelName: 'rightPanel',
-    color: 'cyan',
+    color: color,
     config: {}
   }
 });
 
 
 export const showList = (name, pathPattern, status = WidgetStatus.ACTIVE) => ({ 
-  type: UPDATE_WIDGET,
+  type: ADD_WIDGET,
   data: {
-    id: 'list__' + pathPattern.replace('.', '_'), 
+    id: 'list@' + pathPattern, 
     pathPattern: pathPattern, 
     component: 'NWBListViewer', 
     name: name,
@@ -38,9 +38,9 @@ export const showList = (name, pathPattern, status = WidgetStatus.ACTIVE) => ({
 
 
 export const newWidget = ({ path, component, panelName }) => ({ 
-  type: UPDATE_WIDGET,
+  type: ADD_WIDGET,
   data: {
-    id: path.replace('.', '_'), 
+    id: path, 
     instancePath: path, 
     component: component, 
     name: path.split('.').slice(-1).pop(),
@@ -48,6 +48,11 @@ export const newWidget = ({ path, component, panelName }) => ({
     panelName: panelName
   }
 });
+
+export const updateWidget = (newConf => ({ 
+  type: UPDATE_WIDGET,
+  data: newConf
+}))
 
 
 export const minimizeWidget = id => ({ 

@@ -6,6 +6,7 @@ export const NWBFILE_DEFAULT_STATUS = {
   model: null,
   isLoadedInNotebook: false,
   isLoadingInNotebook: false,
+  modelSettings: {}
 };
 
 
@@ -39,13 +40,14 @@ function reduceNWBFile (state = {}, action) {
     }
 
   case nwbfileActions.NWB_FILE_LOADED:
-    return { ...action.data, nwbFileLoading: false }  
+    return { model: true, nwbFileLoading: false }  
 
   case nwbfileActions.CLEAR_MODEL:
     return { model: null }
   
   case notebookActions.NOTEBOOK_READY:
     return { isLoadingInNotebook: false }
+  
 
   default:
     return state;

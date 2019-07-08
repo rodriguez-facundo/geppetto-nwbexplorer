@@ -36,4 +36,5 @@ export function nwbFileLoaded (model) {
   }
 }
 
+
 export const clearModel = () => ({ type: CLEAR_MODEL })
