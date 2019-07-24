@@ -31,7 +31,7 @@
           "children": [
             {
               "type": "tabset",
-              "weight": 30,
+              "weight": 60,
               "id": "rightTop",
               "enableDeleteWhenEmpty": false,
               "children": [
@@ -39,16 +39,8 @@
             },
             {
               "type": "tabset",
-              "weight": 30,
-              "id": "rightPanel",
-              "enableDeleteWhenEmpty": false,
-              "children": [
-              ]
-            },
-            {
-              "type": "tabset",
               "weight": 40,
-              "id": "rightPanelImg",
+              "id": "rightPanel",
               "enableDeleteWhenEmpty": false,
               "children": [
               ]
