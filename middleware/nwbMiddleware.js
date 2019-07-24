@@ -17,7 +17,32 @@ function handleShowWidget (store, next, action) {
     store.dispatch(updateDetailsWidget(action.data.instancePath));
     return handlePlotTimeseries(store, next, action);
   }
+  if (action.data.type === 'imageseries') { // Instances.getInstance(path).getType().wrappedObj.name
+    store.dispatch(updateDetailsWidget(action.data.instancePath));
+    return handleImportTimestamps(store, next, action);
+  }
   return next(action);
+}
+
+function handleImportTimestamps (store, next, action) {
+  const time_path = action.data.instancePath + '.timestamps';
+  const timestamps = Instances.getInstance(time_path);
+
+  if (timestamps.getValue().wrappedObj.value.eClass == 'ImportValue') {
+
+    store.dispatch(waitData('Loading timestamps data...'));
+    timestamps.getValue().getPath = () => timestamps.getPath()
+
+    timestamps.getValue().resolve(timeValue => {      
+      GEPPETTO.ModelFactory.deleteInstance(timestamps),
+      Instances.getInstance(time_path)
+        
+      next(action);
+    })
+     
+  } else {
+    next(action);
+  }
 }
 
 

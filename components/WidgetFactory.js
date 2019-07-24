@@ -3,7 +3,7 @@ const NWBPlot = lazy(() => import('./NWBPlot'));
 import FileExplorerPage from './pages/FileExplorerPage';
 import Metadata from './Metadata';
 import NWBListViewer from './reduxconnect/NWBListViewerContainer';
-
+import ImageViewer from './ImageViewer';
 
 export default class WidgetFactory{
 
@@ -42,8 +42,14 @@ export default class WidgetFactory{
       const { instancePath } = widgetConfig;
       return instancePath ? <Metadata instancePath = { instancePath } /> : '';
     
+    } else if (component === "Image" ) { 
+      const { instancePath } = widgetConfig;
+      if (!instancePath){
+        throw new Error('Image widget instancePath must be configured')
+      }
+      return <ImageViewer instancePath = { instancePath } />;
+    
     } else if (component === "Plot" ) { 
-          
       const { instancePath, color } = widgetConfig;
       if (!instancePath){
         throw new Error('Plot widget instancePath must be configured')
