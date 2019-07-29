@@ -28,6 +28,7 @@ export default class NWBListViewer extends Component {
     super(props);
     this.updates = 0;
     this.showPlot = this.props.showPlot ? this.props.showPlot : () => console.debug('showPlot not defined in ' + typeof this);
+    this.showImg = props.showImg ? props.showImg : () => console.debug('showImg not defined in ' + typeof this);
     this.updateDetailsWidget = this.props.updateDetailsWidget ? this.props.updateDetailsWidget : () => console.debug('updateDetailsWidget not defined in ' + typeof this);
     this.modelSettings = {};
     this.state = { update: 0 }
@@ -44,6 +45,10 @@ export default class NWBListViewer extends Component {
     this.modelSettings[path] = { color: color };
     this.setState({ update: this.state.update + 1 });
     this.showPlot({ path, type, color });
+  }
+
+  clickShowImg ({ path, type }) {
+    this.showImg({ path, type });
   }
 
   clickShowDetails ({ path }){

@@ -23,6 +23,20 @@ export const showPlot = ({ path, type, color = 'red' }) => ({
   }
 });
 
+export const showImg = ({ path, type }) => ({ 
+  type: ADD_WIDGET,
+  data: {
+    id: 'img@' + path, 
+    instancePath: path,
+    component: 'Image', 
+    type: type,
+    name: path.split('.').slice(-1).pop(),
+    status: WidgetStatus.ACTIVE,
+    panelName: 'rightPanel',
+    config: {}
+  }
+});
+
 
 export const showList = (name, pathPattern, status = WidgetStatus.ACTIVE) => ({ 
   type: ADD_WIDGET,

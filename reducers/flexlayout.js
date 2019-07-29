@@ -34,7 +34,7 @@ export const FLEXLAYOUT_DEFAULT_STATUS = {
       component: 'Metadata', 
       panelName: "leftPanel",
       enableClose: false
-    }, 
+    },
     
     [acquisitionWidget.id]: acquisitionWidget ,
     [stimulusWidget.id]: stimulusWidget ,
@@ -60,11 +60,13 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
       }
     } ;
   }
+
   case DESTROY_WIDGET:{
     const newWidgets = { ...state.widgets };
     delete newWidgets[action.data.id];
     return { ...state, widgets: newWidgets };
   }
+
   case ACTIVATE_WIDGET: { 
     const activatedWidget = state.widgets[action.data.id];
     if (state.widgets['details'].panelName == activatedWidget.panelName) {
@@ -83,6 +85,7 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
       }
     }
   }
+
   case RESET_LAYOUT:
     return FLEXLAYOUT_DEFAULT_STATUS;
   

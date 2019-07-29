@@ -11,7 +11,11 @@ import FileExplorerPage from './pages/FileExplorerPage';
 const theme = createMuiTheme({
   typography: { 
     useNextVariants: true,
-    suppressDeprecationWarnings: true
+    suppressDeprecationWarnings: true,
+    button: {
+      textTransform: "none",
+      fontSize: "1.0rem"
+    }
   },
   palette: {
     primary: { main: grey[500] },

@@ -47,6 +47,18 @@ const conf = [
           
         },
       },
+      {
+        id: "image",
+        customComponent: IconComponent,
+        visible: entity => entity.type === 'imageseries',
+        source: entity => entity,
+        configuration: {
+          action: "clickShowImg",
+          icon: "picture-o",
+          label: "Plot",
+          tooltip: "Plot image series"
+        },
+      }
     ]
   },
   
