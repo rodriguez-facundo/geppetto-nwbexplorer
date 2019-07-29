@@ -20,7 +20,7 @@ const styles = theme => ({
   },
   arrowRight: { 
     opacity: 0.5,
-    marginRight: "5px", 
+    marginRight: "10px", 
     pointerEvents: "none"
   },
   arrowLeft: { 
@@ -87,45 +87,15 @@ class ImageViewer extends Component {
       }
     }
   }
-
-
-  getTimestamps (instancePath) {
-    const values = Instances.getInstance(`${instancePath}.timestamps`).getInitialValue()[0].value.value
-    if (!values){
-      // If no timestamps
-      const num_samples_var = Instances.getInstance(instancePath).getType().getVariables().find(v => v.getName() == "num_samples")
-      const num_samples = parseInt(num_samples_var.getInitialValue().value.text)
-      return new Array(num_samples).fill(0).map((el, index) => index)
-    }
-
-    return values
-  }
-
-  newDate (timestamp) {
-    return new Date(parseFloat(timestamp) * 1000).toString().replace(/\(.*\)/g, '')
-  }
-
   
   render () {
-    const { instancePath, classes } = this.props;
+    const { imagePaths, timestamps, classes } = this.props;
     const { activeStep, hoverImg, imageLoading } = this.state;
-
-    const [ nwbfile, interfase, name ] = instancePath.split('.')
- 
-    const projectId = Project.getId()
-    
-    const timestamps = this.getTimestamps(instancePath)
- 
-    const files = timestamps.map((timestamp, index) => ({
-      index,
-      timestamp: this.newDate(timestamps[index]),
-      path: `/api/image?name=${name}&interface=${interfase}&projectId=${projectId}&index=${index}`
-    }))
     
     return (
       <div 
         className={classes.root}
-        onClick={e => this.clickImage(e, files.length)}
+        onClick={e => this.clickImage(e, timestamps.length)}
         onMouseEnter={() => this.setState({ hoverImg: true })}
         onMouseLeave={() => this.setState({ hoverImg: false })}
       >
@@ -138,8 +108,7 @@ class ImageViewer extends Component {
 
         <img
           className={classes.img}
-          src={files[activeStep].path}
-          alt={`${name}-${interfase}-${files[activeStep].index}`}
+          src={imagePaths[activeStep]}
           onLoad={() => this.setState({ imageLoading: false })}
         />
 
@@ -149,13 +118,13 @@ class ImageViewer extends Component {
           className={classes.spinner}
         />}
 
-        <p className={classes.watermarkRight}>{files[activeStep].timestamp}</p>
-        <p className={classes.watermarkLeft}>{`${activeStep}/${files.length}`}</p>
+        <p className={classes.watermarkRight}>{timestamps[activeStep]}</p>
+        <p className={classes.watermarkLeft}>{`${activeStep}/${timestamps.length}`}</p>
 
         <Zoom in={hoverImg} timeout={{ enter: 1000, exit:1500 }}>
           <a download
             className={classes.download} 
-            href={files[activeStep].path}
+            href={imagePaths[activeStep]}
           >
             <Icon className='fa fa-download imgBtn' />
           </a>
@@ -167,10 +136,7 @@ class ImageViewer extends Component {
           </div>
         </Zoom>
         
-
       </div>
-      
-      
     );
   }
 }

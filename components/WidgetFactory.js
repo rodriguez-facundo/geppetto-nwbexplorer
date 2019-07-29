@@ -47,7 +47,10 @@ export default class WidgetFactory{
       if (!instancePath){
         throw new Error('Image widget instancePath must be configured')
       }
-      return <ImageViewer instancePath = { instancePath } />;
+      return <ImageViewer 
+        imagePaths={this.extractImageSeriesPaths(instancePath)} 
+        timestamps={this.extractImageSeriesTimestamps(instancePath)}
+      />
     
     } else if (component === "Plot" ) { 
       const { instancePath, color } = widgetConfig;
@@ -67,4 +70,27 @@ export default class WidgetFactory{
     }
   }
 
+  extractImageSeriesPaths (instancePath){
+    const projectId = Project.getId()
+    const [ nwbfile, interfase, ...name ] = instancePath.split('.')
+
+    const num_samples_var = Instances.getInstance(instancePath).getType().getVariables().find(v => v.getName() == "num_samples")
+    const num_samples = parseInt(num_samples_var.getInitialValue().value.text)
+
+    return new Array(num_samples).fill(0).map((el, index) => `/api/image?name=${name.join()}&interface=${interfase}&projectId=${projectId}&index=${index}`)
+  }
+
+  extractImageSeriesTimestamps (instancePath){
+    const timestamps = Instances.getInstance(`${instancePath}.timestamps`)
+    const values = timestamps.getInitialValue()[0].value.value
+
+    if (!values){
+      // If no timestamps
+      const num_samples_var = Instances.getInstance(instancePath).getType().getVariables().find(v => v.getName() == "num_samples")
+      const num_samples = parseInt(num_samples_var.getInitialValue().value.text)
+      return new Array(num_samples).fill(0).map((el, index) => index)
+    }
+
+    return values.map(timestamp => new Date(parseFloat(timestamp) * 1000).toString().replace(/\(.*\)/g, ''))
+  }
 } 
