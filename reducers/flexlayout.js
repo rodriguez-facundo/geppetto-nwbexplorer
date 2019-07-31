@@ -4,6 +4,7 @@ import {
   RESET_LAYOUT,
   DESTROY_WIDGET,
   ACTIVATE_WIDGET,
+  ADD_PLOT_TO_EXISTING_WIDGET,
   showList
 } from '../actions/flexlayout';
 
@@ -89,6 +90,22 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
   case RESET_LAYOUT:
     return FLEXLAYOUT_DEFAULT_STATUS;
   
+  case ADD_PLOT_TO_EXISTING_WIDGET: {
+    const widget = { ...Object.values(state.widgets).find(widget => widget.id == action.data.hostId) };
+    
+    if (widget){
+      const guestList = widget.guestList ? [...widget.guestList] : [];
+
+      if (!guestList.find(guest => guest.instancePath == action.data.instancePath)){
+        guestList.push({ instancePath: action.data.instancePath, color: action.data.color })
+        widget.guestList = guestList
+        return { widgets: { ...state.widgets, [action.data.hostId]: widget } }
+      }
+    }
+    
+    return state
+  }
+
   default:
     return state
   }

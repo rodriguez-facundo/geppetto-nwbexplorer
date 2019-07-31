@@ -3,7 +3,7 @@ export const ACTIVATE_WIDGET = 'ACTIVATE_WIDGET';
 export const ADD_WIDGET = 'ADD_WIDGET';
 export const RESET_LAYOUT = 'RESET_LAYOUT';
 export const DESTROY_WIDGET = 'DESTROY_WIDGET';
-
+export const ADD_PLOT_TO_EXISTING_WIDGET = 'ADD_PLOT_TO_EXISTING_WIDGET'
 
 import { WidgetStatus } from '../components/constants';
 
@@ -20,6 +20,16 @@ export const showPlot = ({ path, type, color = 'red' }) => ({
     panelName: 'rightPanel',
     color: color,
     config: {}
+  }
+});
+
+export const addToPlot = ({ hostId, instancePath, color, type }) => ({ 
+  type: ADD_PLOT_TO_EXISTING_WIDGET,
+  data: {
+    hostId,
+    instancePath,
+    color,
+    type
   }
 });
 

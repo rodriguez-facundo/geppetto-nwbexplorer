@@ -1,4 +1,14 @@
+import React from 'react';
 import { GroupComponent, IconComponent, ColorComponent } from "geppetto-client/js/components/interface/listViewer/ListViewer";
+import DropDownMenuConnect from '../reduxconnect/DropDownMenuConnect';
+
+const DropDownMenu = ({ icon, label, action, tooltip }) => ({ value }) => (
+  <DropDownMenuConnect 
+    icon={icon}  
+    action={action} 
+    instancePath={value.path}
+  />
+)
 
 const conf = [
   {
@@ -58,6 +68,17 @@ const conf = [
           label: "Plot",
           tooltip: "Plot image series"
         },
+      },
+      {
+        id: "addToPlot",
+        customComponent: DropDownMenu,
+        visible: entity => entity.type === 'timeseries',
+        configuration: {
+          icon: "gpt-addplot",
+          action: "clickAddToPlot",
+          label: "Add Plot",
+          tooltip: "Add plot",
+        }
       }
     ]
   },

@@ -6,7 +6,7 @@ import {
   loadedNWBFileInNotebook, loadNWBFileInNotebook 
 } from '../actions/nwbfile';
 
-import { ADD_WIDGET, UPDATE_WIDGET, updateDetailsWidget } from '../actions/flexlayout';
+import { ADD_WIDGET, UPDATE_WIDGET, ADD_PLOT_TO_EXISTING_WIDGET, updateDetailsWidget } from '../actions/flexlayout';
 import { waitData } from '../actions/general';
 import { NOTEBOOK_READY } from '../actions/notebook';
 
@@ -77,6 +77,7 @@ function handlePlotTimeseries (store, next, action) {
 
 const nwbMiddleware = store => next => action => {
   switch (action.type) {
+
   case LOAD_NWB_FILE:
     GEPPETTO.CommandController.execute(`Project.loadFromURL("${action.data.nwbFileUrl}")`);
     break;
@@ -84,24 +85,30 @@ const nwbMiddleware = store => next => action => {
   case NWB_FILE_LOADED:
     store.dispatch(loadNWBFileInNotebook);
     break;
+
   case LOAD_NWB_FILE_IN_NOTEBOOK:
     nwbFileService.loadNWBFileInNotebook(store.getState().nwbfile.nwbFileUrl).then(
       () => store.dispatch(loadedNWBFileInNotebook)
     );
     break;
+
   case UNLOAD_NWB_FILE_IN_NOTEBOOK:
     Utils.execPythonMessage('del nwbfile');
     break;
-  
+      
   case NOTEBOOK_READY:
     // FIXME for some reason the callback for python messages is not being always called
     Utils.execPythonMessage('from nwb_explorer.nwb_main import main');
     break;
+
   case UPDATE_WIDGET:
   case ADD_WIDGET:
     return handleShowWidget(store, next, action);
+  
+  case ADD_PLOT_TO_EXISTING_WIDGET:
+    return handlePlotTimeseries(store, next, action)
   }
-
+  
 
   next(action);
 }

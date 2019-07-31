@@ -53,13 +53,13 @@ export default class WidgetFactory{
       />
     
     } else if (component === "Plot" ) { 
-      const { instancePath, color } = widgetConfig;
+      const { instancePath, color, guestList } = widgetConfig;
       if (!instancePath){
         throw new Error('Plot widget instancePath must be configured')
       }
       return (
         <Suspense fallback={<div>Loading...</div>}>
-          <NWBPlot instancePath={ instancePath } color={ color }/>
+          <NWBPlot instancePath={ instancePath } color={ color } guestList={guestList}/>
         </Suspense>
       )
     } else if (component.match("ListViewer")) {
