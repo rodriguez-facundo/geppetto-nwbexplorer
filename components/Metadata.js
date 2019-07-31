@@ -39,7 +39,7 @@ export default class Metadata extends React.Component {
           if (v.getType().getName() == 'Text') {
             let name = v.getId()
             let value = v.getInitialValue().value.text
-            return <p key={name}>{`${prettyFormat(name)}: ${prettyFormat(value)}`}</p>
+            return <p key={name}><span class="label">{prettyFormat(name)}</span>: {prettyFormat(value)}</p>
           }
         })
       }
@@ -49,6 +49,7 @@ export default class Metadata extends React.Component {
           <Collapsible 
             open={true}
             trigger={prettyFormat(name)}
+            triggerStyle={{ }}
           >
             <div>{metadata}</div>
           </Collapsible>
