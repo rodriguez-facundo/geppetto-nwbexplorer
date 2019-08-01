@@ -45,7 +45,6 @@ function handleImportTimestamps (store, next, action) {
   }
 }
 
-
 function handlePlotTimeseries (store, next, action) {
   const data_path = action.data.instancePath + '.data';
   let data = Instances.getInstance(data_path);
@@ -79,7 +78,7 @@ const nwbMiddleware = store => next => action => {
   switch (action.type) {
 
   case LOAD_NWB_FILE:
-    GEPPETTO.CommandController.execute(`Project.loadFromURL("${action.data.nwbFileUrl}")`);
+    Project.loadFromURL(action.data.nwbFileUrl);
     break;
 
   case NWB_FILE_LOADED:

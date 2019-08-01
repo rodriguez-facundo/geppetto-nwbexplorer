@@ -41,19 +41,20 @@ export default class Appbar extends React.Component {
     return (
       <Fragment>
         <AppBar position="static" color="secondary">
-          <Toolbar>
+          <Toolbar classes={{ gutters: 'toolbar-gutters' }}>
             <Grid
               container 
-              spacing={24}
+              spacing={8}
               justify="space-between"
             >
               <Grid item >
-                <Typography variant="h3" color="textSecondary">
-                  NWB-Explorer
-                </Typography>
+                <header id="main-header">
+                  <h1>NWB Explorer</h1>
+           
+                </header>
               </Grid>
 
-              <Grid item >
+              <Grid item className="icon-container">
 
                 <IconButton
                   onClick={() => this.handleClickBack()}

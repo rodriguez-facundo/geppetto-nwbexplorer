@@ -12,74 +12,79 @@ export default class Metadata extends React.Component {
     return output.replace('_interface_map', '').replace('_', ' ')
   }
 
-  setData (anyInstance) {
-    const { prettyFormat } = this;
-    let metadata;
-    const content = []
-    let type = anyInstance;
-    
-    if (!type) {
-      return 
-    }
+  getContent (geppettoInstanceOrType) {
 
-    if (!(type instanceof Type)) {
-      type = anyInstance.getType();
-    }   
+    let metadata;
+    const content = [];
+
+    if (!geppettoInstanceOrType) {
+      return;
+    }
+   
+    const type = (geppettoInstanceOrType instanceof Type) ? geppettoInstanceOrType : geppettoInstanceOrType.getType();
+    if (this.props.showObjectInfo){
+      content.push(
+        this.formatCollapsible('Info', 
+          [
+            this.formatField('Path', type.getId()),
+            this.formatField('Type', type.getName()),
+          ])
+      );
+    }
       
     type.getChildren().forEach(variable => {
       const variableType = variable.getType().getName();
-      let name = variable.getId()
+      let name = variable.getId();
+      const { prettyFormat } = this;
 
       if (variableType == 'Text' ) {
-        let value = variable.getInitialValue().value.text
-        metadata = prettyFormat(value)
+        let value = variable.getInitialValue().value.text;
+        metadata = this.prettyFormat(value);
       
-      } else if (variableType == 'map' ) { 
+      } else if (variableType == 'map' ) {
         metadata = variable.getType().getChildren().map(v => {
           if (v.getType().getName() == 'Text') {
-            let name = v.getId()
-            let value = v.getInitialValue().value.text
-            return <p key={name}>{`${prettyFormat(name)}: ${prettyFormat(value)}`}</p>
+            let name = v.getId();
+            let value = v.getInitialValue().value.text;
+            return this.formatField(prettyFormat(name), prettyFormat(value));
           }
-        })
+        });
       }
 
       if (metadata) {
         content.push(
-          <Collapsible 
-            open={true}
-            trigger={prettyFormat(name)}
-          >
-            <div>{metadata}</div>
-          </Collapsible>
+          this.formatCollapsible(name, metadata)
         );
       }
       
-    })
+    });
 
-    this.setState({ content })
-  }
-
-  componentDidUpdate (prevProps, prevState) {
-    const { instancePath } = this.props;
- 
-    if (instancePath != prevProps.instancePath) {
-      this.setData(Instances.getInstance(instancePath))
-    }
+    return content;
 
   }
 
-  componentDidMount () {
-    const { instancePath } = this.props;
+  formatCollapsible (name, metadata) {
+    const { prettyFormat } = this;
+    return <Collapsible open={true} trigger={prettyFormat(name)}>
+      <div>{metadata}</div>
+    </Collapsible>;
+  }
 
-    this.setData(Instances.getInstance(instancePath))
+  formatField (name, value) {
+    return <p key={name}><span className="meta-label">{name}</span>: {value}</p>;
+  }
+
+  shouldComponentUpdate (prevProps) {
+    return this.props.instancePath != prevProps.instancePath;
   }
 
 
   render () {
-    const { content } = this.state;
+    const instance = Instances.getInstance(this.props.instancePath);
+    const content = this.getContent(instance);
     return (
       <div style={{ marginBottom:'1em' }}>
+        
         {
           content.map((item, key) => 
             <div key={key}>

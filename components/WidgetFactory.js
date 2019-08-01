@@ -4,6 +4,7 @@ import FileExplorerPage from './pages/FileExplorerPage';
 import Metadata from './Metadata';
 import NWBListViewer from './reduxconnect/NWBListViewerContainer';
 import ImageViewer from './ImageViewer';
+import PythonConsole from 'geppetto-client/js/components/interface/pythonConsole/PythonConsole';
 
 export default class WidgetFactory{
 
@@ -34,15 +35,17 @@ export default class WidgetFactory{
   
   newWidget (widgetConfig) {
     const component = widgetConfig.component;
-    
-    if (component === "Explorer" ) { 
+    switch (component) {
+    case "Explorer":
       return <FileExplorerPage />;
-          
-    } else if (component === "Metadata" ) { 
-      const { instancePath } = widgetConfig;
-      return instancePath ? <Metadata instancePath = { instancePath } /> : '';
-    
-    } else if (component === "Image" ) { 
+            
+    case "Metadata":{
+      const { instancePath, showObjectInfo } = widgetConfig;
+      return instancePath 
+        ? <Metadata instancePath = { instancePath } showObjectInfo = { showObjectInfo } /> 
+        : '';
+    }    
+    case "Image": {
       const { instancePath } = widgetConfig;
       if (!instancePath){
         throw new Error('Image widget instancePath must be configured')
@@ -51,8 +54,8 @@ export default class WidgetFactory{
         imagePaths={this.extractImageSeriesPaths(instancePath)} 
         timestamps={this.extractImageSeriesTimestamps(instancePath)}
       />
-    
-    } else if (component === "Plot" ) { 
+    }
+    case "Plot": { 
       const { instancePath, color, guestList } = widgetConfig;
       if (!instancePath){
         throw new Error('Plot widget instancePath must be configured')
@@ -62,11 +65,17 @@ export default class WidgetFactory{
           <NWBPlot instancePath={ instancePath } color={ color } guestList={guestList}/>
         </Suspense>
       )
-    } else if (component.match("ListViewer")) {
+    } 
+    case "ListViewer": {
       const { pathPattern } = widgetConfig;
-   
+    
       return <NWBListViewer pathPattern={pathPattern}></NWBListViewer>;
-  
+    }
+    case "PythonConsole": {
+    
+      return <PythonConsole pythonNotebookPath={"notebooks/notebook.ipynb"} />
+    
+    }
     }
   }
 
