@@ -1,10 +1,11 @@
 import { GroupComponent, IconComponent, ColorComponent } from "geppetto-client/js/components/interface/listViewer/ListViewer";
-
+import { FILEVARIABLE_LENGTH } from '../constants';
+``
 const conf = [
   {
     id: "path",
     title: "Path",
-    source: "path",
+    source: ({ path }) => path.slice(FILEVARIABLE_LENGTH),
   },
   {
     id: "type",
@@ -14,7 +15,7 @@ const conf = [
   {
     id: "description",
     title: "Description",
-    source: "description",
+    source: ({ path }) => path.slice(FILEVARIABLE_LENGTH),
   },
   
   {

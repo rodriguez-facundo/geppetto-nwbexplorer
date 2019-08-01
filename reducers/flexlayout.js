@@ -35,6 +35,15 @@ export const FLEXLAYOUT_DEFAULT_STATUS = {
       panelName: "leftPanel",
       enableClose: false
     },
+    'python': { 
+      id: 'python', 
+      name: 'Python', 
+      status: WidgetStatus.HIDDEN, 
+      icon: 'fa-python',
+      component: 'PythonConsole', 
+      panelName: "bottomPanel",
+      enableClose: false
+    },
     
     [acquisitionWidget.id]: acquisitionWidget ,
     [stimulusWidget.id]: stimulusWidget ,

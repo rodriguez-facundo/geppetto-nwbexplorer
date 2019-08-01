@@ -5,6 +5,7 @@ import ConsoleTabs from './ConsoleTabs';
 import SplashPage from './pages/SplashPage';
 import nwbFileService from '../services/NWBFileService';
 import FileExplorerPage from './pages/FileExplorerPage';
+import PythonConsole from 'geppetto-client/js/components/interface/pythonConsole/PythonConsole';
 // import { Route, Switch, Redirect, BrowserRouter as Router } from 'react-router-dom';
 
 
@@ -118,15 +119,10 @@ export default class App extends React.Component{
           <MuiThemeProvider theme={theme}>
             { page }
           </MuiThemeProvider>
-          <div id="footer">
-            <div id="footerHeader">
-              <ConsoleTabs 
-                enabled={ showNotebook } 
-                hidden={ !isLoadedInNotebook } 
-              />
-            </div>
-          </div>
+          
+
         </div>
+        <PythonConsole className="hidden" pythonNotebookPath={"notebooks/notebook.ipynb"} />
       </div>
     )
   }

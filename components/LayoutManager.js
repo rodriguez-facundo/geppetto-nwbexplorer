@@ -113,7 +113,7 @@ export default class LayoutManager extends Component {
 
 
   }
-
+ 
   addWidgets (widgets) {
     const { model } = this;
     for (let newWidgetDescriptor of widgets) {

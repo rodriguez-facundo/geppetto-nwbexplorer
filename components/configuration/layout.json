@@ -1,61 +1,75 @@
 {
-    "global": { "sideBorders": 8 },
-    "layout": {
-      "type": "row",
-      "weight": 100,
-      "id": "root",
-      "children": [
-        {
-          "type": "row",
-          "weight": 20,
-          "children": [
-            {
-              "type": "tabset",
-              "weight": 100,
-              "id": "leftPanel",
-              "enableDeleteWhenEmpty": false,
-              "enableDrop": false,
-              "enableDrag": false,
-              "enableDivide": false,
-              "enableMaximize": false,
-              "children": [
-              
-              ]
-            }
-          ]
-        },
-        
-        {
-          "type": "row",
-          "weight": 80,
-          "children": [
-            {
-              "type": "tabset",
-              "weight": 60,
-              "id": "rightTop",
-              "enableDeleteWhenEmpty": false,
-              "children": [
-              ]
-            },
-            {
-              "type": "tabset",
-              "weight": 40,
-              "id": "rightPanel",
-              "enableDeleteWhenEmpty": false,
-              "children": [
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    "borders": [
+  "global": {
+    "sideBorders": 8
+  },
+  "layout": {
+    "type": "tabset",
+    "weight": 100,
+    "id": "root",
+    "children": [
       {
-        "type": "border",
-        "location": "bottom",
-        "size": 100,
-        "children": [],
-        "barSize": 10
+        "type": "row",
+        "weight": 20,
+        "children": [
+          {
+            "type": "tabset",
+            "weight": 100,
+            "id": "leftPanel",
+            "enableDeleteWhenEmpty": false,
+            "enableDrop": false,
+            "enableDrag": false,
+            "enableDivide": false,
+            "enableMaximize": false,
+            "children": []
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "weight": 60,
+        "children": [
+          {
+            "type": "tabset",
+            "weight": 60,
+            "id": "rightTop",
+            "enableDeleteWhenEmpty": false,
+            "children": []
+          },
+          {
+            "type": "tabset",
+            "weight": 40,
+            "id": "rightPanel",
+            "enableDeleteWhenEmpty": false,
+            "children": []
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "weight": 20,
+        "children": [
+          {
+            "type": "tabset",
+            "weight": 100,
+            "id": "bottomPanel",
+            "enableDeleteWhenEmpty": false,
+            "enableDrop": false,
+            "enableDrag": false,
+            "enableDivide": false,
+            "enableMaximize": true,
+            "children": []
+          }
+        ]
       }
     ]
+  },
+  "borders": [
+    {
+      "type": "border",
+      "location": "bottom",
+      "size": 100,
+      "children": [],
+      "barSize": 10
+    }
+  ]
 }

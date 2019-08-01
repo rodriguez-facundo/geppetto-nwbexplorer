@@ -8,7 +8,7 @@ const TYPE_INCLUDE_REGEX = /^(?!.*details)Model.nwblib.*$/;
 function mapModelPathToList ( path , modelSettings) {
   const instance = Instances.getInstance(path);
   try {
-    var description = Instances.getInstance(path + '.details.description');
+    var description = Instances.getInstance(path + '.description');
   } catch (Error){
     
   }
