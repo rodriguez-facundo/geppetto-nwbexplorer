@@ -15,7 +15,7 @@ const anchor = {
   }
 }
 
-export default class DropDownMenu extends Component {
+export default class AddPlotMenu extends Component {
   state = { 
     anchorEl: null,
     iconColor: "white",
