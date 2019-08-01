@@ -53,10 +53,6 @@
             "weight": 100,
             "id": "bottomPanel",
             "enableDeleteWhenEmpty": false,
-            "enableDrop": false,
-            "enableDrag": false,
-            "enableDivide": false,
-            "enableMaximize": true,
             "children": []
           }
         ]
