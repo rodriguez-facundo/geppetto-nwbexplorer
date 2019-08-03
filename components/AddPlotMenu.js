@@ -3,6 +3,7 @@ import Icon from '@material-ui/core/Icon';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import { CompactPicker } from 'react-color';
+
 const anchor = {
   origin: {
     vertical: 'bottom',
@@ -18,7 +19,6 @@ const anchor = {
 export default class AddPlotMenu extends Component {
   state = { 
     anchorEl: null,
-    iconColor: "white",
     hostId: null
   }
 
@@ -47,7 +47,7 @@ export default class AddPlotMenu extends Component {
   }
 
   render () {
-    const { anchorEl, iconColor, hostId, color } = this.state;
+    const { anchorEl, hostId, color } = this.state;
     const { widgets, icon, instancePath } = this.props
     let popover = []
 
@@ -83,14 +83,11 @@ export default class AddPlotMenu extends Component {
         </Popover>
       )
     }
-
     return (
       <div>
         <Icon 
           className={icon}
-          style={{ cursor: "pointer", color: iconColor }}
-          onMouseEnter={() => this.setState({ iconColor: "black" })}
-          onMouseLeave={() => this.setState({ iconColor: "white" })}
+          style={{ cursor: "pointer" }}
           onClick={e => hostIds.length > 0 ? this.setState({ anchorEl: e.currentTarget }) : {}}
         />
         {popover}
