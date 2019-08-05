@@ -102,7 +102,7 @@ export default class App extends React.Component{
  
  
   render () {
-    const { model, embedded, showNotebook, isLoadedInNotebook } = this.props;
+    const { model, embedded, showNotebook, isLoadedInNotebook, flexlayoutStatus } = this.props;
     
     var page;
     if (model) {
@@ -112,7 +112,9 @@ export default class App extends React.Component{
     } else {
       page = '<h1>Waiting for data...</h1>';
     }
-
+    console.log("aaa")
+    console.log(flexlayoutStatus)
+    console.log("eee")
     return (
       <div style={{ height: '100%', width: '100%' }}>
         <div id="main-container-inner">
@@ -122,7 +124,8 @@ export default class App extends React.Component{
           
 
         </div>
-        <PythonConsole className="hidden" pythonNotebookPath={"notebooks/notebook.ipynb"} />
+        <span style={{ display: "none" }}><PythonConsole pythonNotebookPath={"notebooks/notebook.ipynb"} /></span>
+        
       </div>
     )
   }
