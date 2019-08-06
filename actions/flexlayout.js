@@ -18,7 +18,8 @@ export const showPlot = ({ path, type, color = 'red' }) => ({
     status: WidgetStatus.ACTIVE,
     panelName: 'rightPanel',
     color: color,
-    config: {}
+    config: {},
+    guestList: []
   }
 });
 

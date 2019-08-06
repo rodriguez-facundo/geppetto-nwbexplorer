@@ -17,14 +17,14 @@ const anchor = {
 }
 
 export default class AddPlotMenu extends Component {
-  state = { 
+  state = {
     anchorEl: null,
     hostId: null
   }
 
   goOnlyToTimeseriesWidgets = this.goOnlyToTimeseriesWidgets.bind(this)
   dontGoToSameHostTwice = this.dontGoToSameHostTwice.bind(this)
-  
+
   clickAddToWidget (color) {
     const { hostId } = this.state
     const { instancePath, action } = this.props
@@ -32,16 +32,16 @@ export default class AddPlotMenu extends Component {
     this.setState({ anchorEl: null, hostId: null })
   }
 
-  dontGoToSameHostTwice (widget){
+  dontGoToSameHostTwice (widget) {
     const { guestList } = widget
-    if (guestList){
+    if (guestList) {
       const list = guestList.map(guest => guest.instancePath)
       return list.indexOf(this.props.instancePath) == -1
     }
     return true
   }
 
-  goOnlyToTimeseriesWidgets (widget){
+  goOnlyToTimeseriesWidgets (widget) {
     const { instancePath } = this.props
     return widget.component == 'Plot' && widget.instancePath != instancePath
   }
@@ -56,7 +56,7 @@ export default class AddPlotMenu extends Component {
       .filter(this.dontGoToSameHostTwice)
       .map(widget => widget.id)
 
-    if (anchorEl){
+    if (anchorEl) {
       popover = (
         <Popover
           open={Boolean(anchorEl)}
@@ -65,33 +65,40 @@ export default class AddPlotMenu extends Component {
           onClose={() => this.setState({ anchorEl: null })}
           transformOrigin={anchor.transform}
         >
-          {hostId 
+          {hostId
             ? <CompactPicker
               color={color}
               onChange={color => this.clickAddToWidget(color)}
             />
-            : hostIds.map(hostId => 
+            : hostIds.map(hostId =>
               <MenuItem
                 id={instancePath}
                 key={hostId}
                 onClick={() => this.setState({ hostId })}
               >
-                {hostId}
+                { widgets[hostId].name }
               </MenuItem>
             )}
 
         </Popover>
       )
     }
-    return (
-      <div>
-        <Icon 
-          className={icon}
-          style={{ cursor: "pointer" }}
-          onClick={e => hostIds.length > 0 ? this.setState({ anchorEl: e.currentTarget }) : {}}
-        />
-        {popover}
-      </div>
-    )
+    if (hostIds.length){
+      return (
+        <span
+          style={{ color: color }}
+          className='list-icon'
+          title="Add to existing plot"
+          onClick={e => hostIds.length > 0 ? this.setState({ anchorEl: e.currentTarget }) : {}}>
+          <span
+            className={icon}
+            style={{ cursor: "pointer" }}
+          />
+          { popover }
+        </span>
+      )
+    }
+    return '';
+    
   }
 }

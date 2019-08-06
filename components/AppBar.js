@@ -49,7 +49,7 @@ export default class Appbar extends React.Component {
             >
               <Grid item >
                 <header id="main-header">
-                  <h1>NWB Explorer</h1>
+                  <h1>NWB Explorer<sub>beta</sub></h1>
            
                 </header>
               </Grid>

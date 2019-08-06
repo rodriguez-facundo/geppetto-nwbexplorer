@@ -10,7 +10,7 @@ import logo_openworm from '../../resources/logos/openworm.png';
 import logo_metacell from '../../resources/logos/metacell.png';
 import logo_gsoc from '../../resources/logos/gsoc.png';
 import logo_wellcome from '../../resources/logos/wellcome.png';
-
+ 
 export default class SplashPage extends React.Component{
 
   render () {
@@ -18,7 +18,7 @@ export default class SplashPage extends React.Component{
       <Grid container className="{classes.root} container" spacing={16}>
         <Grid item sm={12} >
           <header id="main-header">
-            <h1>Welcome to NWB Explorer</h1>
+            <h1>Welcome to NWB Explorer<sub>beta</sub></h1>
             <p>Visualise and understand your neurophysiology data</p>
           </header>
         </Grid>

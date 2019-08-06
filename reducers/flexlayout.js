@@ -62,7 +62,7 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
     
   case ADD_WIDGET:
   case UPDATE_WIDGET: { 
-    const newWidget = { ...state.widgets[action.data.id], panelName: extractPanelName(action), ...action.data, };
+    const newWidget = { ...state.widgets[action.data.id], panelName: extractPanelName(action), ...action.data };
     return {
       ...state, widgets: { 
         ...updateWidgetStatus(state.widgets, newWidget), 
@@ -100,17 +100,29 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
     return FLEXLAYOUT_DEFAULT_STATUS;
   
   case ADD_PLOT_TO_EXISTING_WIDGET: {
-    const widget = { ...Object.values(state.widgets).find(widget => widget.id == action.data.hostId) };
-    
+    const widget = state.widgets[action.data.hostId];
+    const widgets = { ...state.widgets };
+    delete widgets[action.data.hostId];
     if (widget){
-      const guestList = widget.guestList ? [...widget.guestList] : [];
-
-      if (!guestList.find(guest => guest.instancePath == action.data.instancePath)){
-        guestList.push({ instancePath: action.data.instancePath, color: action.data.color })
-        widget.guestList = guestList
-        return { widgets: { ...state.widgets, [action.data.hostId]: widget } }
+      return {
+        widgets: { 
+          ...updateWidgetStatus(widgets, { panelName: widget.panelName, status: WidgetStatus.ACTIVE }), 
+          [action.data.hostId + action.data.instancePath]: { 
+            ...widget,
+            id: action.data.hostId + action.data.instancePath,
+            name: widget.name + '+',
+            guestList: [
+              ...widget.guestList, 
+              { 
+                instancePath: action.data.instancePath, 
+                color: action.data.color 
+              }
+            ] 
+          } 
+        } 
       }
     }
+    
     
     return state
   }
@@ -120,6 +132,15 @@ export default (state = FLEXLAYOUT_DEFAULT_STATUS, action) => {
   }
 }
 
+function filterWidgets (widgets, filterFn) {
+  return Object.fromEntries(Object.values(widgets).filter(filterFn));
+}
+
+/**
+ * Ensure there is one only active widget in the same panel
+ * @param {*} widgets 
+ * @param {*} param1 
+ */
 function updateWidgetStatus (widgets, { status, panelName }) {
   if (status != WidgetStatus.ACTIVE) {
     return widgets;

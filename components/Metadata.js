@@ -39,14 +39,14 @@ export default class Metadata extends React.Component {
 
       if (variableType == 'Text' ) {
         let value = variable.getInitialValue().value.text;
-        metadata = this.prettyFormat(value);
+        metadata = value;
       
       } else if (variableType == 'map' ) {
         metadata = variable.getType().getChildren().map(v => {
           if (v.getType().getName() == 'Text') {
             let name = v.getId();
             let value = v.getInitialValue().value.text;
-            return this.formatField(prettyFormat(name), prettyFormat(value));
+            return this.formatField(prettyFormat(name), value);
           }
         });
       }

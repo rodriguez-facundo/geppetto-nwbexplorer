@@ -111,7 +111,11 @@ export default class LayoutManager extends Component {
       this.updateWidgets(updatedWidgets);
     }
 
+    const deletedWidgets = this.findDeletedWidgets(widgets, oldWidgets);
 
+    if (deletedWidgets) {
+      this.deleteWidgets(deletedWidgets);
+    }
   }
  
   addWidgets (widgets) {
@@ -133,6 +137,12 @@ export default class LayoutManager extends Component {
       
     }
     // window.dispatchEvent(new Event('resize'));
+  }
+
+  deleteWidgets (widgets) {
+    for (let widget of widgets) {
+      this.model.doAction(FlexLayout.Actions.deleteTab(widget.id));
+    }
   }
 
   addWidget (widgetConfiguration) {
@@ -177,6 +187,10 @@ export default class LayoutManager extends Component {
       ? Object.values(widgets)
         .filter(widget => widget && oldWidgets[widget.id] && !isEqual(widget, oldWidgets[widget.id])) 
       : Object.values(widgets);
+  }
+
+  findDeletedWidgets (widgets, oldWidgets) {
+    return oldWidgets ? Object.values(oldWidgets).filter(widget => widget && !widgets[widget.id]) : Object.values(widgets);
   }
   
 
