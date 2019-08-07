@@ -7,7 +7,8 @@ import { raiseError } from '../../actions/general'
 
 const mapStateToProps = state => ({
   ...state.nwbfile,
-  ...state.general
+  ...state.general,
+  ...state.notebook
 });
 
 const mapDispatchToProps = dispatch => ({

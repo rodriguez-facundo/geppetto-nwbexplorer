@@ -41,7 +41,7 @@ const defaultLayoutConfiguration = {
           {
             "type": "tabset",
             "weight": 50,
-            "id": "rightPanel",
+            "id": "bottomPanel",
             "enableDeleteWhenEmpty": false,
             "children": [
             ]
@@ -269,7 +269,7 @@ export default class LayoutManager extends Component {
 
 
   clickOnBordersAction (node) {
-    this.model.doAction(FlexLayout.Actions.moveNode(node.getId(), 'rightPanel', FlexLayout.DockLocation.CENTER, 0));
+    this.model.doAction(FlexLayout.Actions.moveNode(node.getId(), 'bottomPanel', FlexLayout.DockLocation.CENTER, 0));
   }
 
   onRenderTabSet (panel, renderValues) {

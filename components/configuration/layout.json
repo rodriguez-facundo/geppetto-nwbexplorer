@@ -38,25 +38,13 @@
           {
             "type": "tabset",
             "weight": 40,
-            "id": "rightPanel",
-            "enableDeleteWhenEmpty": false,
-            "children": []
-          }
-        ]
-      },
-      {
-        "type": "row",
-        "weight": 20,
-        "children": [
-          {
-            "type": "tabset",
-            "weight": 100,
             "id": "bottomPanel",
             "enableDeleteWhenEmpty": false,
             "children": []
           }
         ]
       }
+      
     ]
   },
   "borders": [

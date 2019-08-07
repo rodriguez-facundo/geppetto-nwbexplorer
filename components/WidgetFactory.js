@@ -4,7 +4,7 @@ import FileExplorerPage from './pages/FileExplorerPage';
 import Metadata from './Metadata';
 import NWBListViewer from './reduxconnect/NWBListViewerContainer';
 import ImageViewer from './ImageViewer';
-import PythonConsole from 'geppetto-client/js/components/interface/pythonConsole/PythonConsole';
+import { getConsole } from '../services/NotebookService';
 
 export default class WidgetFactory{
 
@@ -73,7 +73,7 @@ export default class WidgetFactory{
     }
     case "PythonConsole": {
     
-      return <PythonConsole pythonNotebookPath={"notebooks/notebook.ipynb"} />
+      return getConsole();
     
     }
     }

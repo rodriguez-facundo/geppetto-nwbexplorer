@@ -16,7 +16,7 @@ export const showPlot = ({ path, type, color = 'red' }) => ({
     type: type,
     name: path.slice(FILEVARIABLE_LENGTH),
     status: WidgetStatus.ACTIVE,
-    panelName: 'rightPanel',
+    panelName: 'bottomPanel',
     color: color,
     config: {},
     guestList: []
@@ -42,7 +42,7 @@ export const showImg = ({ path, type }) => ({
     type: type,
     name: path.slice(FILEVARIABLE_LENGTH),
     status: WidgetStatus.ACTIVE,
-    panelName: 'rightPanel',
+    panelName: 'bottomPanel',
     config: {}
   }
 });

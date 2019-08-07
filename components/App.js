@@ -7,7 +7,7 @@ import nwbFileService from '../services/NWBFileService';
 import FileExplorerPage from './pages/FileExplorerPage';
 import PythonConsole from 'geppetto-client/js/components/interface/pythonConsole/PythonConsole';
 // import { Route, Switch, Redirect, BrowserRouter as Router } from 'react-router-dom';
-
+import { getConsole } from '../services/NotebookService';
 
 const theme = createMuiTheme({
   typography: { 
@@ -25,6 +25,7 @@ const theme = createMuiTheme({
     text: { secondary: "white" }
   }
 });
+
 
 export default class App extends React.Component{
 
@@ -54,19 +55,23 @@ export default class App extends React.Component{
 
       }
     });
-
-    if (nwbFileService.getNWBFileUrl()){
-      loadNWBFile(nwbFileService.getNWBFileUrl());
-
-    }
+    
 
     loadNotebook();
+
+    let notebookLoaded = false;
    
     // When the extension is ready we can communicate with the notebook kernel
     GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
+      const { isLoadedInNotebook, isNotebookReady } = this.props;
       console.log("Initializing Python extension");
-      notebookReady();   
-
+      if (!isNotebookReady) {
+        notebookReady();
+      }   
+      if (!isLoadedInNotebook && nwbFileService.getNWBFileUrl()){
+        loadNWBFile(nwbFileService.getNWBFileUrl());
+  
+      }
       /*
        * 
        * Utils.execPythonMessage('utils.start_notebook_server()');
@@ -121,9 +126,11 @@ export default class App extends React.Component{
           
 
         </div>
-        <span style={{ display: "none" }}><PythonConsole pythonNotebookPath={"notebooks/notebook.ipynb"} /></span>
+        <div style={{ display: "none" }}>{getConsole()}</div>
         
       </div>
     )
   }
 }
+
+

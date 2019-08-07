@@ -155,5 +155,5 @@ function updateWidgetStatus (widgets, { status, panelName }) {
 }
 
 function extractPanelName (action) {
-  return action.data.component == "Plot" ? "rightPanel" : "leftPanel";
+  return action.data.component == "Plot" ? "bottomPanel" : "leftPanel";
 }
