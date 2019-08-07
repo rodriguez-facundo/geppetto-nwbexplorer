@@ -28,7 +28,7 @@ function reduceGeneral (state, action) {
   switch (action.type) {
 
   case WAIT_DATA:
-    return { loading: { ...state.loading, [WAIT_DATA] : action.data.message } }
+    return { loading: { ...state.loading, [action.data.offAction] : action.data.message } }
   
   case RAISE_ERROR:
     return { error: action.error }
