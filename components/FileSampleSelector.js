@@ -2,8 +2,14 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 
 const SAMPLE_LINK_FERGUSON = 'https://github.com/OpenSourceBrain/NWBShowcase/raw/master/FergusonEtAl2015/FergusonEtAl2015.nwb';
+const SAMPLE_LINK_FERGUSON_2 = 'https://github.com/OpenSourceBrain/NWBShowcase/raw/master/FergusonEtAl2015/FergusonEtAl2015_PYR2.nwb';
+const SAMPLE_LINK_FERGUSON_3 = 'https://github.com/OpenSourceBrain/NWBShowcase/raw/master/FergusonEtAl2015/FergusonEtAl2015_PYR3.nwb';
+const SAMPLE_LINK_FERGUSON_4 = 'https://github.com/OpenSourceBrain/NWBShowcase/raw/master/FergusonEtAl2015/FergusonEtAl2015_PYR4.nwb';
+const SAMPLE_LINK_FERGUSON_5 = 'https://github.com/OpenSourceBrain/NWBShowcase/raw/master/FergusonEtAl2015/FergusonEtAl2015_PYR5_rebound.nwb';
+
 const SAMPLE_LINK_TIMESERIES = 'https://github.com/OpenSourceBrain/NWBShowcase/raw/master/NWB/time_series_data.nwb';
 const SAMPLE_LINK_TRIPLETT = 'https://github.com/OpenSourceBrain/NWBShowcase/raw/master/TriplettEtAl2018/TriplettEtAl2018.nwb';
+const SAMPLE_LINK_LANTYER = 'https://github.com/OpenSourceBrain/NWBShowcase/raw/master/Lantyer/LantyerEtAl2018.170502_AL_257_CC.nwb';
 
 export default class FileSampleSelector extends React.Component {
 
@@ -36,6 +42,7 @@ export default class FileSampleSelector extends React.Component {
           variant="outlined"
           onClick={ e => this.handleClickLoadFile(SAMPLE_LINK_TIMESERIES)}
           disabled={false}
+          
         >
           Simple time series
         </Button>
@@ -45,8 +52,44 @@ export default class FileSampleSelector extends React.Component {
           variant="outlined"
           onClick={ e => this.handleClickLoadFile(SAMPLE_LINK_FERGUSON)}
           disabled={false}
+          style={{ marginRight: '0.5em' }}
         >
           Ferguson et al. 2015
+        </Button> 
+        <Button
+          id="loadFile"
+          variant="outlined"
+          onClick={ e => this.handleClickLoadFile(SAMPLE_LINK_FERGUSON_2)}
+          disabled={false}
+          style={{ marginRight: '0.5em' }}
+        >
+          2
+        </Button> 
+        <Button
+          id="loadFile"
+          variant="outlined"
+          onClick={ e => this.handleClickLoadFile(SAMPLE_LINK_FERGUSON_3)}
+          disabled={false}
+          style={{ marginRight: '0.5em' }}
+        >
+          3
+        </Button> 
+        <Button
+          id="loadFile"
+          variant="outlined"
+          onClick={ e => this.handleClickLoadFile(SAMPLE_LINK_FERGUSON_4)}
+          disabled={false}
+          style={{ marginRight: '0.5em' }}
+        >
+          4
+        </Button> 
+        <Button
+          id="loadFile"
+          variant="outlined"
+          onClick={ e => this.handleClickLoadFile(SAMPLE_LINK_FERGUSON_5)}
+          disabled={false}
+        >
+          5
         </Button>
         <br />
         <Button
@@ -57,7 +100,18 @@ export default class FileSampleSelector extends React.Component {
         >
           Triplett et al. 2018 
         </Button>
+        <br />
+        <Button
+          id="loadFile"
+          variant="outlined"
+          onClick={ e => this.handleClickLoadFile(SAMPLE_LINK_LANTYER)}
+          disabled={false}
+        >
+          Lantyer et al. 2018 
+        </Button>
       </div>
+
+
     );
   }
 }
