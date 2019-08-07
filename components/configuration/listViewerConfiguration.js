@@ -26,7 +26,7 @@ const conf = [
   {
     id: "description",
     title: "Description",
-    source: ({ path }) => path.slice(FILEVARIABLE_LENGTH),
+    source: 'description',
   },
   
   {
