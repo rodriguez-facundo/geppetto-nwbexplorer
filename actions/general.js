@@ -8,4 +8,4 @@ export const raiseError = error => ({
   type: RAISE_ERROR 
 })
 
-export const waitData = message => ({ type: WAIT_DATA, data: { message: message } })
+export const waitData = (message, offAction) => ({ type: WAIT_DATA, data: { message: message, offAction: offAction } })

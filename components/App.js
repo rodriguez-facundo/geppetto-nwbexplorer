@@ -58,8 +58,6 @@ export default class App extends React.Component{
     
 
     loadNotebook();
-
-    let notebookLoaded = false;
    
     // When the extension is ready we can communicate with the notebook kernel
     GEPPETTO.on('jupyter_geppetto_extension_ready', data => {
@@ -95,8 +93,8 @@ export default class App extends React.Component{
     }
 
     // It would be better having the spinner as a parametrized react component
-    if (loading) {
-      const msg = loading;
+    if (Object.values(loading).length !== 0) {
+      const msg = Object.values(loading)[0];
       setTimeout( () => {
         GEPPETTO.trigger(GEPPETTO.Events.Show_spinner, msg);
       }, 500);

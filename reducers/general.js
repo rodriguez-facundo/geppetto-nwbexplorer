@@ -28,12 +28,11 @@ function reduceGeneral (state, action) {
   switch (action.type) {
 
   case WAIT_DATA:
-    return { loading: action.data.message }
+    return { loading: { ...state.loading, [WAIT_DATA] : action.data.message } }
   
   case RAISE_ERROR:
     return { error: action.error }
 
-  
   case RECOVER_FROM_ERROR:{
     switch (state.error.ename) {
       
@@ -52,19 +51,28 @@ function reduceGeneral (state, action) {
 
 
   case nwbfileActions.LOAD_NWB_FILE:
-    return { loading: 'Loading NWB file' }
+    return { loading: { ...state.loading, [nwbfileActions.NWB_FILE_LOADED] : 'Loading NWB file' } }
   
   case nwbfileActions.LOAD_NWB_FILE_IN_NOTEBOOK: 
-    return { loading: 'Loading NWB file into Python notebook' }
+    return { loading: { ...state.loading, [nwbfileActions.LOADED_NWB_FILE_IN_NOTEBOOK] : 'Loading NWB file into Python notebook' } }
   
   case notebookActions.LOAD_NOTEBOOK:
     return {
-      loading: 'Initializing Python notebook', 
+      loading: {
+        ...state.loading, 
+        [notebookActions.NOTEBOOK_READY] : 'Initializing Python notebook'  
+      }, 
       showNotebook: true, 
-      notebookReady: false
+      isNotebookReady: false
     }
   
-  default:
-    return { loading: false };
+  default:{
+    const loading = { ...state.loading };
+    if (loading[action.type]) {
+      delete loading[action.type];
+    }
+    return { loading: loading };
+  }
+
   }
 }

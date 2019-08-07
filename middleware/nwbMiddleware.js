@@ -30,7 +30,7 @@ function handleImportTimestamps (store, next, action) {
 
   if (timestamps.getValue().wrappedObj.value.eClass == 'ImportValue') {
 
-    store.dispatch(waitData('Loading timestamps data...'));
+    store.dispatch(waitData('Loading timestamps data...', action.type));
     timestamps.getValue().getPath = () => timestamps.getPath()
 
     timestamps.getValue().resolve(timeValue => {      
@@ -53,7 +53,7 @@ function handlePlotTimeseries (store, next, action) {
 
   if (data.getValue().wrappedObj.value.eClass == 'ImportValue') {
 
-    store.dispatch(waitData('Loading timeseries data...'));
+    store.dispatch(waitData('Loading timeseries data...', action.type));
     // Trick to resolve with the instance path instead than the type path. TODO remove when fixed 
     data.getValue().getPath = () => data.getPath()
     time.getValue().getPath = () => time.getPath()
