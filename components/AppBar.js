@@ -17,6 +17,13 @@ export default class Appbar extends React.Component {
    
   
   }
+  
+  clearCookie(url, token) {
+    fetch(url, { 
+      method: 'get', 
+      headers: new Headers({ 'Authorization': `token ${token}` })
+    });
+  }
 
   async componentDidMount () {
     try {
@@ -26,10 +33,7 @@ export default class Appbar extends React.Component {
       } else {
         const data = await response.json()
         if (data != "empty") {
-          fetch('http://nwb-explorer.com/hub/logout', { 
-            method: 'get', 
-            headers: new Headers({ 'Authorization': `token ${data.token}` })
-          });
+          setTimeout(this.clearCookie, 15000, 'http://nwb-explorer.com/hub/logout', data.token)
         }
       }    
     } catch (err) {
