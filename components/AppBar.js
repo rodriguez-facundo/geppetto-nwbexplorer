@@ -18,8 +18,23 @@ export default class Appbar extends React.Component {
   
   }
 
-  componentDidMount () {
-
+  async componentDidMount () {
+    try {
+      const response = await fetch('api/clearcookie')
+      if (response.status !== 200) {
+        console.log('Looks like there was a problem. Status Code: ' + response.status);
+      } else {
+        const data = await response.json()
+        if (data != "empty") {
+          fetch('http://nwb-explorer.com/hub/logout', { 
+            method: 'get', 
+            headers: new Headers({ 'Authorization': `token ${data.token}` })
+          });
+        }
+      }    
+    } catch (err) {
+      console.log('Fetch Error :-S', err);
+    }
   }
   
   componentDidUpdate (prevProps, prevState) {
