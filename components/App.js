@@ -38,17 +38,20 @@ export default class App extends React.Component{
     self = this;
 
     const cookieName = 'nwbloadurl'
-    const [_, nwbFileUrl] = document.cookie.split(';')
-      .filter(cookie => cookie.includes(cookieName))
-      .split("=")
-      
+    const nwbCookie = document.cookie.split(';').find(cookie => cookie.includes(cookieName))
 
-    if (nwbFileUrl && document.location.href.includes("nwbexplorer.com")) {
-      document.cookie = `${cookieName}= ; path=/`
-      // nwbexplorer.opensourcebrain.org
-      
-      document.location.href = `http://nwbexplorer.com/nwbfile=${nwbFileUrl}`;
+
+    if (nwbCookie) {
+      const [_, nwbFileUrl] = nwbCookie.split("=")
+      if (nwbFileUrl && document.location.href.includes("nwbexplorer.com")) {
+        // clear cookie
+        document.cookie = `${cookieName}= ; path=/`
+        // nwbexplorer.opensourcebrain.org
+        document.location.href = `http://nwbexplorer.com/nwbfile=${nwbFileUrl}`;
+      }
     }
+
+    
     
     
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, error => {
