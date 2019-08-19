@@ -36,6 +36,21 @@ export default class App extends React.Component{
   componentDidMount () {
     const { loadNWBFile, loadNotebook, notebookReady, nwbFileLoaded, raiseError } = this.props;
     self = this;
+
+    componentDidMount() {
+      const cookieName = 'nwbloadurl'
+      const [_, nwbFileUrl] = document.cookie.split(';')
+        .filter(cookie => cookie.includes(cookieName))
+        .split("=")
+        
+  
+      if (loadurl && document.location.href.includes("nwbexplorer.com")) {
+        document.cookie = `${cookieName}= ; path=/`
+        // nwbexplorer.opensourcebrain.org
+        
+        document.location.href =  `http://nwbexplorer.com/nwbfile=${nwbFileUrl}`;
+      }
+    }
     
     
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, error => {
