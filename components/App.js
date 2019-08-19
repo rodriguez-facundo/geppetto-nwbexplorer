@@ -37,7 +37,7 @@ export default class App extends React.Component{
     const { loadNWBFile, loadNotebook, notebookReady, nwbFileLoaded, raiseError } = this.props;
     self = this;
 
-    componentDidMount() {
+    componentDidMount () {
       const cookieName = 'nwbloadurl'
       const [_, nwbFileUrl] = document.cookie.split(';')
         .filter(cookie => cookie.includes(cookieName))
