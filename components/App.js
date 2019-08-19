@@ -47,7 +47,7 @@ export default class App extends React.Component{
         // clear cookie
         document.cookie = `${cookieName}= ; path=/`
         // nwbexplorer.opensourcebrain.org
-        document.location.href = `http://nwb-explorer.com/nwbfile=${nwbFileUrl}`;
+        document.location.href = `${document.location.href}?nwbfile=${nwbFileUrl}`;
       }
     }
     
