@@ -38,16 +38,16 @@ export default class App extends React.Component{
     self = this;
 
     const cookieName = 'nwbloadurl'
-    const nwbCookie = document.cookie.split(';').find(cookie => cookie.includes(cookieName))
+    const nwbCookie = document.cookie.split(';').find(cookie => cookie.includes(cookieName)).replace(/"/g, '')
 
 
     if (nwbCookie) {
       const [_, nwbFileUrl] = nwbCookie.split("=")
-      if (nwbFileUrl && document.location.href.includes("nwbexplorer.com")) {
+      if (nwbFileUrl && document.location.href.includes("nwb-explorer.com")) {
         // clear cookie
         document.cookie = `${cookieName}= ; path=/`
         // nwbexplorer.opensourcebrain.org
-        document.location.href = `http://nwbexplorer.com/nwbfile=${nwbFileUrl}`;
+        document.location.href = `http://nwb-explorer.com/nwbfile=${nwbFileUrl}`;
       }
     }
     
