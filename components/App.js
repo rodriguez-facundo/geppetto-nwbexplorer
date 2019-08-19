@@ -50,8 +50,6 @@ export default class App extends React.Component{
         document.location.href = `http://nwbexplorer.com/nwbfile=${nwbFileUrl}`;
       }
     }
-
-    
     
     
     GEPPETTO.on(GEPPETTO.Events.Error_while_exec_python_command, error => {
